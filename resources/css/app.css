@@ -1,0 +1,25 @@
+
+@import "tailwindcss";
+
+
+@layer components {
+  input {
+    @apply block w-full p-2.5 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white;
+  }
+  button{
+    @apply text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
+  }
+  select{
+    @apply bg-gray-50 border border-gray-300 text-sm rounded-lg px-4 py-2.5 dark:bg-gray-700 dark:text-white;
+  }
+  table{
+    @apply w-full text-left rtl:text-right text-gray-500 ;
+  }
+  table.thread{
+    @apply text-gray-700 uppercase bg-gray-50  sticky top-0 z-10 bg-slate-100;
+  }
+  td{
+    @apply min-w-[250px];
+  }
+}
+
