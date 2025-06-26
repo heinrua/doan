@@ -22,7 +22,6 @@ class Administrative extends Model
         'option',
         'classify',
         'commune_id',
-        'district_id',
         'population',
         'created_at',
         'updated_at',
