@@ -22,7 +22,7 @@
         <div class="intro-y col-span-12 flex flex-wrap items-start gap-3">
             <form action="{{ route('view-type-of-construction') }}" method="GET" class="flex flex-wrap items-center gap-3 grow">
                 <select name="type_of_calamity_id"
-                    class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5">
                     <option value="">--Chọn loại thiên tai--</option>
                     @foreach ($typeOfCalamities as $type)
                         <option value="{{ $type->id }}" {{ request('type_of_calamity_id') == $type->id ? 'selected' : '' }}>
@@ -36,7 +36,7 @@
                         {!! $icons['search'] !!}
                     </div>
                     <input type="text" name="name" placeholder="Tên loại công trình..." value="{{ request('name') }}"
-                        class="block w-full p-4 ps-10 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                        class="block w-full p-4 ps-10 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 <button type="submit"
@@ -48,7 +48,7 @@
             @auth
                 <a href="{{ route('create-type-of-construction') }}">
                     <button type="button"
-                        class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600">
+                        class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">
                         {!! $icons['plus-circle'] !!} Tạo Mới Loại Công Trình
                     </button>
                 </a>
@@ -60,8 +60,8 @@
         </div>
 
         <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
-            <table class="w-full text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <table class="w-full text-left text-gray-500">
+                <thead class="text-gray-700 uppercase bg-gray-50">
                     <tr>
                         <th class="px-6 py-3">#</th>
                         <th class="px-6 py-3">Loại thiên tai</th>
@@ -82,7 +82,7 @@
                         </tr>
                     @else
                         @foreach ($data as $key => $value)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <tr class="bg-white border-b">
                                 <td class="px-6 py-4">{{ $data->firstItem() + $key }}</td>
                                 <td class="px-6 py-4">{{ $value->type_of_calamities->name ?? '' }}</td>
                                 <td class="px-6 py-4">
@@ -151,6 +151,18 @@
         document.getElementById('delete-confirmation-modal').classList.add('hidden');
     }
 
+      function openDeleteModal(url) {
+        const modal = document.getElementById('delete-confirmation-modal');
+        modal.classList.remove('hidden');
+        setDeleteUrl(url);
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('delete-confirmation-modal').classList.add('hidden');
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
+    });
     function setDeleteUrl(url) {
         document.getElementById('confirm-delete').setAttribute('href', url);
     }

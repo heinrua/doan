@@ -4,10 +4,10 @@
     data-tw-merge
     {{ $attributes->class(
             merge([
-                'font-medium px-5 py-3 border-b-2 dark:border-darkmode-300',
+                'font-medium px-5 py-3 border-b-2',
                 $variant === 'light' ? 'border-b-0 text-slate-700' : null,
                 $variant === 'dark' ? 'border-b-0' : null,
-                $dark ? 'border-slate-600 dark:border-darkmode-300' : null,
+                $dark ? 'border-slate-600' : null,
                 $bordered ? 'border-l border-r border-t' : null,
                 $sm ? 'px-4 py-2' : null,
             ]),

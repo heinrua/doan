@@ -43,7 +43,7 @@ class CityController extends Controller
             $slug = "{$slug}-{$count}";
         }
         $validated['slug'] = $slug;
-        $validated['created_by_user_id'] = $user->id;
+        
         City::create($validated);
         return redirect('/list-city');
     }
@@ -79,7 +79,7 @@ class CityController extends Controller
             'slug' => $slug,
             'code' => $validated['code'] ?? $city->code,
             'coordinates' => $validated['coordinates'] ?? $city->coordinates,
-            'updated_by_user_id' => $user->id,
+            
         ]);
         return redirect('/list-city')->with('success',200);
     }

@@ -57,7 +57,7 @@ class CommuneController extends Controller
             $slug = "{$slug}-{$count}";
         }
         $validated['slug'] = $slug;
-        $validated['created_by_user_id'] = $user->id;
+        
         Commune::create($validated);
         return redirect('/list-commune');
     }
@@ -96,7 +96,7 @@ class CommuneController extends Controller
             'code' => $validated['code'] ?? $commune->code,
             'coordinates' => $validated['coordinates'] ?? $commune->coordinates,
             'district_id' => $validated['district_id'],
-            'updated_by_user_id' => $user->id,
+            
         ]);
         return redirect('/list-commune')->with('success', 200);
     }

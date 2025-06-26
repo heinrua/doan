@@ -15,9 +15,9 @@
                 @csrf
                 <!-- BEGIN: Tạo Quận Huyện -->
                 <div class="intro-y box mt-5 p-5">
-                    <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                    <div class="rounded-md border border-slate-200/60 p-5">
                         <div
-                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Quận Huyện
                         </div>
                         <div class="mt-5">
@@ -33,7 +33,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="name" id="name" type="text"
+                                    <input name="name" id="name" type="text"
                                         placeholder="Tên Quận Huyện" />
                                     @error('name')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -55,7 +55,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="code" id="code" type="text" placeholder="Mã" />
+                                    <input name="code" id="code" type="text" placeholder="Mã" />
                                     @error('code')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                     @enderror
@@ -76,7 +76,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="coordinates" id="coordinates" type="text"
+                                    <input name="coordinates" id="coordinates" type="text"
                                         placeholder="Toạ độ" />
                                     @error('coordinates')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -98,8 +98,15 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="map[]" id="map" type="file" multiple
-                                    placeholder="Chọn lớp bản đồ" />
+                                    <label for="file" class="block text-sm font-medium text-gray-700 mb-1">Chọn lớp bản đồ:</label>
+                                    <input name="map[]" id="map" type="file" 
+                                        class="block w-full text-sm text-gray-900
+                                        file:mr-2 file:py-1 file:px-3
+                                        file:rounded file:border-0
+                                        file:text-sm file:font-medium
+                                        file:bg-blue-100 file:text-blue-700
+                                        hover:file:bg-blue-200 border border-gray-300 rounded-md">
+                                    
                                     @error('map')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                     @enderror
@@ -119,7 +126,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="population" id="population" type="number"
+                                    <input name="population" id="population" type="number"
                                         placeholder="Sức chứa" />
                                     @error('population')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -160,7 +167,7 @@
                 </div>
                 <!-- END: Tạo Quận Huyện -->
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
-                    <button class="w-full py-3 md:w-52" type="submit" variant="primary">
+                   <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
                         Lưu
                     </button>
                 </div>

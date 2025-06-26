@@ -15,9 +15,9 @@
                 @csrf
                 <!-- BEGIN: Tạo Xã Phường -->
                 <div class="intro-y box mt-5 p-5">
-                    <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                    <div class="rounded-md border border-slate-200/60 p-5">
                         <div
-                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Xã Phường
                         </div>
                         {{-- Tên Xã Phường --}}
@@ -33,7 +33,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="name" id="name" type="text"
+                                    <input name="name" id="name" type="text"
                                         placeholder="Tên Xã Phường" class="w-full" />
                                     @error('name')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -54,7 +54,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="code" id="code" type="text" placeholder="Mã"
+                                    <input name="code" id="code" type="text" placeholder="Mã"
                                         class="w-full" />
                                     @error('code')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -75,7 +75,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="coordinates" id="coordinates" type="text"
+                                    <input name="coordinates" id="coordinates" type="text"
                                         placeholder="Tọa độ" class="w-full" />
                                     @error('coordinates')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -115,6 +115,11 @@
                 </div>
                 <!-- END: Tạo Xã Phường -->
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
+                    <a href="{{ route('view-commune') }}">
+                        <button type="button"
+                            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                            Huỷ Bỏ</button>
+                    </a>
                     <button class="w-full md:w-auto px-6 py-3" type="submit" variant="primary">
                         Lưu
                     </button>

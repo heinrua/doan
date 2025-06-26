@@ -115,7 +115,7 @@
                         <a class="flex items-center mr-3 edit" href="javascript:;">
                             <i data-lucide="check-square" class="w-4 h-4 mr-1"></i> Edit
                         </a>
-                        <a class="flex items-center delete text-danger" href="javascript:;">
+                        <a class="flex items-center delete text-red-700" href="javascript:;">
                             <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> Delete
                         </a>
                         </div>`);

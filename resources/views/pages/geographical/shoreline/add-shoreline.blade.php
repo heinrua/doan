@@ -16,9 +16,9 @@
                 <input type="hidden" name="type" value="shoreline">
                 <!-- BEGIN: Flooding Information -->
                 <div class="intro-y box mt-5 p-5">
-                    <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                    <div class="rounded-md border border-slate-200/60 p-5">
                         <div
-                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Lịch Sử Đường Bờ
                         </div>
                         <div class="mt-5">
@@ -33,7 +33,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="name" id="name" type="text"
+                                    <input name="name" id="name" type="text"
                                         placeholder="Tên đoạn đường bờ" />
                                     @error('name')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -103,7 +103,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="length" id="length" type="text"
+                                    <input name="length" id="length" type="text"
                                         placeholder="Chiều dài (km)" />
                                 </div>
                             </div>
@@ -121,7 +121,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="width" id="width" type="text"
+                                    <input name="width" id="width" type="text"
                                         placeholder="Chiều rộng (m)" />
                                 </div>
                             </div>
@@ -139,7 +139,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="start_coordinates" id="start_coordinates" type="text"
+                                    <input name="start_coordinates" id="start_coordinates" type="text"
                                         placeholder="Toạ độ bắt đầu" />
                                 </div>
                             </div>
@@ -157,7 +157,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="end_coordinates" id="end_coordinates" type="text"
+                                    <input name="end_coordinates" id="end_coordinates" type="text"
                                         placeholder="Toạ độ kết thúc" />
                                 </div>
                             </div>
@@ -175,7 +175,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="description" id="description" type="text"
+                                    <input name="description" id="description" type="text"
                                         placeholder="Thông tin mô tả" />
                                 </div>
                             </div>
@@ -193,7 +193,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="map" id="map" type="file"
+                                    <input name="map" id="map" type="file"
                                         placeholder="Chọn lớp bản đồ" />
                                 </div>
                             </div>
@@ -211,7 +211,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="image" id="image" type="file"
+                                    <input name="image" id="image" type="file"
                                         placeholder="Hình ảnh" />
                                 </div>
                             </div>
@@ -229,7 +229,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="video" id="video" type="file"
+                                    <input name="video" id="video" type="file"
                                         placeholder="Video" />
                                 </div>
                             </div>
@@ -238,7 +238,7 @@
                 </div>
                 <!-- END: Flooding Information -->
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
-                    <button class="w-full py-3 md:w-52" type="submit" variant="primary">
+                   <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
                         Lưu
                     </button>
                 </div>

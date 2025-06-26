@@ -124,7 +124,7 @@ class RiverBankConstructionController extends Controller
         $data['coordinates'] = $request['coordinates'];
         $data['total_investment'] = $request['total_investment'];
         $data['capital_source'] = $request['capital_source'];
-        $data['created_by_user_id'] = $user->id;
+          
 
         $slug = Str::slug($request->name);
         $count = Construction::where('slug', 'like', "{$slug}%")->count();

@@ -2,7 +2,7 @@
 
 <table
     data-tw-merge
-    {{ $attributes->class(merge(['w-full text-left', $dark ? 'bg-dark text-white dark:bg-black/30' : null]))->merge($attributes->whereDoesntStartWith('class')->getAttributes()) }}
+    {{ $attributes->class(merge(['w-full text-left', $dark ? 'bg-dark text-white' : null]))->merge($attributes->whereDoesntStartWith('class')->getAttributes()) }}
 >
     {{ $slot }}
 </table>

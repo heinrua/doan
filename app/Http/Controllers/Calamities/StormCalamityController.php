@@ -10,8 +10,15 @@ use App\Models\SubTypeOfCalamities;
 use App\Models\Calamities;
 use App\Models\Commune;
 use App\Models\District;
+use App\Models\DisasterSubscription;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CalamityCreated;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Excel as ExcelFormat;
+
 
 class StormCalamityController extends Controller
 {
@@ -87,6 +94,29 @@ class StormCalamityController extends Controller
 
         return view('pages/calamities/storm/add-storm', compact('calamities', 'communes', 'sub_calamities', 'risk_levels'));
     }
+    public function export()
+    {
+        $data = Calamities::with(['risk_level', 'communes.district'])
+            ->whereRelation('risk_level.type_of_calamities', 'slug', 'bao-ap-thap-nhiet-doi')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'Tên thiên tai' => $item->name,
+                    'Thời gian bắt đầu' => $item->time_start,
+                    'Thời gian kết thúc' => $item->time_end,
+                    'Cấp độ rủi ro' => optional($item->risk_level)->name,
+                    'Huyện' => $item->communes->pluck('district.name')->unique()->implode(', '),
+                    'Xã' => $item->communes->pluck('name')->implode(', '),
+                    'Thiệt hại người' => $item->human_damage,
+                    'Thiệt hại tài sản' => $item->property_damage,
+                ];
+            });
+
+        return Excel::download(new \Maatwebsite\Excel\Collections\SheetCollection([
+            'Danh sách bão - ATNĐ' => collect($data)
+        ]), 'bao-ap-thap-nhiet-doi.xlsx');
+    }
+
 
     public function store(Request $request)
     {
@@ -173,20 +203,46 @@ class StormCalamityController extends Controller
         if (isset($validated['sub_type_of_calamity_ids'])) {
             $calamities->sub_type_of_calamities()->sync($validated['sub_type_of_calamity_ids']);
         }
+        //Gửi mail toàn bộ người dùng
+        $subscribers = DisasterSubscription::all();
+        foreach ($subscribers as $subscriber) {
+            Mail::to($subscriber->email)->send(
+                new CalamityCreated($calamity, $subscriber->name)
+            );
+        }
         return redirect('/calamity/list-storm')->with('success', 200);
     }
 
-    public function show($id)
-    {
-        $calamities = TypeOfCalamities::where('slug', 'bao-ap-thap-nhiet-doi')->get();
-        $calamity = Calamities::with(['communes','communes.district'])->findOrFail($id);
-        $typeOfCalamities = TypeOfCalamities::all();
-        $subTypeOfCalamities = SubTypeOfCalamities::where('type_of_calamity_id', $calamity->type_of_calamity_id)->get();
-        $communes = Commune::all();
-        $risk_levels = RiskLevel::whereRelation('type_of_calamities', 'slug', 'bao-ap-thap-nhiet-doi')->get();
+    
+        public function show($id)
+        {
+            $calamity = Calamities::with([
+            'communes',
+            'communes.district',
+            'sub_type_of_calamities',
+            'risk_level.type_of_calamities'
+            ])->findOrFail($id);
 
-        return view('pages/calamities/storm/edit-storm', compact('calamities','calamity', 'typeOfCalamities', 'subTypeOfCalamities', 'communes', 'risk_levels'));
-    }
+            // Lấy type id thông qua risk_level
+            $typeId = $calamity->risk_level?->type_of_calamities?->id;
+
+            $subTypeOfCalamities = $typeId
+                ? SubTypeOfCalamities::where('type_of_calamity_id', $typeId)->get()
+                : collect();
+
+
+
+            // Dữ liệu bổ sung
+            $typeOfCalamities = TypeOfCalamities::all();
+            $communes = Commune::all();
+            $risk_levels = RiskLevel::whereRelation('type_of_calamities', 'slug', 'bao-ap-thap-nhiet-doi')->get();
+            $calamities = TypeOfCalamities::where('slug', 'bao-ap-thap-nhiet-doi')->get();
+
+            return view('pages.calamities.storm.edit-storm', compact(
+                'calamity', 'calamities', 'typeOfCalamities', 'subTypeOfCalamities', 'communes', 'risk_levels'
+            ));
+        }
+
 
     public function update(Request $request)
     {

@@ -19,9 +19,9 @@
                 @csrf
                 <!-- BEGIN: Risk Level Information -->
                 <div class="intro-y box mt-5 p-5">
-                    <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                    <div class="rounded-md border border-slate-200/60 p-5">
                         <div
-                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Sạt Lở
                         </div>
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -39,7 +39,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="name" id="name" type="text"
+                                        <input name="name" id="name" type="text"
                                             placeholder="Vị Trí Sạt Lở" value="{{ $calamity->name }}" />
                                         @error('name')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -112,7 +112,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->coordinates }}" name="coordinates"
+                                        <input value="{{ $calamity->coordinates }}" name="coordinates"
                                             id="coordinates" type="text" placeholder="Tọa độ vị trí"
                                             onblur="updateMapFromInput()" />
                                     </div>
@@ -171,7 +171,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->address }}" name="address" id="address"
+                                        <input value="{{ $calamity->address }}" name="address" id="address"
                                             type="text" placeholder="Điạ điểm" />
                                     </div>
                                 </div>
@@ -215,15 +215,15 @@
                                 </label>
                                 <div class="w-full flex flex-col md:flex-row gap-4">
                                     <div class="w-full md:w-1/3">
-                                        <x-base.form-input value="{{ $calamity->width }}" name="width" id="width"
+                                        <input value="{{ $calamity->width }}" name="width" id="width"
                                             type="text" placeholder="Chiều rộng (m)" />
                                     </div>
                                     <div class="w-full md:w-1/3">
-                                        <x-base.form-input value="{{ $calamity->length }}" name="length" id="length"
+                                        <input value="{{ $calamity->length }}" name="length" id="length"
                                             type="text" placeholder="Chiều dài (m)" />
                                     </div>
                                     <div class="w-full md:w-1/3">
-                                        <x-base.form-input value="{{ $calamity->acreage }}" name="acreage"
+                                        <input value="{{ $calamity->acreage }}" name="acreage"
                                             id="acreage" type="text" placeholder="Diện tích (m²)" />
                                     </div>
                                 </div>
@@ -243,7 +243,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->reason }}" name="reason" id="reason"
+                                        <input value="{{ $calamity->reason }}" name="reason" id="reason"
                                             type="text" placeholder="Nguyên nhân" />
                                     </div>
                                 </div>
@@ -258,7 +258,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->geology }}" name="geology"
+                                        <input value="{{ $calamity->geology }}" name="geology"
                                             id="geology" type="text" placeholder="Địa chất" />
                                     </div>
                                 </div>
@@ -273,7 +273,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->support_policy }}" name="support_policy"
+                                        <input value="{{ $calamity->support_policy }}" name="support_policy"
                                             id="support_policy" type="text" placeholder="Chính sách hỗ trợ" />
                                     </div>
                                 </div>
@@ -291,7 +291,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->watermark_points }}"
+                                        <input value="{{ $calamity->watermark_points }}"
                                             name="watermark_points" id="watermark_points" type="text"
                                             placeholder="Đặc điểm thuỷ văn" />
                                     </div>
@@ -307,7 +307,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->mitigation_measures }}"
+                                        <input value="{{ $calamity->mitigation_measures }}"
                                             name="mitigation_measures" id="mitigation_measures" type="text"
                                             placeholder="Các biện pháp giảm thiểu" />
                                     </div>
@@ -326,7 +326,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->human_damage }}" name="human_damage"
+                                        <input value="{{ $calamity->human_damage }}" name="human_damage"
                                             id="human_damage" type="text" placeholder="Thiệt hại về người" />
                                     </div>
                                 </div>
@@ -341,7 +341,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->property_damage }}"
+                                        <input value="{{ $calamity->property_damage }}"
                                             name="property_damage" id="property_damage" type="text"
                                             placeholder="Thiệt hại về tài sản" />
                                     </div>
@@ -357,7 +357,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->investment_level }}"
+                                        <input value="{{ $calamity->investment_level }}"
                                             name="investment_level" id="investment_level" type="text"
                                             placeholder="Mức độ" />
                                     </div>
@@ -503,13 +503,13 @@
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-calamity-river-bank') }}">
                         <button type="button"
-                            class="transition duration-200 border shadow-sm inline-flex items-center justify-center px-3 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&amp;:hover:not(:disabled)]:bg-opacity-90 [&amp;:hover:not(:disabled)]:border-opacity-90 [&amp;:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed w-full border-slate-300 py-3 text-slate-500 dark:border-darkmode-400 md:w-52">Huỷ
-                            Bỏ</button>
+                            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                            Huỷ Bỏ</button>
                     </a>
                     @if ($userCurrent->is_master || $userCurrent->hasPermission('update-calamity-river-bank'))
-                        <button class="w-full py-3 md:w-52" type="submit" variant="primary">
-                            Lưu
-                        </button>
+                       <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+                        Lưu
+                    </button>
                     @endif
                 </div>
             </form>

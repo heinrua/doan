@@ -1,19 +1,20 @@
 @extends('themes.base')
 @section('subhead')
-    <title>Bản Đồ Bão & ATNĐ - PCTT Cà Mau Dashboard</title>
+    <title>Bản Đồ</title>
 @endsection
 
 @section('subcontent')
     <h2 class="intro-y mt-5 text-lg font-medium uppercase flex items-center">
         {!! $icons['map-pin'] !!}
-        Bản Đồ Bão & Ấp Thấp Nhiệt Đới
+        Bản Đồ Phòng Chống Thiên Tai Cà Mau
     </h2>
 
     <div class="mt-3 grid grid-cols-12 gap-6">
         <!-- Sidebar danh mục (1/3 màn hình) -->
         <div class="col-span-12 md:col-span-3">
             <div class="p-5 bg-white shadow rounded-lg h-[950px] overflow-y-auto">
-                <h3 class="text-lg font-semibold mb-3">Chọn Năm:</h3>
+                <!-- Bản đồ Bão -->
+                <h3 class="text-lg font-semibold mb-3">Đường đi của bão:</h3>
                 <select id="yearSelect" class="w-full p-2 border rounded-md">
                     <option value="">-- Chọn Năm --</option>
                     @foreach ($calamitiesByYear as $year => $data)
@@ -21,7 +22,25 @@
                     @endforeach
                 </select>
                 <ul id="stormList" class="space-y-2 mt-4"></ul>
-                <h3 class="mt-3 text-lg font-semibold mb-3">Tùy chọn:</h3>
+                <!-- Bản đồ Lũ -->
+                <h3 class="text-lg font-semibold mb-3">Mức độ ngập:</h3>
+
+                <select id="floodingSelect" class="w-full p-2 border rounded-md">
+                    <option value="">-- Chọn mức độ ngập --</option>
+                    @foreach ($calamitiesByFloodRange as $level => $data)
+                        <option value="{{ $level }}">{{ $level === 'all' ? 'Tất cả' : $level }}</option>
+                    @endforeach
+                </select>
+                <ul id="floodList" class="space-y-2 mt-4" style="max-height: 250px; overflow-y: auto;"></ul>
+                <!-- Bản đồ Sạt lở -->
+                <h3 class="text-lg font-semibold mb-3">Chọn năm sạt lở:</h3>
+
+                <select id="yearSelect" class="w-full p-2 border rounded-md">
+                    <option value="">-- Chọn Năm --</option>
+                    @foreach ($locations as $year => $data)
+                        <option value="{{ $year }}">{{ $year }}</option>
+                    @endforeach
+                </select>
                 <div id="optionContainer" class="space-y-2">
                     <!-- Checkbox chính cho Địa Phận -->
                     <div class="flex items-center space-x-2 bg-gray-100 p-2 rounded border border-gray-300">
@@ -103,11 +122,11 @@
         const center_communes = @json($center_communes);
         const center_districts = @json($center_districts);
 
-        let map, kmlLayers = new Map(),
-            currentLayer = null,
-            markers = new Map();
-        let markersByCalamity = new Map();
-        let kmlLayerSoTan = new Map();
+        // let map, kmlLayers = new Map(),
+        //     currentLayer = null,
+        //     markers = new Map();
+        // let markersByCalamity = new Map();
+        // let kmlLayerSoTan = new Map();
         let sharedInfoWindow; // trường học - y tế - tthc
         let sharedConstructionInfoWindow; // cống - trạm bơm
         document.addEventListener("DOMContentLoaded", function() {

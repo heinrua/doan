@@ -7,14 +7,10 @@
 
 @section('subcontent')
     <h2 class="intro-y mt-5 text-lg font-medium uppercase flex items-center">
-        {!! $icons['map-pin'] !!}
-        Bản Đồ Sạt Lở Bờ Sông & Bờ Biển
+        {!! $icons['map'] !!}
+        Bản Đồ Thiên Tai
     </h2>
-    <div class="mt-3 flex space-x-2">
-            <button id="btn-edit-kml" class="btn btn-outline-primary">✏️ Chỉnh sửa KML</button>
-            <button id="btn-create-kml" class="btn btn-outline-success">➕ Tạo KML mới</button>
-            <button id="btn-export-kml" class="btn btn-outline-warning hidden">💾 Xuất KML</button>
-        </div>
+   
     <div class="mt-3 grid grid-cols-12 gap-6">
         
 
@@ -73,6 +69,19 @@
                         <h3 class="text-lg font-semibold mb-2">Quận & Huyện:</h3>
                         <ul id="districtWardListConstruction1" class="space-y-2"></ul>
                     </div>
+                    <!-- Checkbox chính -->
+                    <div class="flex items-center space-x-2 bg-gray-100 p-2 rounded border border-gray-300">
+                        <input type="checkbox" id="option-construction-pc" class="option-checkbox" value="cong">
+                        <label for="option-construction-pc" class="cursor-pointer select-none text-gray-700">Công trình PC</label>
+                    </div>
+
+                    <!-- Danh sách con: loại công trình -->
+                    <div id="constructionTypeContainer" class="mt-5 space-y-3">
+                        <h3 class="text-lg font-semibold">Loại công trình:</h3>
+                        <ul id="constructionTypeList" class="space-y-2"></ul>
+                    </div>
+
+
 
                     <div class="flex items-center space-x-2 bg-gray-100 p-2 rounded border border-gray-300">
                         <input type="checkbox" id="option-pumping" class="option-checkbox" value="school">
@@ -110,10 +119,12 @@
 
 @push('scripts')
     <script>
-         const districts = @json($districts);
+        const districts = @json($districts);
         const locations = @json($locations);
         const locationsConstructions = @json($locationsConstructions);
         const constructions = @json($constructions);
+        const constructionTypes = @json($constructionTypes);
+
         const schools = @json($schools);
         const medicals = @json($medicals);
         const center_communes = @json($center_communes);
@@ -127,7 +138,7 @@
         let infoWindowRiver;
         let sharedInfoWindow; // trường học - y tế - tthc
         let sharedConstructionInfoWindow; // cống - trạm bơm
-        let drawingManager;
+      
         document.addEventListener("DOMContentLoaded", function() {
             if (typeof google === "undefined" || typeof google.maps === "undefined") {
                 console.warn("Google Maps API chưa tải xong, đang chờ...");
@@ -152,6 +163,83 @@
                 initializeApp();
             }
         });
+        document.getElementById("option-construction-pc").addEventListener("change", function () {
+            const container = document.getElementById("constructionTypeContainer");
+            if (this.checked) {
+                container.classList.remove("hidden");
+                renderConstructionTypeCheckboxes();
+            } else {
+                container.classList.add("hidden");
+                clearAllMarkersByType('cong');
+                markers.clear(); // Xoá toàn bộ marker loại công trình PC
+            }
+        });
+        function renderConstructionTypeCheckboxes() {
+            const list = document.getElementById("constructionTypeList");
+            list.innerHTML = "";
+
+            constructionTypes.forEach(type => {
+                const checkboxId = `construction-type-${type.id}`;
+                const listItem = document.createElement("li");
+
+                listItem.innerHTML = `
+                    <div class="flex items-center space-x-2 bg-white p-2 border rounded-md">
+                        <input type="checkbox" id="${checkboxId}" data-type-id="${type.id}">
+                        <label for="${checkboxId}" class="cursor-pointer select-none">${type.name}</label>
+                    </div>
+                `;
+
+                const checkbox = listItem.querySelector("input");
+                checkbox.addEventListener("change", function () {
+                    const typeId = parseInt(this.dataset.typeId);
+                    const filtered = constructions.filter(c => c.type_id === typeId);
+                    toggleMarkersByConstructionType(typeId, filtered, this.checked);
+                });
+
+                list.appendChild(listItem);
+            });
+        }
+        function toggleMarkersByConstructionType(typeId, items, show) {
+            const key = `construction-type-${typeId}`;
+            if (!markers.has(key)) {
+                markers.set(key, []);
+            }
+
+            let typeMarkers = markers.get(key);
+
+            if (show) {
+                if (typeMarkers.length === 0) {
+                    typeMarkers = items.map(item => {
+                        const marker = new google.maps.Marker({
+                            position: { lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) },
+                            map: map,
+                            icon: {
+                                url: "/uploads/map/construction.png", // hoặc tùy vào từng loại
+                                scaledSize: new google.maps.Size(25, 25)
+                            }
+                        });
+
+                        marker.addListener("click", function () {
+                            sharedConstructionInfoWindow.setContent(getContentConstruction(item, 'cong'));
+                            sharedConstructionInfoWindow.open(map, marker);
+                        });
+
+                        return marker;
+                    });
+
+                    markers.set(key, typeMarkers);
+                } else {
+                    typeMarkers.forEach(marker => marker.setMap(map));
+                }
+            } else {
+                if (markers.has(key)) {
+                    markers.get(key).forEach(marker => marker.setMap(null));
+                    markers.set(key, []);
+                }
+            }
+        }
+
+
 
         function initializeApp() {
             initMap();
@@ -173,7 +261,6 @@
             sharedInfoWindow = new google.maps.InfoWindow();
             sharedConstructionInfoWindow = new google.maps.InfoWindow();
             addDistrictLabels();
-            setupDrawingTools()
         }
 
         //hiển thị quận/huyện lên map khi vào trang
@@ -941,38 +1028,8 @@
             kmlLayerSoTan.clear(); // Xóa danh sách layers
         }
 
-        function setupDrawingTools() {
-            const btnCreate = document.getElementById("btn-create-kml");
-            const btnExport = document.getElementById("btn-export-kml");
+     
 
-            btnCreate.addEventListener("click", () => {
-                // Nếu đã tạo rồi thì reset
-                if (drawingManager) {
-                    drawingManager.setMap(null);
-                }
-
-                drawingManager = new google.maps.drawing.DrawingManager({
-                    drawingMode: null,
-                    drawingControl: true,
-                    drawingControlOptions: {
-                        position: google.maps.ControlPosition.TOP_CENTER,
-                        drawingModes: ["marker", "polygon", "polyline"]
-                    },
-                });
-
-                drawingManager.setMap(map); // QUAN TRỌNG: gán vào bản đồ
-
-                btnExport.classList.remove("hidden");
-
-                // Khi vẽ xong một overlay
-                drawingManager.addListener("overlaycomplete", (e) => {
-                    const overlay = e.overlay;
-                    const type = e.type;
-                    console.log("Vẽ xong:", type, overlay.getPath ? overlay.getPath().getArray() : overlay.getPosition());
-                    // Bạn có thể lưu overlay lại để export KML sau
-                });
-            });
-        }
     </script>
 <!--     
      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMhd9dHKpWfJ57Ndv2alnxEcSvP_-_uN8&callback=initMap" async &libraries=drawing
@@ -983,9 +1040,7 @@
         defer
         ></script>
 
-    <!-- <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script> -->
-    <script src="https://unpkg.com/togeojson@0.16.0/togeojson.js"></script>
-    <script src="https://unpkg.com/@mapbox/tokml@0.4.0/tokml.js"></script>
+    
+    
 
 @endpush

@@ -36,7 +36,7 @@
             classTo: "input-form",
             errorClass: "has-error",
             errorTextParent: "input-form",
-            errorTextClass: "text-danger mt-2",
+            errorTextClass: "text-red-700 mt-2",
         });
 
         pristine.addValidator(

@@ -17,9 +17,9 @@
                 <input type="hidden" name="type" value="erosion">
                 <!-- BEGIN: Flooding Information -->
                 <div class="intro-y box mt-5 p-5">
-                    <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                    <div class="rounded-md border border-slate-200/60 p-5">
                         <div
-                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Khu Vực Xói, Bồi
                         </div>
                         <div class="mt-5">
@@ -34,7 +34,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="name" id="name" type="text"
+                                    <input name="name" id="name" type="text"
                                         value="{{ $data->name }}" placeholder="Tên khu vực xói bồi" />
                                     @error('name')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -130,7 +130,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="start_year" id="start_year" type="text"
+                                    <input name="start_year" id="start_year" type="text"
                                         value="{{ $data->start_year }}" placeholder="Năm bắt đầu" />
                                 </div>
                             </div>
@@ -148,7 +148,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="end_year" id="end_year" type="text"
+                                    <input name="end_year" id="end_year" type="text"
                                         value="{{ $data->end_year }}" placeholder="Năm hoàn thành" />
                                 </div>
                             </div>
@@ -166,7 +166,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="area" id="area" type="text"
+                                    <input name="area" id="area" type="text"
                                         value="{{ $data->area }}" placeholder="Diện tích (ha)" />
                                 </div>
                             </div>
@@ -184,7 +184,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="scale" id="scale" type="text"
+                                    <input name="scale" id="scale" type="text"
                                         value="{{ $data->scale }}" placeholder="Quy mô ảnh hưởng" />
                                 </div>
                             </div>
@@ -202,7 +202,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="impact_level" id="impact_level" type="text"
+                                    <input name="impact_level" id="impact_level" type="text"
                                         value="{{ $data->impact_level }}" placeholder="Mức độ ảnh hưởng" />
                                 </div>
                             </div>
@@ -220,7 +220,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="coordinates" id="coordinates" type="text"
+                                    <input name="coordinates" id="coordinates" type="text"
                                         value="{{ $data->coordinates }}" placeholder="Toạ độ" />
                                 </div>
                             </div>
@@ -238,7 +238,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="total_investment" id="total_investment" type="text"
+                                    <input name="total_investment" id="total_investment" type="text"
                                         value="{{ $data->total_investment }}" placeholder="Tổng mức đầu tư" />
                                 </div>
                             </div>
@@ -256,7 +256,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="funding_source" id="funding_source" type="text"
+                                    <input name="funding_source" id="funding_source" type="text"
                                         value="{{ $data->funding_source }}" placeholder="Nguồn vốn" />
                                 </div>
                             </div>
@@ -273,7 +273,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input value="{{ $data->map }}" name="map" id="map"
+                                    <input value="{{ $data->map }}" name="map" id="map"
                                         type="file" placeholder="Chọn lớp bản đồ" />
                                 </div>
                             </div>
@@ -295,7 +295,7 @@
                                             class="mb-3 h-40 w-auto rounded-lg shadow" />
                                     @endif
                                     <!-- Input để upload ảnh mới -->
-                                    <x-base.form-input name="image" id="image" type="file"
+                                    <input name="image" id="image" type="file"
                                         placeholder="Hình ảnh" />
                                 </div>
                             </div>
@@ -333,10 +333,10 @@
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-erosion') }}">
                         <button type="button"
-                            class="transition duration-200 border shadow-sm inline-flex items-center justify-center px-3 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&amp;:hover:not(:disabled)]:bg-opacity-90 [&amp;:hover:not(:disabled)]:border-opacity-90 [&amp;:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed w-full border-slate-300 py-3 text-slate-500 dark:border-darkmode-400 md:w-52">Huỷ
-                            Bỏ</button>
+                            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                            Huỷ Bỏ</button>
                     </a>
-                    <button class="w-full py-3 md:w-52" type="submit" variant="primary">
+                   <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
                         Lưu
                     </button>
                 </div>

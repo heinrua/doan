@@ -11,7 +11,7 @@
             showWeekNumbers: true,
             format: "D MMM, YYYY",
             dropdowns: {
-                minYear: 1990,
+                minYear: null,
                 maxYear: null,
                 months: true,
                 years: true,

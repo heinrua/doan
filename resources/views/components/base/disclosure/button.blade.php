@@ -14,7 +14,7 @@
         aria-controls="{{ $id }}-collapse"
         {{ $attributes->class(
                 merge([
-                    'accordion-button outline-none py-4 -my-4 font-medium w-full text-left dark:text-slate-400',
+                    'accordion-button outline-none py-4 -my-4 font-medium w-full text-left',
                     '[&:not(.collapsed)]:text-primary [&:not(.collapsed)]:dark:text-slate-300',
                     $selectedIndex != $index ? 'collapsed' : null,
                     $attributes->whereStartsWith('class')->first(),

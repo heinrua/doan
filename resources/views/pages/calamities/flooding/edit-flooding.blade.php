@@ -19,9 +19,9 @@
                 @csrf
                 <!-- BEGIN: Flooding Information -->
                 <div class="intro-y box mt-5 p-5">
-                    <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                    <div class="rounded-md border border-slate-200/60 p-5">
                         <div
-                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Ngập Lụt
                         </div>
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -39,7 +39,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->name }}" name="name" id="name"
+                                        <input value="{{ $calamity->name }}" name="name" id="name"
                                             type="text" placeholder="Tên khu vực ngập" />
                                         @error('name')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -59,7 +59,7 @@
                                     </label>
                                     <div class="w-full">
                                          <select id="yearSelect" id="crud-form-2" name="type_of_calamity_id"
-                                            class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:text-white">
+                                            class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5">
                                             @foreach ($calamities as $value)
                                                 <option value="{{ $value->id }}"
                                                     {{ $calamity->type_of_calamity_id == $value->id ? 'selected' : '' }}>
@@ -84,14 +84,14 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->coordinates }}" name="coordinates"
+                                        <input value="{{ $calamity->coordinates }}" name="coordinates"
                                             id="coordinates" type="text" placeholder="Toạ độ" />
                                     </div>
                                 </div>
                             </div>
                             <!-- Cột 2 -->
                             <div>
-                                <!-- Loại sạt lở -->
+                                <!-- Loại ngập  -->
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -104,7 +104,7 @@
                                     </label>
                                     <div class="w-full">
                                         <select  id="crud-form-2" name="sub_type_of_calamity_ids[]"
-                                            class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:text-white">
+                                            class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5" multiple>
                                             @foreach ($subTypeOfCalamities as $subTypeOfCalamity)
                                                 <option value="{{ $subTypeOfCalamity->id }}"
                                                     {{ $calamity->sub_type_of_calamities->pluck('id')->contains($subTypeOfCalamity->id) ? 'selected' : '' }}>
@@ -132,7 +132,7 @@
                                     </label>
                                     <div class="w-full">
                                         <select id="crud-form-2" name="commune_ids[]"
-                                            class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:text-white">
+                                            class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5">
                                             @foreach ($communes as $commune)
                                                 <option value="{{ $commune->id }}"
                                                     {{ $calamity->communes->pluck('id')->contains($commune->id) ? 'selected' : '' }}>
@@ -239,7 +239,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->flood_level }}" name="flood_level"
+                                        <input value="{{ $calamity->flood_level }}" name="flood_level"
                                             id="flood_level" type="text" placeholder="Mức độ ngập (m)" />
                                     </div>
                                 </div>
@@ -253,7 +253,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->reason }}" name="reason" id="reason"
+                                        <input value="{{ $calamity->reason }}" name="reason" id="reason"
                                             type="text" placeholder="Nguyên nhân gây ngập" />
                                     </div>
                                 </div>
@@ -267,7 +267,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->mitigation_measures }}"
+                                        <input value="{{ $calamity->mitigation_measures }}"
                                             name="mitigation_measures" id="mitigation_measures" type="text"
                                             placeholder="Biện pháp ứng phó" />
                                     </div>
@@ -282,7 +282,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->data_source }}" name="data_source"
+                                        <input value="{{ $calamity->data_source }}" name="data_source"
                                             id="data_source" type="text" placeholder="Nguồn dữ liệu" />
                                     </div>
                                 </div>
@@ -300,7 +300,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->flooded_area }}" name="flooded_area"
+                                        <input value="{{ $calamity->flooded_area }}" name="flooded_area"
                                             id="flooded_area" type="text" placeholder="Diện tích ngập (ha)" />
                                     </div>
                                 </div>
@@ -314,7 +314,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->number_of_people_affected }}"
+                                        <input value="{{ $calamity->number_of_people_affected }}"
                                             name="number_of_people_affected" id="number_of_people_affected"
                                             type="text" placeholder="Số dân bị ảnh hưởng" />
                                     </div>
@@ -329,7 +329,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->damaged_infrastructure }}"
+                                        <input value="{{ $calamity->damaged_infrastructure }}"
                                             name="damaged_infrastructure" id="damaged_infrastructure" type="text"
                                             placeholder="Cơ sở hạ tầng hư hại" />
                                     </div>
@@ -344,7 +344,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->property_damage }}"
+                                        <input value="{{ $calamity->property_damage }}"
                                             name="property_damage" id="property_damage" type="text"
                                             placeholder="Thiệt hại về tài sản" />
                                     </div>
@@ -378,7 +378,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="sprint_time" id="sprint_time" type="text"
+                                        <input name="sprint_time" id="sprint_time" type="text"
                                             placeholder="Thời gian nước rút (giờ)" />
                                     </div>
                                 </div>
@@ -393,7 +393,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->human_damage }}" name="human_damage"
+                                        <input value="{{ $calamity->human_damage }}" name="human_damage"
                                             id="human_damage" type="text" placeholder="Thiệt hại về người" />
                                     </div>
                                 </div>
@@ -485,6 +485,7 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <!-- Cột 3 -->
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
@@ -500,7 +501,13 @@
                                     <div class="w-full">
                                         <!-- Input file -->
                                         <input type="file" name="video" id="videoInput" accept="video/mp4"
-                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                                            class="block w-full text-sm text-gray-900
+                                            file:mr-2 file:py-1 file:px-3
+                                            file:rounded file:border-0
+                                            file:text-sm file:font-medium
+                                            file:bg-blue-100 file:text-blue-700
+                                            hover:file:bg-blue-200 border border-gray-300 rounded-md">
+                                        
                                         <!-- Hiển thị video nếu có -->
                                         @if (!empty($calamity->video))
                                             <div id="videoContainer" class="mt-4 relative w-fit group">
@@ -534,13 +541,13 @@
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-calamity-flooding') }}">
                         <button type="button"
-                            class="transition duration-200 border shadow-sm inline-flex items-center justify-center px-3 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&amp;:hover:not(:disabled)]:bg-opacity-90 [&amp;:hover:not(:disabled)]:border-opacity-90 [&amp;:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed w-full border-slate-300 py-3 text-slate-500 dark:border-darkmode-400 md:w-52">Huỷ
-                            Bỏ</button>
+                            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                            Huỷ Bỏ</button>
                     </a>
                     @if ($userCurrent->is_master || $userCurrent->hasPermission('update-calamity-flooding'))
-                        <button class="w-full py-3 md:w-52" type="submit" variant="primary">
-                            Lưu
-                        </button>
+                       <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+                        Lưu
+                    </button>
                     @endif
                 </div>
             </form>

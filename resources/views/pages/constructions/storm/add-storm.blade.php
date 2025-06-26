@@ -15,9 +15,9 @@
                 @csrf
                 <!-- BEGIN: Storm Information -->
                 <div class="intro-y box mt-5 p-5">
-                    <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                    <div class="rounded-md border border-slate-200/60 p-5">
                         <div
-                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Công Trình Bão
                         </div>
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -34,7 +34,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="name" id="name" type="text"
+                                        <input name="name" id="name" type="text"
                                             placeholder="Tên công trình" />
                                         @error('name')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -99,7 +99,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="construction_code" id="construction_code" type="text"
+                                        <input name="construction_code" id="construction_code" type="text"
                                             placeholder="Mã công trình" />
                                     </div>
                                 </div>
@@ -115,7 +115,7 @@
                                     </label>
                                     <div class="w-full">
                                         <select class="w-full" id="crud-form-2" name="type_of_construction_id"
-                                            multiple>
+                                            >
                                             @foreach ($typeOfConstructions as $key => $value)
                                                 <option value="{{ $value->id }}">
                                                     {{ $value->name }}
@@ -138,7 +138,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="address" id="address" type="text"
+                                        <input name="address" id="address" type="text"
                                             placeholder="Địa chỉ" />
                                     </div>
                                 </div>
@@ -178,7 +178,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="size" id="size" type="text"
+                                        <input name="size" id="size" type="text"
                                             placeholder="Kích thước" />
                                     </div>
                                 </div>
@@ -214,7 +214,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="capital_source" id="capital_source" type="text"
+                                        <input name="capital_source" id="capital_source" type="text"
                                             placeholder="Nguồn vốn" />
                                     </div>
                                 </div>
@@ -245,7 +245,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="efficiency_level" id="efficiency_level" type="text"
+                                        <input name="efficiency_level" id="efficiency_level" type="text"
                                             placeholder="Mức độ hiệu quả" />
                                     </div>
                                 </div>
@@ -262,7 +262,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="status" id="status" type="text"
+                                        <input name="status" id="status" type="text"
                                             placeholder="Tình trạng" />
                                     </div>
                                 </div>
@@ -298,7 +298,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="total_investment" id="total_investment" type="text"
+                                        <input name="total_investment" id="total_investment" type="text"
                                             placeholder="Chi phí" />
                                     </div>
                                 </div>
@@ -312,7 +312,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="contractor" id="contractor" type="text"
+                                        <input name="contractor" id="contractor" type="text"
                                             placeholder="Nhà thầu" />
                                     </div>
                                 </div>
@@ -322,7 +322,7 @@
                 </div>
                 <!-- END: Storm Information -->
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
-                    <button class="w-full py-3 md:w-52" type="submit" variant="primary">
+                   <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
                         Lưu
                     </button>
                 </div>

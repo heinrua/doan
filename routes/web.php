@@ -14,10 +14,25 @@ use App\Exports\UsersExport;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\NewPasswordController;
+
+Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
+    ->middleware('guest')->name('password.request');
+
+Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
+    ->middleware('guest')->name('password.email');
+
+Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
+    ->middleware('guest')->name('password.reset');
+
+Route::post('/reset-password', [NewPasswordController::class, 'store'])
+    ->middleware('guest')->name('password.update');
+
 
 use App\Http\Controllers\ChatController;
 
-Route::get('/chat', [ChatController::class, 'index']);
+Route::get('/chat', [ChatController::class, 'index'])->name('chat');
 Route::post('/chat/send', [ChatController::class, 'send']);
 
 // Cho phép tất cả người dùng (kể cả chưa login) vào dashboard
@@ -36,25 +51,22 @@ Route::get('/test-email', function () {
 
     return 'Email test đã được gửi!';
 });
+    Route::post('/guest-disaster-subscribe', [App\Http\Controllers\DisasterSubscriptionController::class, 'store'])
+        ->name('guest.disaster.subscribe');
 
-// // Authentication routes
-// Route::get('/register', [App\Http\Controllers\AuthController::class, 'viewRegister'])->name('register');
-// Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
 
-Route::get('/login', [App\Http\Controllers\AuthController::class, 'viewLogin'])->name('login');
-Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
-Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
-Route::get('/forgot-password', [App\Http\Controllers\AuthController::class, 'viewForgotPassword'])->name('forgot-password');
-Route::get('/reset-password/{token}', [App\Http\Controllers\AuthController::class, 'viewResetPassword'])->name('reset-password');
-// Hiển thị trang chỉnh sửa hồ sơ
-Route::get('/edit-profile', [App\Http\Controllers\AuthController::class, 'viewEditProfile'])->name('edit-profile');
+    Route::get('/login', [App\Http\Controllers\AuthController::class, 'viewLogin'])->name('login');
+    Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
+    Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
-// Xử lý cập nhật hồ sơ
-Route::post('/edit_profile', [App\Http\Controllers\AuthController::class, 'updateProfile'])->name('update-profile');
+    // Hiển thị trang chỉnh sửa hồ sơ
+    Route::get('/edit-profile', [App\Http\Controllers\AuthController::class, 'viewEditProfile'])->name('edit-profile');
 
-//Route::middleware(['auth'])->group(function () {
+    // Xử lý cập nhật hồ sơ
+    Route::post('/edit_profile', [App\Http\Controllers\AuthController::class, 'updateProfile'])->name('update-profile');
+
+
     
-    Route::get('/faq', [App\Http\Controllers\AdminController::class, 'faq'])->name('view-faq'); // hướng dẫn
     Route::get('/get-risk-levels', [App\Http\Controllers\AdminController::class, 'getRiskLevels'])->name('get-risk-levels');
     Route::get('/get-sub-type-of-calamities', [App\Http\Controllers\AdminController::class, 'getSubTypeOfCalamities'])->name('get-sub-type-of-calamities');
     Route::post('/create-disaster', [App\Http\Controllers\AdminController::class, 'createDisaster'])->name('create-disaster');
@@ -62,82 +74,81 @@ Route::post('/edit_profile', [App\Http\Controllers\AuthController::class, 'updat
    
     // CRUD User
     Route::middleware(['auth'])->group(function () {
-    Route::get('/create-user', [App\Http\Controllers\UserController::class, 'viewFormUser'])->name('create-user');//->middleware('permission:create-user');
-    Route::post('/create-user', [App\Http\Controllers\UserController::class, 'store'])->name('store-user');
-    Route::get('/list-user', [App\Http\Controllers\UserController::class, 'index'])->name('view-user');//->middleware('permission:view-user');
-    Route::get('/export-users', function () {
-        return Excel::download(new UsersExport, 'DanhSachNguoiDung.xlsx');
-    })->name('export-users');
-    Route::get('/edit-user/{id}', [App\Http\Controllers\UserController::class, 'show'])->name('edit-user');//->middleware('permission:edit-user');
-    Route::post('/update-user', [App\Http\Controllers\UserController::class, 'update'])->name('update-user');//->middleware('permission:update-user');
-    Route::get('/delete-user/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('delete-user');//->middleware('permission:delete-user');
-    
-  
-   
+        Route::get('/create-user', [App\Http\Controllers\UserController::class, 'viewFormUser'])->name('create-user');//->middleware('permission:create-user');
+        Route::post('/create-user', [App\Http\Controllers\UserController::class, 'store'])->name('store-user');
+        Route::get('/list-user', [App\Http\Controllers\UserController::class, 'index'])->name('view-user');//->middleware('permission:view-user');
+        Route::get('/export-users', function () {
+            return Excel::download(new UsersExport, 'DanhSachNguoiDung.xlsx');
+        })->name('export-users');
+        // routes/web.php
+        Route::post('/import-users', [App\Http\Controllers\UserController::class, 'importUsers'])->name('import-users');
 
-
-});
+        Route::get('/edit-user/{id}', [App\Http\Controllers\UserController::class, 'show'])->name('edit-user');//->middleware('permission:edit-user');
+        Route::post('/update-user', [App\Http\Controllers\UserController::class, 'update'])->name('update-user');//->middleware('permission:update-user');
+        Route::get('/delete-user/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('delete-user');//->middleware('permission:delete-user');
+    });
      
     
+    Route::get('/list-city', [App\Http\Controllers\CityController::class, 'index'])->name('view-city') ;
+    Route::get('/list-district', [App\Http\Controllers\DistrictController::class, 'index'])->name('view-district');//->middleware('permission:view-district');
+    Route::get('/list-commune', [App\Http\Controllers\CommuneController::class, 'index'])->name('view-commune');//->middleware('permission:view-commune');
+    Route::get('/list-type-of-calamity', [App\Http\Controllers\TypeOfCalamityController::class, 'index'])->name('view-type-of-calamity');//->middleware('permission:view-type-of-calamity');
+    Route::get('/list-risk-level', [App\Http\Controllers\RiskLevelController::class, 'index'])->name('view-risk-level');//->middleware('permission:view-risk-level');
+    Route::get('/list-type-of-construction', [App\Http\Controllers\TypeOfConstructionController::class, 'index'])->name('view-type-of-construction');//->middleware('permission:view-type-of-construction');
+    Route::get('/list-sub-type-of-calamity', [App\Http\Controllers\SubTypeOfCalamityController::class, 'index'])->name('view-sub-type-of-calamity');//->middleware('permission:view-sub-type-of-calamity');
 
     // CRUD City
-    Route::get('/create-city', [App\Http\Controllers\CityController::class, 'viewFormCity'])->name('create-city');//->middleware('permission:create-city');
-    Route::post('/create-city', [App\Http\Controllers\CityController::class, 'store'])->name('store-city');
-    Route::get('/list-city', [App\Http\Controllers\CityController::class, 'index'])->name('view-city') ;//->middleware('permission:view-city');
-    Route::get('/edit-city/{id}', [App\Http\Controllers\CityController::class, 'show'])->name('edit-city');//->middleware('permission:edit-city');
-    Route::post('/update-city', [App\Http\Controllers\CityController::class, 'update'])->name('update-city');//->middleware('permission:update-city');
-    Route::get('/delete-city/{id}', [App\Http\Controllers\CityController::class, 'destroy'])->name('delete-city');//->middleware('permission:delete-city');
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/create-city', [App\Http\Controllers\CityController::class, 'viewFormCity'])->name('create-city');//->middleware('permission:create-city');
+        Route::post('/create-city', [App\Http\Controllers\CityController::class, 'store'])->name('store-city');
+        Route::get('/edit-city/{id}', [App\Http\Controllers\CityController::class, 'show'])->name('edit-city');//->middleware('permission:edit-city');
+        Route::post('/update-city', [App\Http\Controllers\CityController::class, 'update'])->name('update-city');//->middleware('permission:update-city');
+        Route::get('/delete-city/{id}', [App\Http\Controllers\CityController::class, 'destroy'])->name('delete-city');//->middleware('permission:delete-city');
 
-    // CRUD District
-    Route::get('/create-district', [App\Http\Controllers\DistrictController::class, 'viewFormDistrict'])->name('create-district');//->middleware('permission:create-district');
-    Route::post('/create-district', [App\Http\Controllers\DistrictController::class, 'store'])->name('store-district');
-    Route::get('/list-district', [App\Http\Controllers\DistrictController::class, 'index'])->name('view-district');//->middleware('permission:view-district');
-    Route::get('/edit-district/{id}', [App\Http\Controllers\DistrictController::class, 'show'])->name('edit-district');//->middleware('permission:edit-district');
-    Route::post('/update-district', [App\Http\Controllers\DistrictController::class, 'update'])->name('update-district');//->middleware('permission:update-district');
-    Route::get('/delete-district/{id}', [App\Http\Controllers\DistrictController::class, 'destroy'])->name('delete-district');//->middleware('permission:delete-district');
+        // CRUD District
+        Route::get('/create-district', [App\Http\Controllers\DistrictController::class, 'viewFormDistrict'])->name('create-district');//->middleware('permission:create-district');
+        Route::post('/create-district', [App\Http\Controllers\DistrictController::class, 'store'])->name('store-district');
+        Route::get('/edit-district/{id}', [App\Http\Controllers\DistrictController::class, 'show'])->name('edit-district');//->middleware('permission:edit-district');
+        Route::post('/update-district', [App\Http\Controllers\DistrictController::class, 'update'])->name('update-district');//->middleware('permission:update-district');
+        Route::get('/delete-district/{id}', [App\Http\Controllers\DistrictController::class, 'destroy'])->name('delete-district');//->middleware('permission:delete-district');
 
-    // CRUD Commune
-    Route::get('/create-commune', [App\Http\Controllers\CommuneController::class, 'viewFormCommune'])->name('create-commune');//->middleware('permission:create-commune');
-    Route::post('/create-commune', [App\Http\Controllers\CommuneController::class, 'store'])->name('store-commune');
-    Route::get('/list-commune', [App\Http\Controllers\CommuneController::class, 'index'])->name('view-commune');//->middleware('permission:view-commune');
-    Route::get('/edit-commune/{id}', [App\Http\Controllers\CommuneController::class, 'show'])->name('edit-commune');//->middleware('permission:edit-commune');
-    Route::post('/update-commune', [App\Http\Controllers\CommuneController::class, 'update'])->name('update-commune');//->middleware('permission:update-commune');
-    Route::get('/delete-commune/{id}', [App\Http\Controllers\CommuneController::class, 'destroy'])->name('delete-commune');//->middleware('permission:delete-commune');
-    Route::get('/get-commune', [App\Http\Controllers\CommuneController::class, 'getCommunesByDistrict'])->name('get-communes');//->middleware('permission:get-communes');
+        // CRUD Commune
+        Route::get('/create-commune', [App\Http\Controllers\CommuneController::class, 'viewFormCommune'])->name('create-commune');//->middleware('permission:create-commune');
+        Route::post('/create-commune', [App\Http\Controllers\CommuneController::class, 'store'])->name('store-commune');
+        Route::get('/edit-commune/{id}', [App\Http\Controllers\CommuneController::class, 'show'])->name('edit-commune');//->middleware('permission:edit-commune');
+        Route::post('/update-commune', [App\Http\Controllers\CommuneController::class, 'update'])->name('update-commune');//->middleware('permission:update-commune');
+        Route::get('/delete-commune/{id}', [App\Http\Controllers\CommuneController::class, 'destroy'])->name('delete-commune');//->middleware('permission:delete-commune');
+        Route::get('/get-commune', [App\Http\Controllers\CommuneController::class, 'getCommunesByDistrict'])->name('get-communes');//->middleware('permission:get-communes');
 
 
-    // CRUD Type Of Calamity
-    Route::get('/create-type-of-calamity', [App\Http\Controllers\TypeOfCalamityController::class, 'viewFormTypeOfCalamity'])->name('create-type-of-calamity');//->middleware('permission:create-type-of-calamity');
-    Route::post('/create-type-of-calamity', [App\Http\Controllers\TypeOfCalamityController::class, 'store'])->name('store-type-of-calamity');
-    Route::get('/list-type-of-calamity', [App\Http\Controllers\TypeOfCalamityController::class, 'index'])->name('view-type-of-calamity');//->middleware('permission:view-type-of-calamity');
-    Route::get('/edit-type-of-calamity/{id}', [App\Http\Controllers\TypeOfCalamityController::class, 'show'])->name('edit-type-of-calamity');//->middleware('permission:edit-type-of-calamity');
-    Route::post('/edit-type-of-calamity', [App\Http\Controllers\TypeOfCalamityController::class, 'update'])->name('update-type-of-calamity');//->middleware('permission:update-type-of-calamity');
-    Route::get('/delete-type-of-calamity/{id}', [App\Http\Controllers\TypeOfCalamityController::class, 'destroy'])->name('delete-type-of-calamity');//->middleware('permission:delete-type-of-calamity');
+        // CRUD Type Of Calamity
+        Route::get('/create-type-of-calamity', [App\Http\Controllers\TypeOfCalamityController::class, 'viewFormTypeOfCalamity'])->name('create-type-of-calamity');//->middleware('permission:create-type-of-calamity');
+        Route::post('/create-type-of-calamity', [App\Http\Controllers\TypeOfCalamityController::class, 'store'])->name('store-type-of-calamity');
+        Route::get('/edit-type-of-calamity/{id}', [App\Http\Controllers\TypeOfCalamityController::class, 'show'])->name('edit-type-of-calamity');//->middleware('permission:edit-type-of-calamity');
+        Route::post('/edit-type-of-calamity', [App\Http\Controllers\TypeOfCalamityController::class, 'update'])->name('update-type-of-calamity');//->middleware('permission:update-type-of-calamity');
+        Route::get('/delete-type-of-calamity/{id}', [App\Http\Controllers\TypeOfCalamityController::class, 'destroy'])->name('delete-type-of-calamity');//->middleware('permission:delete-type-of-calamity');
 
-    // CRUD Risk Level
-    Route::get('/create-risk-level', [App\Http\Controllers\RiskLevelController::class, 'viewFormRiskLevel'])->name('create-risk-level');//->middleware('permission:create-risk-level');
-    Route::post('/create-risk-level', [App\Http\Controllers\RiskLevelController::class, 'store'])->name('store-risk-level');//->middleware('permission:');
-    Route::get('/list-risk-level', [App\Http\Controllers\RiskLevelController::class, 'index'])->name('view-risk-level');//->middleware('permission:view-risk-level');
-    Route::get('/edit-risk-level/{id}', [App\Http\Controllers\RiskLevelController::class, 'show'])->name('edit-risk-level');//->middleware('permission:edit-risk-level');
-    Route::post('/update-risk-level', [App\Http\Controllers\RiskLevelController::class, 'update'])->name('update-risk-level');//->middleware('permission:update-risk-level');
-    Route::get('/delete-risk-level/{id}', [App\Http\Controllers\RiskLevelController::class, 'destroy'])->name('delete-risk-level');//->middleware('permission:delete-risk-level');
+        // CRUD Risk Level
+        Route::get('/create-risk-level', [App\Http\Controllers\RiskLevelController::class, 'viewFormRiskLevel'])->name('create-risk-level');//->middleware('permission:create-risk-level');
+        Route::post('/create-risk-level', [App\Http\Controllers\RiskLevelController::class, 'store'])->name('store-risk-level');//->middleware('permission:');
+        Route::get('/edit-risk-level/{id}', [App\Http\Controllers\RiskLevelController::class, 'show'])->name('edit-risk-level');//->middleware('permission:edit-risk-level');
+        Route::post('/update-risk-level', [App\Http\Controllers\RiskLevelController::class, 'update'])->name('update-risk-level');//->middleware('permission:update-risk-level');
+        Route::get('/delete-risk-level/{id}', [App\Http\Controllers\RiskLevelController::class, 'destroy'])->name('delete-risk-level');//->middleware('permission:delete-risk-level');
 
-    // CRUD Construction
-    Route::get('/create-type-of-construction', [App\Http\Controllers\TypeOfConstructionController::class, 'viewFormTypeOfConstruction'])->name('create-type-of-construction');//->middleware('permission:create-type-of-construction');
-    Route::post('/create-type-of-construction', [App\Http\Controllers\TypeOfConstructionController::class, 'store'])->name('store-type-of-construction');
-    Route::get('/list-type-of-construction', [App\Http\Controllers\TypeOfConstructionController::class, 'index'])->name('view-type-of-construction');//->middleware('permission:view-type-of-construction');
-    Route::get('/edit-type-of-construction/{id}', [App\Http\Controllers\TypeOfConstructionController::class, 'show'])->name('edit-type-of-construction');//->middleware('permission:edit-type-of-construction');
-    Route::post('/update-type-of-construction', [App\Http\Controllers\TypeOfConstructionController::class, 'update'])->name('update-type-of-construction');//->middleware('permission:update-type-of-construction');
-    Route::get('/delete-type-of-construction/{id}', [App\Http\Controllers\TypeOfConstructionController::class, 'destroy'])->name('delete-type-of-construction');//->middleware('permission:delete-type-of-construction');
+        // CRUD Construction
+        Route::get('/create-type-of-construction', [App\Http\Controllers\TypeOfConstructionController::class, 'viewFormTypeOfConstruction'])->name('create-type-of-construction');//->middleware('permission:create-type-of-construction');
+        Route::post('/create-type-of-construction', [App\Http\Controllers\TypeOfConstructionController::class, 'store'])->name('store-type-of-construction');
+        Route::get('/edit-type-of-construction/{id}', [App\Http\Controllers\TypeOfConstructionController::class, 'show'])->name('edit-type-of-construction');//->middleware('permission:edit-type-of-construction');
+        Route::post('/update-type-of-construction', [App\Http\Controllers\TypeOfConstructionController::class, 'update'])->name('update-type-of-construction');//->middleware('permission:update-type-of-construction');
+        Route::get('/delete-type-of-construction/{id}', [App\Http\Controllers\TypeOfConstructionController::class, 'destroy'])->name('delete-type-of-construction');//->middleware('permission:delete-type-of-construction');
 
-    // CRUD Sub Type Of Calamity
-    Route::get('/create-sub-type-of-calamity', [App\Http\Controllers\SubTypeOfCalamityController::class, 'viewFormTypeOfCalamity'])->name('create-sub-type-of-calamity');//->middleware('permission:create-sub-type-of-calamity');
-    Route::post('/create-sub-type-of-calamity', [App\Http\Controllers\SubTypeOfCalamityController::class, 'store'])->name('store-sub-type-of-calamity');
-    Route::get('/list-sub-type-of-calamity', [App\Http\Controllers\SubTypeOfCalamityController::class, 'index'])->name('view-sub-type-of-calamity');//->middleware('permission:view-sub-type-of-calamity');
-    Route::get('/edit-sub-type-of-calamity/{id}', [App\Http\Controllers\SubTypeOfCalamityController::class, 'show'])->name('edit-sub-type-of-calamity');//->middleware('permission:edit-sub-type-of-calamity');
-    Route::post('/update-sub-type-of-calamity', [App\Http\Controllers\SubTypeOfCalamityController::class, 'update'])->name('update-sub-type-of-calamity');//->middleware('permission:update-sub-type-of-calamity');
-    Route::get('/delete-sub-type-of-calamity/{id}', [App\Http\Controllers\SubTypeOfCalamityController::class, 'destroy'])->name('delete-sub-type-of-calamity');//->middleware('permission:delete-sub-type-of-calamity');
-
+        // CRUD Sub Type Of Calamity
+        Route::get('/create-sub-type-of-calamity', [App\Http\Controllers\SubTypeOfCalamityController::class, 'viewFormTypeOfCalamity'])->name('create-sub-type-of-calamity');//->middleware('permission:create-sub-type-of-calamity');
+        Route::post('/create-sub-type-of-calamity', [App\Http\Controllers\SubTypeOfCalamityController::class, 'store'])->name('store-sub-type-of-calamity');
+        Route::get('/edit-sub-type-of-calamity/{id}', [App\Http\Controllers\SubTypeOfCalamityController::class, 'show'])->name('edit-sub-type-of-calamity');//->middleware('permission:edit-sub-type-of-calamity');
+        Route::post('/update-sub-type-of-calamity', [App\Http\Controllers\SubTypeOfCalamityController::class, 'update'])->name('update-sub-type-of-calamity');//->middleware('permission:update-sub-type-of-calamity');
+        Route::get('/delete-sub-type-of-calamity/{id}', [App\Http\Controllers\SubTypeOfCalamityController::class, 'destroy'])->name('delete-sub-type-of-calamity');//->middleware('permission:delete-sub-type-of-calamity');
+    });
     Route::prefix('calamity')->group(function () {
         // CRUD RiverBank (SẠT LỞ ĐẤT)
         Route::get('/create-river-bank', [App\Http\Controllers\Calamities\RiverBankCalamityController::class, 'viewFormRiverbank'])->name('create-calamity-river-bank');//->middleware('permission:create-calamity-river-bank');
@@ -238,24 +249,18 @@ Route::post('/edit_profile', [App\Http\Controllers\AuthController::class, 'updat
                 ->name("delete-{$type}");//->middleware("permission:delete-{$type}");
         }
     });
+    
+    Route::get('/map', [App\Http\Controllers\MapController::class, 'viewRiverBank'])->name('view-map');
 
-    Route::prefix('map')->group(function () {
-        // CRUD Map (BẢN ĐỒ)
-        Route::get('/river-bank', [App\Http\Controllers\MapController::class, 'viewRiverBank'])->name('view-map-river-bank');//->middleware('permission:view-map-river-bank');
-        Route::get('/flooding', [App\Http\Controllers\MapController::class, 'viewFlooding'])->name('view-map-flooding');//->middleware('permission:view-map-flooding');
-        Route::get('/storm', [App\Http\Controllers\MapController::class, 'viewStorm'])->name('view-map-storm');//->middleware('permission:view-map-storm');
-        // Route::get('/test', [App\Http\Controllers\MapController::class, 'getCategoryData']);//->middleware('permission:');
-
-    });//->middleware('permission:');
 
     // CRUD scenarios (PHƯƠNG ÁN ỨNG PHÓ)
     Route::get('/create-scenarios', [App\Http\Controllers\ResponsePlan\ScenarioController::class, 'viewFormScenarios'])->name('create-scenarios');//->middleware('permission:create-scenarios');
     Route::post('/create-scenarios', [App\Http\Controllers\ResponsePlan\ScenarioController::class, 'store'])->name('store-scenarios');
-    Route::get('/list-scenarios', [App\Http\Controllers\ResponsePlan\ScenarioController::class, 'index'])->name('view-scenarios');//->middleware('permission:view-scenarios');
+    Route::get('/list-scenarios', [App\Http\Controllers\ResponsePlan\ScenarioController::class, 'index'])->name('view-scenarios');
     Route::get('/edit-scenarios/{id}', [App\Http\Controllers\ResponsePlan\ScenarioController::class, 'show'])->name('edit-scenarios');//->middleware('permission:edit-scenarios');
     Route::post('/update-scenarios', [App\Http\Controllers\ResponsePlan\ScenarioController::class, 'update'])->name('update-scenarios');//->middleware('permission:update-scenarios');
     Route::get('/delete-scenarios/{id}', [App\Http\Controllers\ResponsePlan\ScenarioController::class, 'destroy'])->name('delete-scenarios');//->middleware('permission:delete-scenarios');
 
    
 
-//});
+

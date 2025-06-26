@@ -83,151 +83,151 @@
         </div>
     @else
         <table class="-mt-2 border-separate border-spacing-y-[10px]">
-            <table.thead>
-                <table.tr>
-                    <table.th class="whitespace-nowrap  bg-white dark:bg-darkmode-700 sticky left-0 z-10">
+            <thead>
+                <tr>
+                    <table.th class="whitespace-nowrap  bg-white sticky left-0 z-10">
                         #
                     </table.th>
                     <table.th
-                        class="whitespace-nowrap  text-center bg-white dark:bg-darkmode-700 sticky left-12 z-10 uppercase">
+                        class="whitespace-nowrap  text-center bg-white sticky left-12 z-10 uppercase">
                         Tên công trình
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Loại công trình
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Cấp độ rủi ro thiên tai
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Phường/Xã
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Quận/Huyện
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Tiến độ thực hiện
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Năm xây dựng
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Năm hoàn thành
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Chiều dài (km)
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Chiều rộng (m)
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Quy mô
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Mức độ ảnh hưởng
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Toạ độ
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Tổng mức đầu tư
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Nguồn vốn
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Hình ảnh
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Video
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         Thời gian cập nhật
                     </table.th>
-                    <table.th class="whitespace-nowrap bg-white dark:bg-darkmode-700 sticky text-center uppercase">
+                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
                         HÀNH ĐỘNG
                     </table.th>
-                </table.tr>
-            </table.thead>
-            <table.tbody>
+                </tr>
+            </thead>
+            <tbody>
                 @foreach ($data as $key => $value)
-                    <table.tr class="intro-x">
-                        <table.td
-                            class="box sticky rounded-l-none rounded-r-none border-x-0 left-0 z-10 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                    <tr class="intro-x">
+                        <td
+                            class="box sticky rounded-l-none rounded-r-none border-x-0 left-0 z-10 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $data->firstItem() + $key }}
-                        </table.td>
-                        <table.td
-                            class="box sticky rounded-l-none rounded-r-none border-x-0 left-12 z-10 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 ">
+                        </td>
+                        <td
+                            class="box sticky rounded-l-none rounded-r-none border-x-0 left-12 z-10 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r ">
                             <a class="whitespace-nowrap font-medium"
                                 href="/construction/edit-river-bank/{{ $value->id }}">
                                 {{ $value->name }}
                             </a>
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $value->type_of_constructions->name ?? '' }}
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $value->risk_level->name ?? '' }}
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $value->communes[0]->name ?? '' }}
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $value->communes[0]->district->name ?? '' }}
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $value->progress }}
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $value->year_of_construction }}
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $value->year_of_completion }}
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $value->length }}
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $value->width }}
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $value->scale }}
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $value->influence_level }}
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $value->coordinates }}
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $value->total_investment }}
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $value->capital_source }}
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             @if (!empty($value->image))
                                 <x-base.image-zoom class="w-full rounded-md" src="{{ asset($value->image) }}" />
                             @else
                                 <span class="text-gray-500 italic">Chưa có hình ảnh</span>
                             @endif
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             @if (!empty($value->video))
                                 <div class="relative w-24 h-16 cursor-pointer"
                                     onclick="openVideoModal('{{ asset($value->video) }}')">
@@ -243,13 +243,13 @@
                             @else
                                 <span class="text-gray-500 italic">Chưa có video</span>
                             @endif
-                        </table.td>
-                        <table.td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600">
+                        </td>
+                        <td
+                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
                             {{ $value->updated_at ?? '' }}
-                        </table.td>
-                        <table.td @class([
-                            'box w-56 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600',
+                        </td>
+                        <td @class([
+                            'box w-56 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r',
                             'before:absolute before:inset-y-0 before:left-0 before:my-auto before:block before:h-8 before:w-px before:bg-slate-200 before:dark:bg-darkmode-400',
                         ])>
                             <div class="flex items-center justify-center">
@@ -259,7 +259,7 @@
                                     Sửa
                                 </a>
                                 @if ($userCurrent->is_master || $userCurrent->hasPermission('delete-construction-river-bank'))
-                                    <a class="flex items-center text-danger" data-tw-toggle="modal"
+                                    <a class="flex items-center text-red-700" data-tw-toggle="modal"
                                         data-tw-target="#delete-confirmation-modal"
                                         onclick="setDeleteUrl('{{ route('delete-construction-river-bank', ['id' => $value->id]) }}')"
                                         href="javascript:void(0);">
@@ -267,10 +267,10 @@
                                     </a>
                                 @endif
                             </div>
-                        </table.td>
-                    </table.tr>
+                        </td>
+                    </tr>
                 @endforeach
-            </table.tbody>
+            </tbody>
         </table>
         @endif
     </div>
@@ -282,28 +282,37 @@
     <!-- END: Pagination -->
     </div>
     <!-- BEGIN: Delete Confirmation Modal -->
-    <x-base.dialog id="delete-confirmation-modal">
-        <x-base.dialog.panel>
-            <div class="p-5 text-center">
-                {!! $icons['x-circle'] !!}
-                <div class="mt-5 text-3xl">Bạn Có Chắc Chắn?</div>
-                <div class="mt-2 text-slate-500">
-                    Bạn thật sự muốn xoá dữ liệu này? <br />
-                    Quá trình sẽ không được hoàn lại.
+    <div class="fixed inset-0 z-50 hidden" id="delete-confirmation-modal" aria-modal="true">
+        <!-- Nền mờ -->
+        <div class="fixed inset-0 bg-black/50"></div>
+
+        <!-- Khung modal chính giữa màn hình -->
+        <div class="flex min-h-screen items-center justify-center">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-md z-50 p-6">
+                <div class="flex items-start space-x-3">
+                    <div class="text-red-500">
+                        {!! $icons['warning-circle'] !!}
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Xác nhận xoá</h3>
+                        <p class="mt-1 text-sm text-gray-600">Xác nhận xóa dữ liệu này?</p>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end space-x-2">
+                    <button type="button" onclick="closeDeleteModal()"
+                            class="bg-white px-4 py-2 rounded border text-gray-700 hover:bg-gray-100">
+                        Hủy
+                    </button>
+                    <a class="flex items-center text-red-600"
+                    onclick="openDeleteModal('{{ route('delete-user', ['id' => $value->id]) }}')"
+                    href="javascript:void(0);">
+                        {!! $icons['trash-2'] !!} Xoá
+                    </a>
                 </div>
             </div>
-            <div class="px-5 pb-8 text-center">
-                <button class="mr-1 w-24" data-tw-dismiss="modal" type="button" variant="outline-secondary">
-                    Huỷ Bỏ
-                </button>
-                <a id="confirm-delete" href="#">
-                    <button class="w-24" type="button" variant="danger">
-                        Xoá
-                    </button>
-                </a>
-            </div>
-        </x-base.dialog.panel>
-    </x-base.dialog>
+        </div>
+    </div>
     <!-- END: Delete Confirmation Modal -->
     <!-- Modal Video -->
     <div id="videoModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
@@ -315,6 +324,18 @@
     </div>
 @endsection
 <script>
+      function openDeleteModal(url) {
+        const modal = document.getElementById('delete-confirmation-modal');
+        modal.classList.remove('hidden');
+        setDeleteUrl(url);
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('delete-confirmation-modal').classList.add('hidden');
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
+    });
     function setDeleteUrl(url) {
         document.getElementById('confirm-delete').setAttribute('href', url);
     }

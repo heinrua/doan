@@ -19,9 +19,9 @@
                 @csrf
                 <!-- BEGIN: Storm Information -->
                 <div class="intro-y box mt-5 p-5">
-                    <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                    <div class="rounded-md border border-slate-200/60 p-5">
                         <div
-                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Bão Và Áp Thấp Nhiệt Đới
                         </div>
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -39,7 +39,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->name }}" name="name" id="name"
+                                        <input value="{{ $calamity->name }}" name="name" id="name"
                                             type="text" placeholder="Tên Bão" />
                                         @error('name')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -127,6 +127,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
+
                                         <select class="w-full" id="crud-form-2" name="sub_type_of_calamity_ids[]"
                                             multiple>
                                             @foreach ($subTypeOfCalamities as $subTypeOfCalamity)
@@ -156,7 +157,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->coordinates }}" name="coordinates"
+                                        <input value="{{ $calamity->coordinates }}" name="coordinates"
                                             id="coordinates" type="text" placeholder="Toạ Độ" />
                                     </div>
                                 </div>
@@ -222,7 +223,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->investment_level }}"
+                                        <input value="{{ $calamity->investment_level }}"
                                             name="investment_level" id="investment_level" type="text"
                                             placeholder="Cấp độ" />
                                     </div>
@@ -241,7 +242,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->human_damage }}" name="human_damage"
+                                        <input value="{{ $calamity->human_damage }}" name="human_damage"
                                             id="human_damage" type="text" placeholder="Thiệt hại về người" />
                                     </div>
                                 </div>
@@ -256,7 +257,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->property_damage }}"
+                                        <input value="{{ $calamity->property_damage }}"
                                             name="property_damage" id="property_damage" type="text"
                                             placeholder="Thiệt hại về tài sản" />
                                     </div>
@@ -275,7 +276,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $calamity->mitigation_measures }}"
+                                        <input value="{{ $calamity->mitigation_measures }}"
                                             name="mitigation_measures" id="mitigation_measures" type="text"
                                             placeholder="Biện pháp ứng phó" />
                                     </div>
@@ -399,8 +400,7 @@
                                                 </video>
                                                 <!-- Nút X để xóa video -->
                                                 <button type="button" onclick="hideVideo()"
-                                                    class="absolute top-1 right-1 bg-black/60 text-white rounded-full p-2 shadow-lg transition-all
-                            opacity-0 group-hover:opacity-100 hover:bg-red-600">
+                                                    class="absolute top-1 right-1 bg-black/60 text-white rounded-full p-2 shadow-lg transition-all opacity-0 group-hover:opacity-100 hover:bg-red-600">
                                                     ✕
                                                 </button>
                                             </div>
@@ -420,15 +420,15 @@
                     <!-- END: Product Information -->
                     <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                         <a href="{{ route('view-calamity-storm') }}">
-                            <button type="button"
-                                class="transition duration-200 border shadow-sm inline-flex items-center justify-center px-3 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&amp;:hover:not(:disabled)]:bg-opacity-90 [&amp;:hover:not(:disabled)]:border-opacity-90 [&amp;:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed w-full border-slate-300 py-3 text-slate-500 dark:border-darkmode-400 md:w-52">Huỷ
-                                Bỏ</button>
+                        <button type="button"
+                            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                            Huỷ Bỏ</button>
                         </a>
-                        @if ($userCurrent->is_master || $userCurrent->hasPermission('update-calamity-storm'))
-                            <button class="w-full py-3 md:w-52" type="submit" variant="primary">
+                        @auth
+                            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
                                 Lưu
                             </button>
-                        @endif
+                        @endauth
                     </div>
             </form>
             <div id="mapStorm" class="mt-5 w-full h-[700px] rounded-lg border"></div>

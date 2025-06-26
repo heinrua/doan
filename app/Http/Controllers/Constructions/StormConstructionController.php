@@ -70,7 +70,7 @@ class StormConstructionController extends Controller
     public function viewFormStorm()
     {
         $calamities = TypeOfCalamities::where('slug', 'bao-ap-thap-nhiet-doi')->get();
-        $typeOfConstructions = TypeOfConstruction::whereRelation('type_of_calamities', 'slug', 'bao-ap-thap-nhiet-doi')->get();
+        $typeOfConstructions = TypeOfConstruction::whereRelation('risk_level.type_of_calamities', 'slug', 'bao-ap-thap-nhiet-doi')->get();
         $communes = Commune::all();
         $risk_levels = RiskLevel::whereRelation('type_of_calamities', 'slug', 'bao-ap-thap-nhiet-doi')->get();
         return view('pages/constructions/storm/add-storm', compact('calamities', 'typeOfConstructions', 'communes', 'risk_levels'));
@@ -102,7 +102,7 @@ class StormConstructionController extends Controller
         $data['contractor'] = $request['contractor'];
         $data['efficiency_level'] = $request['efficiency_level'];
         $data['total_investment'] = $request['total_investment'];
-        $data['created_by_user_id'] = $user->id;
+          
 
         $slug = Str::slug($request->name);
         $count = Construction::where('slug', 'like', "{$slug}%")->count();

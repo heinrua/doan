@@ -12,6 +12,8 @@ use App\Models\Calamities;
 use App\Models\District;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use App\Model\DisasterSubscription;
+use Illuminate\Support\Facades\Mail;
 
 class FloodingCalamityController extends Controller
 {
@@ -90,8 +92,6 @@ class FloodingCalamityController extends Controller
 
     public function store(Request $request)
     {
-        $user = auth()->user();
-
         $validated = $request->validate([
             'name' => 'required|unique:calamities',
             'type_of_calamity_id' => 'required',
@@ -165,7 +165,7 @@ class FloodingCalamityController extends Controller
         $data['damaged_infrastructure'] = $request['damaged_infrastructure'];
         $data['mitigation_measures'] = $request['mitigation_measures'];
         $data['data_source'] = $request['data_source'];
-        $data['created_by_user_id'] = $user->id;
+          
 
         $slug = Str::slug($request->name);
         $count = Calamities::where('slug', 'like', "{$slug}%")->count();
@@ -181,24 +181,41 @@ class FloodingCalamityController extends Controller
         if (isset($validated['sub_type_of_calamity_ids'])) {
             $calamities->sub_type_of_calamities()->sync($validated['sub_type_of_calamity_ids']);
         }
-        // Gửi thông báo cho người dùng
+        //Gửi mail toàn bộ người dùng
         $subscribers = DisasterSubscription::all();
-
         foreach ($subscribers as $subscriber) {
-            Notification::route('mail', $subscriber->email)
-                ->notify(new CalamityCreated($calamity, $subscriber->fullname));
+            Mail::to($subscriber->email)->send(
+                new CalamityCreated($calamity, $subscriber->name)
+            );
         }
+
         return redirect('/calamity/list-flooding')->with('success', 200);
     }
 
     public function show($id)
     {
-        $calamities = TypeOfCalamities::where('slug', 'ngap-lut')->get();
-        $calamity = Calamities::with(['communes','communes.district'])->findOrFail($id);
+        $calamity = Calamities::with([
+        'communes',
+        'communes.district',
+        'sub_type_of_calamities',
+        'risk_level.type_of_calamities'
+        ])->findOrFail($id);
+
+        // Lấy type id thông qua risk_level
+        $typeId = $calamity->risk_level?->type_of_calamities?->id;
+
+        $subTypeOfCalamities = $typeId
+            ? SubTypeOfCalamities::where('type_of_calamity_id', $typeId)->get()
+            : collect();
+
+
+
+        // Dữ liệu bổ sung
         $typeOfCalamities = TypeOfCalamities::all();
         $communes = Commune::all();
-        $subTypeOfCalamities = SubTypeOfCalamities::where('type_of_calamity_id', $calamity->type_of_calamity_id)->get();
         $risk_levels = RiskLevel::whereRelation('type_of_calamities', 'slug', 'ngap-lut')->get();
+        $calamities = TypeOfCalamities::where('slug', 'ngap-lut')->get();
+
         return view('pages/calamities/flooding/edit-flooding', compact('calamities', 'calamity', 'typeOfCalamities', 'subTypeOfCalamities', 'communes', 'risk_levels'));
     }
 

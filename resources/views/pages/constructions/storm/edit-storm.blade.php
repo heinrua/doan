@@ -19,9 +19,9 @@
                 @csrf
                 <!-- BEGIN: Storm Information -->
                 <div class="intro-y box mt-5 p-5">
-                    <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                    <div class="rounded-md border border-slate-200/60 p-5">
                         <div
-                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Công Trình Bão
                         </div>
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -38,7 +38,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->name }}" name="name" id="name"
+                                        <input value="{{ $construction->name }}" name="name" id="name"
                                             type="text" placeholder="Tên công trình" />
                                         @error('name')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -105,7 +105,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->construction_code }}"
+                                        <input value="{{ $construction->construction_code }}"
                                             name="construction_code" id="construction_code" type="text"
                                             placeholder="Mã công trình" />
                                     </div>
@@ -146,7 +146,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->address }}" name="address"
+                                        <input value="{{ $construction->address }}" name="address"
                                             id="address" type="text" placeholder="Địa chỉ" />
                                     </div>
                                 </div>
@@ -188,7 +188,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->size }}" name="size"
+                                        <input value="{{ $construction->size }}" name="size"
                                             id="size" type="text" placeholder="Kích thước" />
                                     </div>
                                 </div>
@@ -217,7 +217,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->capital_source }}"
+                                        <input value="{{ $construction->capital_source }}"
                                             name="capital_source" id="capital_source" type="text"
                                             placeholder="Nguồn vốn" />
                                     </div>
@@ -258,7 +258,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->efficiency_level }}"
+                                        <input value="{{ $construction->efficiency_level }}"
                                             name="efficiency_level" id="efficiency_level" type="text"
                                             placeholder="Mức độ hiệu quả" />
                                     </div>
@@ -276,7 +276,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->status }}" name="status"
+                                        <input value="{{ $construction->status }}" name="status"
                                             id="status" type="text" placeholder="Tình trạng" />
                                     </div>
                                 </div>
@@ -312,7 +312,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->total_investment }}"
+                                        <input value="{{ $construction->total_investment }}"
                                             name="total_investment" id="total_investment" type="text"
                                             placeholder="Chi phí" />
                                     </div>
@@ -327,7 +327,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->contractor }}" name="contractor"
+                                        <input value="{{ $construction->contractor }}" name="contractor"
                                             id="contractor" type="text" placeholder="Nhà thầu" />
                                     </div>
                                 </div>
@@ -339,13 +339,13 @@
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-construction-storm') }}">
                         <button type="button"
-                            class="transition duration-200 border shadow-sm inline-flex items-center justify-center px-3 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&amp;:hover:not(:disabled)]:bg-opacity-90 [&amp;:hover:not(:disabled)]:border-opacity-90 [&amp;:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed w-full border-slate-300 py-3 text-slate-500 dark:border-darkmode-400 md:w-52">Huỷ
-                            Bỏ</button>
+                            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                            Huỷ Bỏ</button>
                     </a>
                     @if ($userCurrent->is_master || $userCurrent->hasPermission('update-construction-storm'))
-                        <button class="w-full py-3 md:w-52" type="submit" variant="primary">
-                            Lưu
-                        </button>
+                       <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+                        Lưu
+                    </button>
                     @endif
                 </div>
             </form>

@@ -12,6 +12,7 @@ class DistrictController extends Controller
 
     public function __construct()
     {
+      
         
     }
 
@@ -23,6 +24,7 @@ class DistrictController extends Controller
 
     public function index(Request $request)
     {
+       
         $type = $request->input('type');
         $search = $request->input('search');
         $query = District::query();
@@ -39,7 +41,7 @@ class DistrictController extends Controller
 
     public function store(Request $request)
     {
-        $user = auth()->user();
+        
         $validated = $request->validate([
             'name' => 'required|unique:districts',
             'code' => 'required|unique:districts',
@@ -54,7 +56,7 @@ class DistrictController extends Controller
             $slug = "{$slug}-{$count}";
         }
         $validated['slug'] = $slug;
-        $validated['created_by_user_id'] = $user->id;
+        
         if ($request->hasFile('map')) {
             $mapFiles = $request->file('map');
             $allowedMimeTypes = [
@@ -160,7 +162,7 @@ class DistrictController extends Controller
             'map' => $validated['map'],
             'population' => $validated['population'],
             'city_id' => $validated['city_id'],
-            'updated_by_user_id' => $user->id,
+            
         ]);
 
         return redirect('/list-district')->with('success', 'District updated successfully.');

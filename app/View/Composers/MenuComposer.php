@@ -12,30 +12,20 @@ class MenuComposer
      */
     public function compose(View $view): void
     {
-        $user = auth()->user();
-        $isMaster = $user?->is_master;
+        
         $menus = [
             'dashboard-overview' => [
                 'icon' => 'activity',
                 'route_name' => 'dashboard-overview',
                 'title' => 'Tổng Quan'
             ],
-            'user-management' => [
-                'icon' => 'user',
+            'view-user' => [
+                'icon' => 'users',
+                'route_name' => 'view-user',
                 'title' => 'Người Dùng',
                 'only_master' => true,
-                'sub_menu' => [
-                    
-                    'view-user' => [
-                        'icon' => 'activity',
-                        'route_name' => 'view-user',
-                        'title' => 'Người Dùng',
-                        'permission' => 'view-user',
-                        'only_master' => true,
-                    ],
-                    
-                ]
             ],
+           
             'location' => [
                 'icon' => 'home',
                 'title' => 'Địa Điểm',
@@ -44,19 +34,19 @@ class MenuComposer
                         'icon' => 'activity',
                         'route_name' => 'view-city',
                         'title' => 'Tỉnh-Thành',
-                        'permission' => 'view-city'
+                        
                     ],
                     'view-district' => [
                         'icon' => 'activity',
                         'route_name' => 'view-district',
                         'title' => 'Quận-Huyện',
-                        'permission' => 'view-district'
+                      
                     ],
                     'view-commune' => [
                         'icon' => 'activity',
                         'route_name' => 'view-commune',
                         'title' => 'Phường-Xã',
-                        'permission' => 'view-commune'
+                        
                     ],
                 ]
             ],
@@ -68,31 +58,27 @@ class MenuComposer
                         'icon' => 'activity',
                         'route_name' => 'view-type-of-calamity',
                         'title' => 'Loại Thiên Tai',
-                        'permission' => 'view-type-of-calamity'
+                        
                     ],
                     'view-sub-type-of-calamity' => [
                         'icon' => 'activity',
                         'route_name' => 'view-sub-type-of-calamity',
                         'title' => 'Loại Thiên Tai Phụ',
-                        'permission' => 'view-sub-type-of-calamity'
                     ],
                     'view-risk-level' => [
                         'icon' => 'activity',
                         'route_name' => 'view-risk-level',
                         'title' => 'Cấp Độ Thiên Tai',
-                        'permission' => 'view-risk-level'
                     ],
                     'view-type-of-construction' => [
                         'icon' => 'activity',
                         'route_name' => 'view-type-of-construction',
                         'title' => 'Loại Công Trình',
-                        'permission' => 'view-type-of-construction'
                     ],
                     'view-scenarios' => [
                         'icon' => 'activity',
                         'route_name' => 'view-scenarios',
-                        'title' => 'Phương Án Ứng Phó',
-                        'permission' => 'view-scenarios'
+                        'title' => 'Phương Án Ứng Phó'
                     ],
                 ]
             ],
@@ -103,69 +89,60 @@ class MenuComposer
                     'view-calamity-river-bank' => [
                         'icon' => 'activity',
                         'route_name' => 'view-calamity-river-bank',
-                        'title' => 'Sạt Lở',
-                        'permission' => 'view-calamity-river-bank'
+                        'title' => 'Sạt Lở'
                     ],
                     'view-calamity-flooding' => [
                         'icon' => 'activity',
                         'route_name' => 'view-calamity-flooding',
-                        'title' => 'Ngập Lụt',
-                        'permission' => 'view-calamity-flooding'
+                        'title' => 'Ngập Lụt'
                     ],
                     'view-calamity-storm' => [
                         'icon' => 'activity',
                         'route_name' => 'view-calamity-storm',
-                        'title' => 'Bão và ATNĐ',
-                        'permission' => 'view-calamity-storm'
+                        'title' => 'Bão và ATNĐ'
                     ],
                 ],
             ],
             'constructions' => [
-                'icon' => 'group',
+                'icon' => 'constructions',
                 'title' => 'Công Trình PCTT',
                 'sub_menu' => [
                     'view-construction-river-bank' => [
                         'icon' => 'activity',
                         'route_name' => 'view-construction-river-bank',
-                        'title' => 'Sạt Lở',
-                        'permission' => 'view-construction-river-bank'
+                        'title' => 'Sạt Lở'
                     ],
                     'view-construction-flooding' => [
                         'icon' => 'activity',
                         'route_name' => 'view-construction-flooding',
-                        'title' => 'Ngập Lụt',
-                        'permission' => 'view-construction-flooding'
+                        'title' => 'Ngập Lụt'
                     ],
                     'view-construction-storm' => [
                         'icon' => 'activity',
                         'route_name' => 'view-construction-storm',
-                        'title' => 'Bão và ATNĐ',
-                        'permission' => 'view-construction-storm'
+                        'title' => 'Bão và ATNĐ'
 
                     ],
                     ]
                 ],
             'construction_different' => [
                 'icon' => 'group',
-                'title' => 'Công Trình Khác',
+                'title' => 'Địa danh hành chính',
                 'sub_menu' => [
                     'view-school' => [
-                        'icon' => 'activity',
+                        'icon' => 'school',
                         'route_name' => 'view-school',
-                        'title' => 'Trường Học',
-                        'permission' => 'view-school'
+                        'title' => 'Trường Học'
                         ],
                     'view-medical' => [
-                        'icon' => 'activity',
+                        'icon' => 'hospital',
                         'route_name' => 'view-medical',
-                        'title' => 'Địa Điểm Y Tế',
-                        'permission' => 'view-medical'
+                        'title' => 'Địa Điểm Y Tế'
                     ],
                     'view-center' => [
-                        'icon' => 'activity',
+                        'icon' => 'university',
                         'route_name' => 'view-center',
-                        'title' => 'TTHC và Khác',
-                        'permission' => 'view-center'
+                        'title' => 'TTHC và Khác'
                     ],
 
                 ],
@@ -177,108 +154,76 @@ class MenuComposer
                     'view-erosion' => [
                         'icon' => 'activity',
                         'route_name' => 'view-erosion',
-                        'title' => 'Khu vực xói, bồi',
-                        'permission' => 'view-erosion'
+                        'title' => 'Khu vực xói, bồi'
 
                     ],
                     'view-shoreline' => [
                         'icon' => 'activity',
                         'route_name' => 'view-shoreline',
-                        'title' => 'Lịch sử đường bờ',
-                        'permission' => 'view-shoreline'
+                        'title' => 'Lịch sử đường bờ'
                     ],
                     'view-cross-section' => [
                         'icon' => 'activity',
                         'route_name' => 'view-cross-section',
-                        'title' => 'Mặt cắt ngang',
-                        'permission' => 'view-cross-section'
+                        'title' => 'Mặt cắt ngang'
                     ],
                     'view-monitoring' => [
                         'icon' => 'activity',
                         'route_name' => 'view-monitoring',
-                        'title' => 'Mốc quan trắc',
-                        'permission' => 'view-monitoring'
+                        'title' => 'Mốc quan trắc'
                     ],
                 ]
             ],
             'map' => [
-                'icon' => 'group',
+                'icon' => 'map',
                 'title' => 'Bản Đồ',
-                'sub_menu' => [
-                    'view-map-river-bank' => [
-                        'icon' => 'activity',
-                        'route_name' => 'view-map-river-bank',
-                        'title' => 'Sạt Lở',
-                        'permission' => 'view-map-river-bank'
-                    ],
-                    'view-map-flooding' => [
-                        'icon' => 'activity',
-                        'route_name' => 'view-map-flooding',
-                        'title' => 'Ngập Lụt',
-                        'permission' => 'view-map-flooding'
-                    ],
-                    'view-map-storm' => [
-                        'icon' => 'activity',
-                        'route_name' => 'view-map-storm',
-                        'title' => 'Bão & ATNĐ',
-                        'permission' => 'view-map-storm'
-                    ],
-                ]
+                'route_name' => 'view-map',
             ],
-            'view-faq' => [
-                'icon' => 'group',
-                'route_name' => 'view-faq',
-                'title' => 'Hướng dẫn',
-            ],
+           
+            'chat' =>[
+                'icon' => 'chat',
+                'route_name' => 'chat',
+                'title' => 'Tham gia cộng đồng',
+            ]
         ];
-        // $filterMenu = function(array $items) use ($user, $isMaster, &$filterMenu) {
-        //         $filtered = [];
+    $user = null;
+    $isMaster = false;
 
-        //         foreach ($items as $key => $item) {
-        //             if (isset($item['sub_menu'])) {
-        //                 $item['sub_menu'] = $filterMenu($item['sub_menu']);
-        //                 if (!empty($item['sub_menu'])) {
-        //                     $filtered[$key] = $item;
-        //                 }
-        //             } else {
-        //                 $hasPermission = isset($item['permission']) ? $user?->hasPermission($item['permission']) : true;
-        //                 if ($isMaster || $hasPermission) {
-        //                     $filtered[$key] = $item;
-        //                 }
-        //             }
-        //         }
+    if (app()->has('auth') && auth()->check()) {
+        $user = auth()->user();
+        $isMaster = $user?->is_master;
+    }
 
-        //         return $filtered;
-        // };
-  $filterMenu = function (array $items) use ($user, $isMaster, &$filterMenu) {
-    $filtered = [];
 
-    foreach ($items as $key => $item) {
+    $filterMenu = function (array $items) use ($user, $isMaster, &$filterMenu) {
+        $filtered = [];
+        foreach ($items as $key => $item) {
 
-        // 1. Kiểm tra menu chỉ dành cho master
-        if (isset($item['only_master']) && $item['only_master'] && (!$user || !$isMaster)) {
-            continue;
-        }
+            // 1. Kiểm tra menu chỉ dành cho master
+            if (isset($item['only_master']) && $item['only_master'] && (!$user || !$isMaster)) {
+                continue;
+            }
+            
 
-        // 2. Nếu có submenu → đệ quy
-        if (isset($item['sub_menu'])) {
-            $item['sub_menu'] = $filterMenu($item['sub_menu']);
+            // 2. Nếu có submenu → đệ quy
+            if (isset($item['sub_menu'])) {
+                $item['sub_menu'] = $filterMenu($item['sub_menu']);
 
-            if (!empty($item['sub_menu'])) {
-                $filtered[$key] = $item;
+                if (!empty($item['sub_menu'])) {
+                    $filtered[$key] = $item;
+                }
+
+                continue;
             }
 
-            continue;
-        }
+            // 3. Nếu chưa login → chỉ hiển thị menu không có 'only_master'
+            if (!$user) {
+                $filtered[$key] = $item;
+                continue;
+            }
 
-        // 3. Nếu chưa login → chỉ hiển thị menu không có 'only_master'
-        if (!$user) {
+            // 4. Nếu là master hoặc user thường → đều thấy (trừ menu bị giới hạn only_master)
             $filtered[$key] = $item;
-            continue;
-        }
-
-        // 4. Nếu là master hoặc user thường → đều thấy (trừ menu bị giới hạn only_master)
-        $filtered[$key] = $item;
     }
 
     return $filtered;
@@ -287,15 +232,15 @@ class MenuComposer
 
         $filteredMenus = $filterMenu($menus);
         $view->with('mainMenu', $filteredMenus);
-        if (!is_null(request()->route())) {
+        if ($user && !is_null(request()->route())) {
             $pageName = request()->route()->getName();
-            $activeMenu = $this->activeMenu($pageName,$menus);
-            //$view->with('mainMenu', $menus);
+            $activeMenu = $this->activeMenu($pageName, $filteredMenus);
             $view->with('firstLevelActiveIndex', $activeMenu['first_level_active_index']);
             $view->with('secondLevelActiveIndex', $activeMenu['second_level_active_index']);
             $view->with('thirdLevelActiveIndex', $activeMenu['third_level_active_index']);
             $view->with('pageName', $pageName);
-    }
+        }
+
     
     }
     /**
@@ -310,8 +255,6 @@ class MenuComposer
         // Nhóm route cho từng menu
         $routeGroups = [
             'view-user' => ['view-user', 'create-user', 'edit-user'],
-            'view-role' => ['view-role', 'create-role', 'edit-role'],
-            'view-permission' => ['view-permission', 'create-permission', 'edit-permission'],
             'view-city' => ['view-city', 'create-city', 'edit-city'],
             'view-district' => ['view-district', 'create-district', 'edit-district'],
             'view-commune' => ['view-commune', 'create-commune', 'edit-commune'],
@@ -333,10 +276,6 @@ class MenuComposer
             'view-medical' => ['view-medical', 'create-medical', 'edit-medical'],
             'view-center' => ['view-center', 'create-center', 'edit-center'],
             'view-scenarios' => ['view-scenarios', 'create-scenarios', 'edit-scenarios'],
-            'view-scenario-stages' => ['view-scenario-stages', 'create-scenario-stages', 'edit-scenario-stages'],
-            'view-tasks' => ['view-tasks', 'create-tasks', 'edit-tasks'],
-            'view-harbors' => ['view-harbors', 'create-harbors', 'edit-harbors'],
-            'view-anchorage-points' => ['view-anchorage-points', 'create-anchorage-points', 'edit-anchorage-points'],
         ];
 
         
@@ -372,6 +311,7 @@ class MenuComposer
                 }
             }
         }
+        
 
         return [
             'first_level_active_index' => $first,

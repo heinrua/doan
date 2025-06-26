@@ -59,7 +59,7 @@ class TypeOfConstructionController extends Controller
             'slug' => $validated['slug'],
             'description' => $validated['description'],
             'type_of_calamity_id' => $validated['type_of_calamity_id'],
-            'created_by_user_id' =>  $user->id
+             
         ]);
         return redirect('/list-type-of-construction');
     }
@@ -96,7 +96,7 @@ class TypeOfConstructionController extends Controller
             'slug' => $slug,
             'description' => $validated['description'] ?? $construction->description,
             'type_of_calamity_id' => $validated['type_of_calamity_id'],
-            'updated_by_user_id' => $user->id,
+            
         ]);
         return redirect('/list-type-of-construction')->with('success', 200);
     }

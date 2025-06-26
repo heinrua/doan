@@ -7,9 +7,13 @@ use App\Models\Commune;
 use App\Models\RiskLevel;
 use App\Models\SubTypeOfCalamities;
 use App\Models\TypeOfCalamities;
+use App\Models\DisasterSubscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CalamityCreated;
+
 
 class AdminController extends Controller
 {
@@ -28,7 +32,14 @@ class AdminController extends Controller
     {
         $user = auth()->user();
         $typeOfCalamities = TypeOfCalamities::withCount(['calamities', 'constructions'])->get();
-        $calamities = DB::table('calamities')->orderBy('created_at', 'desc')->limit(5)->get();
+
+        $calamities = DB::table('calamities')
+            ->join('risk_levels', 'calamities.risk_level_id', '=', 'risk_levels.id')
+            ->join('type_of_calamities', 'risk_levels.type_of_calamity_id', '=', 'type_of_calamities.id')
+            ->select('calamities.*', 'type_of_calamities.name as calamity_type') // Giả sử cột tên là "name"
+            ->orderBy('calamities.created_at', 'desc')
+            ->limit(5)
+            ->get();
 
         $totals = Calamities::count();
         $rivers = Calamities::whereHas('risk_level.type_of_calamities', function ($query) {
@@ -36,11 +47,11 @@ class AdminController extends Controller
         })->count();
         
         $floodings = Calamities::whereHas('risk_level', function ($q) {
-    $q->whereHas('type_of_calamities', function ($q2) {
-        $q2->where('slug', 'ngap-lut');
-    });
-})->count();
-         $storms = Calamities::whereHas('risk_level.type_of_calamities', function ($query) {
+            $q->whereHas('type_of_calamities', function ($q2) {
+                $q2->where('slug', 'ngap-lut');
+            });
+        })->count();
+        $storms = Calamities::whereHas('risk_level.type_of_calamities', function ($query) {
             $query->where('slug', 'bao-ap-thap-nhiet-doi');
         })->count();
         $communes = Commune::all();
@@ -67,7 +78,7 @@ class AdminController extends Controller
         // Lấy dữ liệu sạt lở theo `time`
         $recentLandslides = Calamities::where('time', '>=', $sevenDaysAgo)
             ->whereRelation('risk_level.type_of_calamities', 'slug', 'sat-lo-bo-song-bo-bien')
-            ->with(['risk_level','sub_type_of_calamities','type_of_calamities', 'communes.district'])
+            ->with(['risk_level','sub_type_of_calamities','risk_level.type_of_calamities', 'communes.district'])
             ->get();
 
         // Lấy dữ liệu ngập lụt & bão theo `time_start`
@@ -75,9 +86,9 @@ class AdminController extends Controller
             ->whereHas('risk_level.type_of_calamities', function ($query) {
                 $query->whereIn('slug', ['ngap-lut', 'bao-ap-thap-nhiet-doi']);
             })
-            ->with(['risk_level','sub_type_of_calamities','type_of_calamities', 'communes.district'])
+            ->with(['risk_level','sub_type_of_calamities','risk_level.type_of_calamities', 'communes.district'])
             ->get()
-            ->groupBy('type_of_calamities.slug'); // Gom nhóm theo loại thiên tai
+            ->groupBy('risk_level.type_of_calamities.slug'); // Gom nhóm theo loại thiên tai
 
         // Chuyển dữ liệu về định dạng mong muốn
         $data7Days = [
@@ -103,7 +114,6 @@ class AdminController extends Controller
     public function getSubTypeOfCalamities(Request $request)
     {
         $calamityId = $request->query('calamity_id');
-        // Lấy danh sách cấp độ rủi ro theo loại thiên tai
         $subTypeOfCalamities = SubTypeOfCalamities::where('type_of_calamity_id', $calamityId)->get();
 
         return response()->json($subTypeOfCalamities);
@@ -112,7 +122,7 @@ class AdminController extends Controller
     public function createDisaster(Request $request)
     {
         // dd($request->all());
-        $user = auth()->user();
+        
         $validated = $request->validate([
             'name' => 'required|unique:calamities',
             'risk_level_id' => 'required',
@@ -127,7 +137,7 @@ class AdminController extends Controller
             $slug = "{$slug}-{$count}";
         }
         $validated['slug'] = $slug;
-        $validated['created_by_user_id'] = $user->id;
+        
         $validated['time'] =now();
         $validated['time_start'] =now();
         $calamities = Calamities::create($validated);
@@ -137,6 +147,13 @@ class AdminController extends Controller
 
         if ($request->has('sub_type_of_calamity_id')) {
             $calamities->sub_type_of_calamities()->sync($request->sub_type_of_calamity_id);
+        }
+
+        // ✅ GỬI EMAIL ĐẾN TOÀN BỘ NGƯỜI ĐĂNG KÝ
+        $emails = DisasterSubscription::pluck('email'); // bảng disaster_subscriptions có cột email
+
+        foreach ($emails as $email) {
+            Mail::to($email)->send(new CalamityCreated($calamities));
         }
         return redirect('/')->with('success', 'Tạo mới thành công!');
 

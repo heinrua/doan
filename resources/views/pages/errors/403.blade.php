@@ -23,7 +23,7 @@
                 </div>
                 <!-- Button -->
                 <button as="a" href="{{ url('/') }}"
-                    class="mt-8 border-white px-4 py-3 text-white dark:border-darkmode-400 dark:text-slate-200">
+                    class="mt-8 border-white px-4 py-3 text-white">
                     Quay trở lại trang chủ
                 </button>
             </div>

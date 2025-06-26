@@ -18,9 +18,9 @@
                 <input type="hidden" name="id" value="{{ $commune->id }}">
                 <!-- BEGIN: Cập Nhật Xã Phường -->
                 <div class="intro-y box mt-5 p-5">
-                    <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                    <div class="rounded-md border border-slate-200/60 p-5">
                         <div
-                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Xã Phường
                         </div>
                         {{-- Tên Xã Phường --}}
@@ -35,7 +35,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="name" id="name" type="text"
+                                    <input name="name" id="name" type="text"
                                         placeholder="Tên Xã Phường" value="{{ $commune->name }}" class="w-full" />
                                     @error('name')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -56,7 +56,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="code" id="code" type="text"
+                                    <input name="code" id="code" type="text"
                                         placeholder="Mã Xã Phường" value="{{ $commune->code }}" class="w-full" />
                                     @error('code')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -77,7 +77,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="coordinates" id="coordinates" type="text"
+                                    <input name="coordinates" id="coordinates" type="text"
                                         placeholder="Toạ Độ" value="{{ $commune->coordinates }}" class="w-full" />
                                     @error('coordinates')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -119,11 +119,10 @@
 
                 {{-- Nút Lưu & Huỷ --}}
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
-                    <a href="{{ route('view-commune') }}" class="w-full md:w-auto">
+                    <a href="{{ route('view-commune') }}">
                         <button type="button"
-                            class="w-full md:w-auto border border-slate-300 py-3 px-6 rounded-md text-slate-500 hover:bg-gray-100 dark:border-darkmode-400">
-                            Huỷ Bỏ
-                        </button>
+                            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                            Huỷ Bỏ</button>
                     </a>
                     @if ($userCurrent->is_master || $userCurrent->hasPermission('update-commune'))
                         <button class="w-full md:w-auto px-6 py-3" type="submit" variant="primary">

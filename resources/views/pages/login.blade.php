@@ -45,7 +45,7 @@
                                 <div class="input-form mt-3">
                                     <label for="user_name" class="inline-block text-sm/6 font-medium text-gray-900 ">Tên đăng nhập</label>
                                     <div class="mt-2">
-                                    <input id="validation-form-2" name="user_name" id="user_name" type="text" placeholder="Tên Đăng Nhập" required="required" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                                    <input  name="user_name" id="user_name" type="text" placeholder="Tên Đăng Nhập" required="required" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                                     </div>
                                     
                                    
@@ -54,14 +54,24 @@
                                     <div class="flex items-center justify-between">
                                         <label for="validation-form-3" class="block text-sm/6 font-medium text-gray-900">Mật khẩu</label>
                                         <div class="text-sm">
-                                            <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Quên mật khẩu?</a>
+                                            <a href="{{ route('password.request') }}" class="font-semibold text-indigo-600 hover:text-indigo-500">
+                                                Quên mật khẩu?
+                                            </a>
+
+
                                         </div>
                                         </div>
-                                        <div class="mt-2">
-                                        <input type="password" id="password" name="password" id="validation-form-3" minlength="8" required="required" autocomplete="current-password" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
-                                    </div>
-                                    
-                                
+                                        <div class="mt-2 relative">
+                                            <input type="password" name="password" id ="password" class="w-full p-3 border border-gray-300 rounded">
+                                        </div>
+                                        @if (session('error'))
+                                            
+                                            <p class="text-sm text-red-600 mt-2">
+                                                {{ session('error') }}
+                                            </p>
+                                            
+                                        @endif
+
                                 </div>
                             </div>
                             <div class="intro-x mt-5 text-center xl:mt-8 xl:text-left">
@@ -69,12 +79,11 @@
                                     Đăng nhập
                                 </button>
                                 
-                            </div>
-                            
-</body>
+</div>
 
                         </form>
                         
+
                     </div>
                 </div>
                 <!-- END: Login Form -->
@@ -83,5 +92,8 @@
     </div>
     
 </body>
+
+
 </html>
-    
+
+

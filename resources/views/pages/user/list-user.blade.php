@@ -26,7 +26,7 @@
                         {!! $icons['search'] !!}
                     </div>
                     <input type="text" name="name" placeholder="Tên người dùng..." value="{{ request('name') }}"
-                            class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                            class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" />
                 </div>
                
                 <!-- Nút tìm kiếm -->
@@ -36,15 +36,28 @@
                 </button>
             </form>
             <a href="{{ route('create-user') }}">
-                    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        {!! $icons['plus-circle']!!} Thêm mới người dùng
-                    </button>
+                <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2">
+                    {!! $icons['plus-circle']!!} Thêm mới người dùng
+                </button>
             </a>
-            <form action="{{ route('import-users') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('import-users') }}" method="POST" enctype="multipart/form-data" formInline>
                 @csrf
-                <input type="file" name="file" required>
-                <button type="submit">Thêm mới nhiều người dùng</button>
+
+               <div class="flex items-center gap-2">
+                <label for="fileImport"
+                    class="flex items-center cursor-pointer bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">
+                    {!! $icons['cloud-upload'] !!}
+                    <input type="file" id="fileImport" name="fileImport" />
+                </label>
+
+                <button type="submit"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">
+                    Import
+                </button>
+            </div>
             </form>
+
+
 
             
         </div>
@@ -55,13 +68,14 @@
         </div>
         <!-- END: Total Records -->
         <!-- BEGIN: Data List -->
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
-            <table class="w-full text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <div class="intro-y col-span-12 overflow-auto lg:overflow-visible w-full overflow-x-auto">
+            <table class="w-full text-left rtl:text-right text-gray-500 ">
+                <thead class="text-gray-700 uppercase bg-gray-50">
                     <tr>
                         <th scope="col" class="px-6 py-3">#</th>
                         <th scope="col" class="px-6 py-3">Tên người dùng</th>
                         <th scope="col" class="px-6 py-3">Tên đăng nhập</th>
+                        <th scope="col" class="px-6 py-3">Email</th>
                         <th scope="col" class="px-6 py-3">Hành động</th>
                     </tr>
                 </thead>
@@ -77,8 +91,8 @@
                         </tr>
                     @else
                         @foreach ($data as $key => $value)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <tr class="bg-white border-b border-gray-200">
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                     {{ $data->firstItem() + $key }}
                                 </td>
                                 <td class="px-6 py-4">
@@ -87,15 +101,16 @@
                                     </a>
                                 </td>
                                 <td class="px-6 py-4">{{ $value->user_name }}</td>
-                                <td class="px-6 py-4">
+                                 <td class="px-6 py-4">{{ $value->email }}</td>
+                                <td class="px-6 py-4 text-center">
                                     <div class="flex items-center justify-center">
                                         <a class="mr-3 flex items-center text-blue-700" href="/edit-user/{{ $value->id }}">
                                             {!! $icons['edit-2'] !!} Sửa
                                         </a>
-                                            <a class="flex items-center text-danger"
-                                            onclick="openDeleteModal('{{ route('delete-user', ['id' => $value->id]) }}')"
-                                            href="javascript:void(0);">
-                                                {!! $icons['trash-2'] !!} Xoá
+                                        <a class="flex items-center text-red-600"
+                                        onclick="openDeleteModal('{{ route('delete-user', ['id' => $value->id]) }}')"
+                                        href="javascript:void(0);">
+                                            {!! $icons['trash-2'] !!} Xoá
                                         </a>
                                        
                                     </div>
@@ -134,7 +149,7 @@
                 </div>
                 <div>
                     <h3 class="text-lg font-semibold text-gray-900">Xác nhận xoá</h3>
-                    <p class="mt-1 text-sm text-gray-600">Xác nhận xóa tài khoản này?</p>
+                    <p class="mt-1 text-sm text-gray-600">Xác nhận xóa dữ liệu này?</p>
                 </div>
             </div>
 
@@ -165,6 +180,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
     });
+    
     function setDeleteUrl(url) {
         document.getElementById('confirm-delete').setAttribute('href', url);
     }

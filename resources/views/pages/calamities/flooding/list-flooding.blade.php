@@ -3,9 +3,7 @@
 @section('subhead')
     <title>Danh Sách Thiên Tai Ngập Lụt - PCTT Cà Mau Dashboard</title>
 @endsection
-@php
-    $userCurrent = auth()->user();
-@endphp
+
 @section('subcontent')
     <div class="intro-y mt-5  flex items-center justify-between">
         <div class="flex items-center text-lg font-medium uppercase">
@@ -23,7 +21,7 @@
                 class="flex flex-wrap items-center gap-3 grow">
                 <!-- Dropdown chọn loại -->
                 <select id="yearSelect" name="year_id"
-                    class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:text-white">
+                    class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5">
                     <option value="">-- Chọn năm --</option>
                     @foreach ($years as $year)
                         <option value="{{ $year }}" {{ request('year_id') == $year ? 'selected' : '' }}>
@@ -34,7 +32,7 @@
 
                 <!-- Dropdown chọn huyện -->
                 <select id="districtSelect" name="district_id"
-                    class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:text-white">
+                    class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5">
                     <option value="">-- Chọn huyện --</option>
                     @foreach ($districts as $district)
                         <option value="{{ $district->id }}" {{ request('district_id') == $district->id ? 'selected' : '' }}>
@@ -44,16 +42,16 @@
                 </select>
                 
                 <select id="communeSelect" name="commune_id"
-                    class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:text-white">
+                    class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5">
                     <option value="">-- Chọn xã --</option>
-                    
+                  
                 </select>
 
     
 
                 {{-- Chọn cấp độ thiên tai --}}
                 <select id="riskLevelSelect" name="risk_level_id"
-                    class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:text-white">
+                    class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5">
                     <option value="">Cấp độ thiên tai</option>
                     @foreach ($riskLevels as $riskLevel)
                         <option value="{{ $riskLevel->id }}" data-fulltext="{{ $riskLevel->name }}"
@@ -69,7 +67,7 @@
                         {!! $icons['search'] !!}
                     </div>
                     <input type="text" name="name" placeholder="Tìm kiếm..." value="{{ request('search') }}"
-                        class="block w-full p-4 ps-10 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                        class="block w-full p-4 ps-10 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 
                 <!-- Nút tìm kiếm -->
@@ -81,14 +79,21 @@
             <!-- Nút tạo mới -->
             
             
-            @if ($userCurrent->is_master || $userCurrent->hasPermission('create-calamity-flooding'))
+            @auth
                 <a href="{{ route('create-calamity-flooding') }}">
                     <button class="shadow-md h-10" variant="primary">
                         {!! $icons['plus-circle'] !!}
                         Tạo Mới Ngập Lụt
                     </button>
                 </a>
-            @endif
+                <a href="">
+                    <button class="shadow-md h-10" variant="primary">
+                        {!! $icons['download'] !!}
+                        Xuất dữ liệu
+                    </button>
+                </a>
+            @endauth
+            
         </div>
         <!-- BEGIN: Total Records -->
         <div
@@ -99,35 +104,37 @@
         <!-- END: Total Records -->
         <!-- BEGIN: Data List -->
         <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <table class="w-full min-w-[1200px] text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th class="sticky left-0 z-20 bg-white px-4 py-2 border-r">#</th>
-                            <th class="sticky left-[60px] z-20 bg-white px-4 py-2 border-r">Tên khu vực ngập</th>
-                            <th class="px-6 py-3">Loại hình ngập</th>
-                            <th class="px-6 py-3">Địa phương</th>
-                            <th class="px-6 py-3">Cấp độ rủi ro</th>
-                            <th class="px-6 py-3">Toạ độ</th>
-                            <th class="px-6 py-3">Khoảng ngập</th>
-                            <th class="px-6 py-3">Mức độ (m)</th>
-                            <th class="px-6 py-3">Diện tích (ha)</th>
-                            <th class="px-6 py-3">Bắt đầu</th>
-                            <th class="px-6 py-3">Kết thúc</th>
-                            <th class="px-6 py-3">Nước rút (giờ)</th>
-                            <th class="px-6 py-3">Nguyên nhân</th>
-                            <th class="px-6 py-3">Số hộ ảnh hưởng</th>
-                            <th class="px-6 py-3">Thiệt hại người</th>
-                            <th class="px-6 py-3">Thiệt hại tài sản</th>
-                            <th class="px-6 py-3">Hạ tầng hư hại</th>
-                            <th class="px-6 py-3">Biện pháp</th>
-                            <th class="px-6 py-3">Bản đồ</th>
-                            <th class="px-6 py-3">Hình ảnh</th>
-                            <th class="px-6 py-3">Video</th>
-                            <th class="px-6 py-3">Nguồn</th>
-                            <th class="px-6 py-3">Cập nhật</th>
-                            <th class="px-6 py-3">Hành động</th>
-                        </tr>
-                    </thead>
+            <table class="-mt-2 border-separate border-spacing-y-[10px]">
+                <thead class="text-gray-700 uppercase bg-blue-100">
+                    <tr>
+                        <th class="sticky left-0 z-20 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                        <th class="sticky left-[40px] z-20 bg-blue-100 px-4 py-4 ">Tên khu vực ngập</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Loại hình ngập</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Địa phương</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Cấp độ rủi ro</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Toạ độ</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Khoảng ngập</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Mức độ (m)</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Diện tích (ha)</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Bắt đầu</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Kết thúc</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Nước rút (giờ)</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Nguyên nhân</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Số hộ ảnh hưởng</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Thiệt hại người</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Thiệt hại tài sản</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Hạ tầng hư hại</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Biện pháp</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Bản đồ</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Hình ảnh</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Video</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Nguồn</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Cập nhật</th>
+                        @auth
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Hành động</th>
+                        @endauth
+                    </tr>
+                </thead>
                     <tbody>
                         @if ($data->isEmpty())
                         <tr>
@@ -140,25 +147,25 @@
                         </tr>
                         @else
                         @foreach ($data as $key => $value)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="sticky left-0 z-10 bg-white  px-10 py-2 border-r">{{ $data->firstItem() + $key }}</td>
-                                <td class="sticky left-[60px] z-10 bg-white px-10 py-2 border-r">
+                            <tr class="bg-white ">
+                                <td class="sticky left-0 z-20 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                                <td class="sticky left-[40px] z-20 bg-white px-4 py-4 font-bold">
                                     <a href="/calamity/edit-flooding/{{ $value->id }}">{{ $value->name }}</a>
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
                                     {!! $value->sub_type_of_calamities->count() > 1
                                     ? $value->sub_type_of_calamities->pluck('name')->implode(',<br>')
                                     : $value->sub_type_of_calamities->first()->name ?? '' !!}
                                     
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
                                     {!! $value->communes->count() > 1
                                     ? $value->communes->pluck('name')->implode(',<br>')
                                     : $value->communes->first()->name ?? '' !!}
                                 </td>
-                                <td class="px-6 py-4">{{ $value->risk_level->name ?? '' }}</td>
-                                <td class="px-6 py-4">{{ $value->coordinates }}</td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->risk_level->name ?? '' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->coordinates }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
                                     @php
                                         $floodRangeMapping = [
                                             '0-0.5m' => '0m -> 0.5m',
@@ -170,62 +177,80 @@
                                         echo $floodRangeMapping[$value->flood_range] ?? $value->flood_range;
                                     @endphp
                                 </td>
-                                <td class="px-6 py-4">{{ $value->flood_level }}</td>
-                                <td class="px-6 py-4">{{ $value->flooded_area }}</td>
-                                <td class="px-6 py-4">{{ \Carbon\Carbon::parse($value->time_start)->format('d-m-Y') }}</td>
-                                <td class="px-6 py-4">{{ \Carbon\Carbon::parse($value->time_end)->format('d-m-Y') }}</td>
-                                <td class="px-6 py-4">{{ $value->sprint_time }}</td>
-                                <td class="px-6 py-4">{{ $value->reason }}</td>
-                                <td class="px-6 py-4">{{ $value->number_of_people_affected }}</td>
-                                <td class="px-6 py-4">{{ $value->human_damage }}</td>
-                                <td class="px-6 py-4">{{ $value->property_damage }}</td>
-                                <td class="px-6 py-4">{{ $value->damaged_infrastructure }}</td>
-                                <td class="px-6 py-4">{{ $value->mitigation_measures }}</td>
-                                <td class="px-6 py-4">
-                                    @php $maps = json_decode($value->map, true); @endphp
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->flood_level }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->flooded_area }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ \Carbon\Carbon::parse($value->time_start)->format('d-m-Y') }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ \Carbon\Carbon::parse($value->time_end)->format('d-m-Y') }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->sprint_time }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->reason }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->number_of_people_affected }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->human_damage }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->property_damage }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->damaged_infrastructure }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->mitigation_measures }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
+                                    @php
+                                        $maps = json_decode($value->map, true);
+                                    @endphp
                                     @if (!empty($maps) && is_array($maps))
-                                        <ul class="list-disc pl-4 max-h-32 overflow-y-auto text-sm">
-                                            @foreach ($maps as $map)
-                                                <li><a href="{{ asset($map) }}" target="_blank" class="text-blue-500 hover:underline">{{ basename($map) }}</a></li>
-                                            @endforeach
-                                        </ul>
-                                    @else
-                                        <span class="text-gray-500 italic">Không có</span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 text-center">
-                                    @if (!empty($value->image))
-                                        <img src="{{ asset($value->image) }}" class="w-24 h-auto rounded shadow-md" />
-                                    @else
-                                        <span class="text-gray-500 italic">Chưa có</span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 text-center">
-                                    @if (!empty($value->video))
-                                        <div class="relative w-24 h-16 cursor-pointer" onclick="openVideoModal('{{ asset($value->video) }}')">
-                                            <video class="w-full h-full object-cover rounded-md pointer-events-none">
-                                                <source src="{{ asset($value->video) }}" type="video/mp4">
-                                            </video>
-                                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-xs font-bold rounded-md">Xem Video</div>
+                                        <div class="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
+                                            style="max-height: {{ count($maps) > 4 ? '150px' : 'auto' }};">
+                                            <ul class="list-disc text-left pl-4">
+                                                @foreach ($maps as $map)
+                                                    <li>
+                                                        <a href="{{ asset($map) }}" target="_blank"
+                                                            class="text-blue-500 hover:underline">
+                                                            {{ basename($map) }}
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
                                         </div>
                                     @else
-                                        <span class="text-gray-500 italic">Chưa có</span>
+                                        <span class="text-gray-500">Không có bản đồ</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4">{{ $value->data_source }}</td>
-                                <td class="px-6 py-4">{{ $value->updated_at }}</td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
+                                    @if (!empty($value->image))
+                                        <x-base.image-zoom class="w-full rounded-md" src="{{ asset($value->image) }}" />
+                                    @else
+                                        <span class="text-gray-500 italic">Chưa có hình ảnh</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
+                                    @if (!empty($value->video))
+                                        <div class="relative w-24 h-16 cursor-pointer"
+                                            onclick="openVideoModal('{{ asset($value->video) }}')">
+                                            <video class="w-full h-full object-cover rounded-md shadow-md pointer-events-none">
+                                                <source src="{{ asset($value->video) }}" type="video/mp4">
+                                                Trình duyệt của bạn không hỗ trợ video.
+                                            </video>
+                                            <div
+                                                class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xs font-bold rounded-md">
+                                                Xem Video
+                                            </div>
+                                        </div>
+                                    @else
+                                        <span class="text-gray-500 italic">Chưa có video</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->data_source }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->updated_at }}</td>
+                                @auth
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
                                     <div class="flex gap-3 justify-center">
                                         <a href="/calamity/edit-flooding/{{ $value->id }}" class="text-blue-700 flex items-center">
                                             {!! $icons['edit-2'] !!} Sửa
                                         </a>
-                                        @if ($userCurrent->role_id == 2)
-                                            <a href="javascript:void(0);" onclick="openDeleteModal('{{ route('delete-calamity-flooding', ['id' => $value->id]) }}')" class="text-red-600 flex items-center">
-                                                {!! $icons['trash-2'] !!} Xoá
-                                            </a>
-                                        @endif
+                                        <a class="flex items-center text-red-600"
+                                        onclick="openDeleteModal('{{ route('delete-calamity-flooding', ['id' => $value->id]) }}')"
+                                        href="javascript:void(0);">
+                                            {!! $icons['trash-2'] !!} Xoá
+                                        </a>
+                                    
                                     </div>
                                 </td>
+                                @endauth
                             </tr>
                         @endforeach
                     </tbody>
@@ -241,30 +266,7 @@
         </div>
         <!-- END: Pagination -->
         </div>
-        <!-- BEGIN: Delete Confirmation Modal -->
-        <x-base.dialog id="delete-confirmation-modal">
-            <x-base.dialog.panel>
-                <div class="p-5 text-center">
-                    {!! $icons['x-circle'] !!}
-                    <div class="mt-5 text-3xl">Bạn Có Chắc Chắn?</div>
-                    <div class="mt-2 text-slate-500">
-                        Bạn thật sự muốn xoá dữ liệu này? <br />
-                        Quá trình sẽ không được hoàn lại.
-                    </div>
-                </div>
-                <div class="px-5 pb-8 text-center">
-                    <button class="mr-1 w-24" data-tw-dismiss="modal" type="button" variant="outline-secondary">
-                        Huỷ Bỏ
-                    </button>
-                    <a id="confirm-delete" href="#">
-                        <button class="w-24" type="button" variant="danger">
-                            Xoá
-                        </button>
-                    </a>
-                </div>
-            </x-base.dialog.panel>
-        </x-base.dialog>
-        <!-- END: Delete Confirmation Modal -->
+        
         <!-- Modal Video -->
         <div id="videoModal" class="fixed inset-0 items-center justify-center bg-black bg-opacity-75 hidden z-50">
             <div class="relative w-[80%] max-w-4xl">
@@ -274,8 +276,51 @@
             </div>
     </div>
 @endsection
+<!-- BEGIN: Delete Confirmation Modal -->
+    <!-- Modal xác nhận xoá -->
+    <div class="fixed inset-0 z-50 hidden" id="delete-confirmation-modal" aria-modal="true">
+        <!-- Nền mờ -->
+        <div class="fixed inset-0 bg-black/50"></div>
 
+        <!-- Khung modal chính giữa màn hình -->
+        <div class="flex min-h-screen items-center justify-center">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-md z-50 p-6">
+                <div class="flex items-start space-x-3">
+                    <div class="text-red-500">
+                        {!! $icons['warning-circle'] !!}
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Xác nhận xoá</h3>
+                        <p class="mt-1 text-sm text-gray-600">Xác nhận xóa dữ liệu này?</p>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end space-x-2">
+                    <button type="button" onclick="closeDeleteModal()"
+                            class="bg-white px-4 py-2 rounded border text-gray-700 hover:bg-gray-100">
+                        Hủy
+                    </button>
+                    
+                    <a href="#" id="confirm-delete"
+                    class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">
+                        Xoá
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: Delete Confirmation Modal -->
 <script>
+      
+    function openDeleteModal(url) {
+        const modal = document.getElementById('delete-confirmation-modal');
+        modal.classList.remove('hidden');
+        setDeleteUrl(url);
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
+    });
+      
     function setDeleteUrl(url) {
         document.getElementById('confirm-delete').setAttribute('href', url);
     }

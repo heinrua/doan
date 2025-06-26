@@ -57,7 +57,7 @@ class RiskLevelController extends Controller
             'slug' => $validated['slug'],
             'description' => $validated['description'],
             'type_of_calamity_id' => $validated['type_of_calamity_id'],
-            'created_by_user_id' =>  $user->id
+             
         ]);
         return redirect('/list-risk-level')->with('success', 200);
     }
@@ -94,7 +94,7 @@ class RiskLevelController extends Controller
             'slug' => $slug,
             'description' => $validated['description'] ?? $riskLevel->description,
             'type_of_calamity_id' => $validated['type_of_calamity_id'],
-            'updated_by_user_id' => $user->id,
+            
         ]);
         return redirect('/list-risk-level')->with('success', 200);
     }

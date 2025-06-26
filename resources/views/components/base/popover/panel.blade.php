@@ -10,7 +10,7 @@
 >
     <div
         data-tw-merge
-        {{ $attributes->class(['dropdown-content rounded-md border-transparent bg-white p-2 shadow-[0px_3px_10px_#00000017] dark:border-transparent dark:bg-darkmode-600'])->merge($attributes->whereDoesntStartWith('class')->getAttributes()) }}
+        {{ $attributes->class(['dropdown-content rounded-md border-transparent bg-white p-2 shadow-[0px_3px_10px_#00000017]'])->merge($attributes->whereDoesntStartWith('class')->getAttributes()) }}
     >
         {{ $slot }}
     </div>

@@ -15,9 +15,9 @@
                 @csrf
                 <!-- BEGIN: Risk Level Information -->
                 <div class="intro-y box mt-5 p-5">
-                    <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                    <div class="rounded-md border border-slate-200/60 p-5">
                         <div
-                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Sạt Lở
                         </div>
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -35,7 +35,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="name" id="name" type="text"
+                                        <input name="name" id="name" type="text"
                                             placeholder="Vị Trí Sạt Lở" />
                                         @error('name')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -101,7 +101,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="coordinates" id="coordinates" type="text"
+                                        <input name="coordinates" id="coordinates" type="text"
                                             placeholder="Tọa độ vị trí" />
                                         @error('coordinates')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -159,7 +159,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="address" id="address" type="text"
+                                        <input name="address" id="address" type="text"
                                             placeholder="Địa điểm" />
                                     </div>
                                 </div>
@@ -200,15 +200,15 @@
                                 </label>
                                 <div class="w-full flex flex-col md:flex-row gap-4">
                                     <div class="w-full md:w-1/3">
-                                        <x-base.form-input name="width" id="width" type="text"
+                                        <input name="width" id="width" type="text"
                                             placeholder="Chiều rộng (m)" />
                                     </div>
                                     <div class="w-full md:w-1/3">
-                                        <x-base.form-input name="length" id="length" type="text"
+                                        <input name="length" id="length" type="text"
                                             placeholder="Chiều dài (m)" />
                                     </div>
                                     <div class="w-full md:w-1/3">
-                                        <x-base.form-input name="acreage" id="acreage" type="text"
+                                        <input name="acreage" id="acreage" type="text"
                                             placeholder="Diện tích (m²)" />
                                     </div>
                                 </div>
@@ -228,7 +228,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="reason" id="reason" type="text"
+                                        <input name="reason" id="reason" type="text"
                                             placeholder="Nguyên nhân" />
                                     </div>
                                 </div>
@@ -244,7 +244,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="geology" id="geology" type="text"
+                                        <input name="geology" id="geology" type="text"
                                             placeholder="Địa chất" />
                                     </div>
                                 </div>
@@ -259,7 +259,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="support_policy" id="support_policy" type="text"
+                                        <input name="support_policy" id="support_policy" type="text"
                                             placeholder="Chính sách hỗ trợ" />
                                     </div>
                                 </div>
@@ -278,7 +278,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="watermark_points" id="watermark_points" type="text"
+                                        <input name="watermark_points" id="watermark_points" type="text"
                                             placeholder="Đặc điểm thuỷ văn" />
                                     </div>
                                 </div>
@@ -294,7 +294,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="mitigation_measures" id="mitigation_measures"
+                                        <input name="mitigation_measures" id="mitigation_measures"
                                             type="text" placeholder="Các biện pháp giảm thiểu" />
                                     </div>
                                 </div>
@@ -309,7 +309,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="investment_level" id="investment_level" type="text"
+                                        <input name="investment_level" id="investment_level" type="text"
                                             placeholder="Mức độ" />
                                     </div>
                                 </div>
@@ -328,7 +328,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="human_damage" id="human_damage" type="text"
+                                        <input name="human_damage" id="human_damage" type="text"
                                             placeholder="Thiệt hại về người" />
                                     </div>
                                 </div>
@@ -344,7 +344,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="property_damage" id="property_damage" type="text"
+                                        <input name="property_damage" id="property_damage" type="text"
                                             placeholder="Thiệt hại về tài sản" />
                                     </div>
                                 </div>
@@ -357,17 +357,16 @@
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
-                                    <label class="md:w-80">
-                                        <div class="text-left">
-                                            <div class="flex items-center">
-                                                <div class="font-medium">Chọn lớp bản đồ</div>
-                                            </div>
-                                        </div>
-                                    </label>
-                                    <div class="w-full">
-                                        <x-base.form-input name="map[]" id="map" type="file" multiple
-                                            placeholder="Chọn lớp bản đồ" />
-                                    </div>
+                                   <div class="mb-4">
+                                        <label for="file" class="block text-sm font-medium text-gray-700 mb-1">Chọn lớp bản đồ</label>
+                                        <input type="file" name="map[]" id="map" 
+                                            class="block w-full text-sm text-gray-900
+                                            file:mr-2 file:py-1 file:px-3
+                                            file:rounded file:border-0
+                                            file:text-sm file:font-medium
+                                            file:bg-blue-100 file:text-blue-700
+                                            hover:file:bg-blue-200 border border-gray-300 rounded-md">
+</div>   
                                 </div>
 
                             </div>
@@ -375,35 +374,32 @@
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
-                                    <label class="md:w-80">
-                                        <div class="text-left">
-                                            <div class="flex items-center">
-                                                <div class="font-medium">Hình ảnh</div>
-                                            </div>
-                                        </div>
-                                    </label>
-                                    <div class="w-full">
-                                        <x-base.form-input name="image" id="image" type="file"
-                                            placeholder="Hình ảnh" />
-                                    </div>
+                                    <div class="mb-4">
+                                        <label for="file" class="block text-sm font-medium text-gray-700 mb-1">Hình ảnh</label>
+                                        <input type="file" name="image" id="image"
+                                            class="block w-full text-sm text-gray-900
+                                            file:mr-2 file:py-1 file:px-3
+                                            file:rounded file:border-0
+                                            file:text-sm file:font-medium
+                                            file:bg-blue-100 file:text-blue-700
+                                            hover:file:bg-blue-200 border border-gray-300 rounded-md">
+</div>
                                 </div>
                             </div>
                             <!-- Cột 3 -->
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
-                                    <label class="md:w-80">
-                                        <div class="text-left">
-                                            <div class="flex items-center">
-                                                <div class="font-medium">Video</div>
-                                            </div>
-
-                                        </div>
-                                    </label>
-                                    <div class="w-full">
-                                        <x-base.form-input name="video" id="video" type="file"
-                                            placeholder="Video" />
-                                    </div>
+                                    <div class="mb-4">
+                                        <label for="file" class="block text-sm font-medium text-gray-700 mb-1">Video</label>
+                                        <input type="file" name="video" id="video"
+                                            class="block w-full text-sm text-gray-900
+                                            file:mr-2 file:py-1 file:px-3
+                                            file:rounded file:border-0
+                                            file:text-sm file:font-medium
+                                            file:bg-blue-100 file:text-blue-700
+                                            hover:file:bg-blue-200 border border-gray-300 rounded-md">
+</div>
                                 </div>
                             </div>
                         </div>
@@ -411,7 +407,7 @@
                 </div>
                 <!-- END: Product Information -->
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
-                    <button class="w-full py-3 md:w-52" type="submit" variant="primary">
+                   <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
                         Lưu
                     </button>
                 </div>

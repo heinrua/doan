@@ -15,6 +15,7 @@ return new class extends Migration
              $table->id();
             $table->string('sender_name');
             $table->text('message');
+            $table->string('file')->nullable;
             $table->timestamps();
         });
     }

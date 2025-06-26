@@ -10,6 +10,8 @@ use App\Models\TypeOfCalamities;
 use App\Models\SubTypeOfCalamities;
 use App\Models\Calamities;
 use App\Models\District;
+use App\Models\DisasterSubscription;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -166,7 +168,7 @@ class RiverBankCalamityController extends Controller
         $data['investment_level'] = $request['investment_level'];
         $data['mitigation_measures'] = $request['mitigation_measures'];
         $data['support_policy'] = $request['support_policy'];
-        $data['created_by_user_id'] = $user->id;
+          
 
         $slug = Str::slug($request->name);
         $count = Calamities::where('slug', 'like', "{$slug}%")->count();
@@ -183,17 +185,42 @@ class RiverBankCalamityController extends Controller
         if ($request->has('sub_type_of_calamity_id')) {
             $calamities->sub_type_of_calamities()->sync($request->sub_type_of_calamity_id);
         }
+        //Gửi mail toàn bộ người dùng
+        $subscribers = DisasterSubscription::all();
+        foreach ($subscribers as $subscriber) {
+            Mail::to($subscriber->email)->send(
+                new CalamityCreated($calamity, $subscriber->name)
+            );
+        }
+        
         return redirect('/calamity/list-river-bank')->with('success', 200);
     }
 
     public function show($id)
     {
-        $calamities = TypeOfCalamities::where('slug', 'sat-lo-bo-song-bo-bien')->get();
-        $calamity = Calamities::with(['communes','communes.district'])->findOrFail($id);
+        $calamity = Calamities::with([
+        'communes',
+        'communes.district',
+        'sub_type_of_calamities',
+        'risk_level.type_of_calamities'
+        ])->findOrFail($id);
+
+        // Lấy type id thông qua risk_level
+        $typeId = $calamity->risk_level?->type_of_calamities?->id;
+
+        $subTypeOfCalamities = $typeId
+            ? SubTypeOfCalamities::where('type_of_calamity_id', $typeId)->get()
+            : collect();
+
+
+
+        // Dữ liệu bổ sung
         $typeOfCalamities = TypeOfCalamities::all();
-        $subTypeOfCalamities = SubTypeOfCalamities::where('type_of_calamity_id', $calamity->type_of_calamity_id)->get();
         $communes = Commune::all();
         $risk_levels = RiskLevel::whereRelation('type_of_calamities', 'slug', 'sat-lo-bo-song-bo-bien')->get();
+        $calamities = TypeOfCalamities::where('slug', 'sat-lo-bo-song-bo-bien')->get();
+
+       
         return view('pages/calamities/river-bank/edit-river-bank', compact('calamities', 'calamity', 'typeOfCalamities', 'subTypeOfCalamities', 'communes', 'risk_levels'));
     }
 

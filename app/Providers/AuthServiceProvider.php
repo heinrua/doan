@@ -25,8 +25,8 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Auth::viaRequest('custom-token', function ($request) {
-            $user = User::with('roles.permissions')->find(auth()->id());
-            return $user;
+            return User::find(auth()->id());
+         
         });
     }
 }

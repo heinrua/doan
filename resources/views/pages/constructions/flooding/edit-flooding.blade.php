@@ -19,9 +19,9 @@
                 @csrf
                 <!-- BEGIN: Flooding Information -->
                 <div class="intro-y box mt-5 p-5">
-                    <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                    <div class="rounded-md border border-slate-200/60 p-5">
                         <div
-                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Công Trình Ngập Lụt
                         </div>
                         {{-- Thông tin chính --}}
@@ -39,7 +39,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->name }}" name="name" id="name"
+                                        <input value="{{ $construction->name }}" name="name" id="name"
                                             type="text" placeholder="Tên công trình" />
                                         @error('name')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -84,7 +84,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->address }}" name="address"
+                                        <input value="{{ $construction->address }}" name="address"
                                             id="address" type="text" placeholder="Ví trí công trình" />
                                     </div>
                                 </div>
@@ -178,7 +178,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->coordinates }}" name="coordinates"
+                                        <input value="{{ $construction->coordinates }}" name="coordinates"
                                             id="coordinates" type="text" placeholder="Toạ độ" />
                                     </div>
                                 </div>
@@ -207,7 +207,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->characteristic }}"
+                                        <input value="{{ $construction->characteristic }}"
                                             name="characteristic" id="characteristic" type="text"
                                             placeholder="Đặc điểm đặc dạng" />
                                     </div>
@@ -222,7 +222,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->pillar_top_level }}"
+                                        <input value="{{ $construction->pillar_top_level }}"
                                             name="pillar_top_level" id="pillar_top_level" type="text"
                                             placeholder="Cao trình đỉnh trụ pin (m)" />
                                     </div>
@@ -237,7 +237,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->operation_method }}"
+                                        <input value="{{ $construction->operation_method }}"
                                             name="operation_method" id="operation_method" type="text"
                                             placeholder="Hình thức vận hành" />
                                     </div>
@@ -252,7 +252,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->culver_type }}" name="culver_type"
+                                        <input value="{{ $construction->culver_type }}" name="culver_type"
                                             id="culver_type" type="text" placeholder="Loại Cống" />
                                     </div>
                                 </div>
@@ -269,7 +269,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->year_of_construction }}"
+                                        <input value="{{ $construction->year_of_construction }}"
                                             name="year_of_construction" id="year_of_construction" type="number"
                                             placeholder="Năm xây dựng" />
                                     </div>
@@ -284,7 +284,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->main_function }}"
+                                        <input value="{{ $construction->main_function }}"
                                             name="main_function" id="main_function" type="text"
                                             placeholder="Chức năng chính" />
                                     </div>
@@ -299,7 +299,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->width_of_door }}"
+                                        <input value="{{ $construction->width_of_door }}"
                                             name="width_of_door" id="width_of_door" type="text"
                                             placeholder="Bề rộng 1 cửa (m)" />
                                     </div>
@@ -314,7 +314,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->total_door_width }}"
+                                        <input value="{{ $construction->total_door_width }}"
                                             name="total_door_width" id="total_door_width" type="text"
                                             placeholder="Tổng bề rộng cửa (m)" />
                                     </div>
@@ -329,7 +329,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->irrigation_system }}"
+                                        <input value="{{ $construction->irrigation_system }}"
                                             name="irrigation_system" id="irrigation_system" type="text"
                                             placeholder="Hệ thống thuỷ lợi" />
                                     </div>
@@ -344,7 +344,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->culver_code }}" name="culver_code"
+                                        <input value="{{ $construction->culver_code }}" name="culver_code"
                                             id="culver_code" type="text" placeholder="Mã Cống" />
                                     </div>
                                 </div>
@@ -361,7 +361,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->year_of_completion }}"
+                                        <input value="{{ $construction->year_of_completion }}"
                                             name="year_of_completion" id="year_of_completion" type="number"
                                             placeholder="Năm hoàn thành" />
                                     </div>
@@ -377,7 +377,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->scale }}" name="scale"
+                                        <input value="{{ $construction->scale }}" name="scale"
                                             id="scale" type="text" placeholder="Quy mô" />
                                     </div>
                                 </div>
@@ -391,7 +391,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->base_level }}" name="base_level"
+                                        <input value="{{ $construction->base_level }}" name="base_level"
                                             id="base_level" type="text" placeholder="Cao trình đấy (m)" />
                                     </div>
                                 </div>
@@ -405,7 +405,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->notes }}" name="notes"
+                                        <input value="{{ $construction->notes }}" name="notes"
                                             id="notes" type="text" placeholder="Ghi Chú" />
                                     </div>
                                 </div>
@@ -419,7 +419,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->irrigation_area }}"
+                                        <input value="{{ $construction->irrigation_area }}"
                                             name="irrigation_area" id="irrigation_area" type="text"
                                             placeholder="Vùng Thuỷ Lợi" />
                                     </div>
@@ -434,7 +434,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input value="{{ $construction->management_unit }}"
+                                        <input value="{{ $construction->management_unit }}"
                                             name="management_unit" id="management_unit" type="text"
                                             placeholder="Đơn vị quản lý" />
                                     </div>
@@ -461,7 +461,7 @@
                                                 class="mb-3 h-40 w-auto rounded-lg shadow" />
                                         @endif
                                         <!-- Input để upload ảnh mới -->
-                                        <x-base.form-input name="image" id="image" type="file"
+                                        <input name="image" id="image" type="file"
                                             placeholder="Hình ảnh" />
                                     </div>
                                 </div>
@@ -501,13 +501,13 @@
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-construction-flooding') }}">
                         <button type="button"
-                            class="transition duration-200 border shadow-sm inline-flex items-center justify-center px-3 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&amp;:hover:not(:disabled)]:bg-opacity-90 [&amp;:hover:not(:disabled)]:border-opacity-90 [&amp;:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed w-full border-slate-300 py-3 text-slate-500 dark:border-darkmode-400 md:w-52">Huỷ
-                            Bỏ</button>
+                            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                            Huỷ Bỏ</button>
                     </a>
                     @if ($userCurrent->is_master || $userCurrent->hasPermission('update-construction-flooding'))
-                        <button class="w-full py-3 md:w-52" type="submit" variant="primary">
-                            Lưu
-                        </button>
+                       <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+                        Lưu
+                    </button>
                     @endif
                 </div>
             </form>

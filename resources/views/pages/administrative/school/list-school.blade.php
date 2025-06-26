@@ -22,7 +22,7 @@
     <div class="intro-y col-span-12 flex flex-wrap items-start gap-3">
         <form action="{{ route('view-school') }}" method="GET" class="flex flex-wrap items-center gap-3 grow">
             <select id="districtSelect" name="district_id"
-                class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:text-white">
+                class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5">
                 <option value="">-- Chọn huyện --</option>
                 @foreach ($districts as $district)
                     <option value="{{ $district->id }}" {{ request('district_id') == $district->id ? 'selected' : '' }}>
@@ -32,7 +32,7 @@
             </select>
 
             <select id="communeSelect" name="commune_id"
-                class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:text-white">
+                class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5">
                 <option value="">-- Chọn xã --</option>
             </select>
 
@@ -41,7 +41,7 @@
                     {!! $icons['search'] !!}
                 </div>
                 <input type="text" name="name" placeholder="Tìm kiếm..." value="{{ request('name') }}"
-                    class="block w-full p-4 ps-10 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                    class="block w-full p-4 ps-10 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
             </div>
 
             <button type="submit"
@@ -50,14 +50,14 @@
             </button>
         </form>
 
-        @if ($userCurrent->is_master || $userCurrent->hasPermission('create-school'))
+        @auth
             <a href="{{ route('create-school') }}">
                 <button type="button"
-                    class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600">
+                    class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">
                     {!! $icons['plus-circle'] !!} Tạo Mới Trường Học
                 </button>
             </a>
-        @endif
+        @endauth
     </div>
 
     <div class="intro-y col-span-3 text-base text-gray-800 bg-gray-300 rounded-md px-4 py-2 shadow-sm text-center">
@@ -65,8 +65,8 @@
     </div>
 
     <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-        <table class="w-full min-w-[1200px] text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <table class="w-full min-w-[1200px] text-left text-gray-500">
+            <thead class="text-gray-700 uppercase bg-gray-50">
                 <tr>
                     <th class="px-6 py-3">#</th>
                     <th class="px-6 py-3">Tên</th>
@@ -77,7 +77,9 @@
                     <th class="px-6 py-3">Tọa độ</th>
                     <th class="px-6 py-3">Sức chứa</th>
                     <th class="px-6 py-3">Mô tả</th>
+                    @auth
                     <th class="px-6 py-3">Hành động</th>
+                    @endauth
                 </tr>
             </thead>
             <tbody>
@@ -92,7 +94,7 @@
                     </tr>
                 @else
                     @foreach ($data as $key => $value)
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <tr class="bg-white border-b">
                             <td class="px-6 py-4">{{ $data->firstItem() + $key }}</td>
                             <td class="px-6 py-4">
                                 <a href="/administrative/edit-school/{{ $value->id }}" class="font-medium text-blue-600">
@@ -106,20 +108,23 @@
                             <td class="px-6 py-4">{{ $value->coordinates }}</td>
                             <td class="px-6 py-4 text-center">{{ number_format($value->population, 0, ',', '.') }}</td>
                             <td class="px-6 py-4">{{ $value->description }}</td>
+                            @auth
                             <td class="px-6 py-4">
                                 <div class="flex items-center justify-center gap-3">
+
                                     <a href="/administrative/edit-school/{{ $value->id }}" class="text-blue-700 flex items-center">
                                         {!! $icons['edit-2'] !!} Sửa
                                     </a>
-                                    @if ($userCurrent->is_master || $userCurrent->hasPermission('delete-school'))
+                                    
                                         <a href="javascript:void(0);"
                                            onclick="openDeleteModal('{{ route('delete-school', ['id' => $value->id, 'type' => 'school']) }}')"
                                            class="text-red-600 flex items-center">
                                             {!! $icons['trash-2'] !!} Xoá
                                         </a>
-                                    @endif
+                                   
                                 </div>
                             </td>
+                            @endauth
                         </tr>
                     @endforeach
                 @endif
@@ -166,6 +171,18 @@
         document.getElementById('delete-confirmation-modal').classList.add('hidden');
     }
 
+      function openDeleteModal(url) {
+        const modal = document.getElementById('delete-confirmation-modal');
+        modal.classList.remove('hidden');
+        setDeleteUrl(url);
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('delete-confirmation-modal').classList.add('hidden');
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
+    });
     function setDeleteUrl(url) {
         document.getElementById('confirm-delete').setAttribute('href', url);
     }

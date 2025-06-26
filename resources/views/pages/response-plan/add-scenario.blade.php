@@ -15,9 +15,9 @@
                 @csrf
                 <!-- BEGIN: Tạo Phương Án Ứng Phó -->
                 <div class="intro-y box mt-5 p-5">
-                    <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                    <div class="rounded-md border border-slate-200/60 p-5">
                         <div
-                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Phương Án Ứng Phó
                         </div>
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -34,7 +34,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="name" id="name" type="text"
+                                        <input name="name" id="name" type="text"
                                             placeholder="Tên Phương Án" />
                                         @error('name')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -121,7 +121,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="short_description" id="short_description" type="text"
+                                        <input name="short_description" id="short_description" type="text"
                                             placeholder="Mô Tả Ngắn" />
                                         @error('short_description')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -178,7 +178,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="documents[]" id="documents" type="file" multiple
+                                        <input name="documents[]" id="documents" type="file" multiple
                                             placeholder="Chọn lớp bản đồ" />
                                     </div>
                                 </div>
@@ -188,7 +188,7 @@
                 </div>
                 <!-- END: Tạo Tỉnh Thành -->
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
-                    <button class="w-full py-3 md:w-52" type="submit" variant="primary">
+                   <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
                         Lưu
                     </button>
                 </div>

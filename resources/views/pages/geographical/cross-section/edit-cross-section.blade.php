@@ -18,9 +18,9 @@
                 <input type="hidden" name="type" value="cross-section">
                 <!-- BEGIN: Flooding Information -->
                 <div class="intro-y box mt-5 p-5">
-                    <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                    <div class="rounded-md border border-slate-200/60 p-5">
                         <div
-                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Mặt Cắt Ngang
                         </div>
                         <div class="mt-5">
@@ -35,7 +35,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="name" id="name" type="text"
+                                    <input name="name" id="name" type="text"
                                         value="{{ $data->name }}" placeholder="Vị trí mặt cắt" />
                                     @error('name')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -80,7 +80,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="survey_year" id="survey_year" type="text"
+                                    <input name="survey_year" id="survey_year" type="text"
                                         value="{{ $data->survey_year }}" placeholder="Năm khảo sát" />
                                 </div>
                             </div>
@@ -98,7 +98,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="reference_number" id="reference_number" type="text"
+                                    <input name="reference_number" id="reference_number" type="text"
                                         value="{{ $data->reference_number }}" placeholder="Số hiệu" />
                                 </div>
                             </div>
@@ -135,7 +135,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="start_coordinates" id="start_coordinates"
+                                    <input name="start_coordinates" id="start_coordinates"
                                         value="{{ $data->start_coordinates }}" type="text"
                                         placeholder="Vị trí điểm đầu (X,Y)" />
                                 </div>
@@ -154,7 +154,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="end_coordinates" id="end_coordinates" type="text"
+                                    <input name="end_coordinates" id="end_coordinates" type="text"
                                         value="{{ $data->end_coordinates }}" placeholder="Vị trí điểm cuối (X,Y)" />
                                 </div>
                             </div>
@@ -173,7 +173,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input name="description" id="description" type="text"
+                                    <input name="description" id="description" type="text"
                                         value="{{ $data->description }}" placeholder="Thông tin mô tả" />
                                 </div>
                             </div>
@@ -190,7 +190,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <x-base.form-input value="{{ $data->map }}" name="map" id="map"
+                                    <input value="{{ $data->map }}" name="map" id="map"
                                         type="file" placeholder="Chọn lớp bản đồ" />
                                 </div>
                             </div>
@@ -212,7 +212,7 @@
                                             class="mb-3 h-40 w-auto rounded-lg shadow" />
                                     @endif
                                     <!-- Input để upload ảnh mới -->
-                                    <x-base.form-input name="image" id="image" type="file"
+                                    <input name="image" id="image" type="file"
                                         placeholder="Hình ảnh" />
                                 </div>
                             </div>
@@ -250,10 +250,10 @@
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-cross-section') }}">
                         <button type="button"
-                            class="transition duration-200 border shadow-sm inline-flex items-center justify-center px-3 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&amp;:hover:not(:disabled)]:bg-opacity-90 [&amp;:hover:not(:disabled)]:border-opacity-90 [&amp;:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed w-full border-slate-300 py-3 text-slate-500 dark:border-darkmode-400 md:w-52">Huỷ
-                            Bỏ</button>
+                            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                            Huỷ Bỏ</button>
                     </a>
-                    <button class="w-full py-3 md:w-52" type="submit" variant="primary">
+                   <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
                         Lưu
                     </button>
                 </div>

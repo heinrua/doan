@@ -11,10 +11,7 @@ use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    public function viewRegister(): View
-    {
-        return view('pages/register');
-    }
+   
 
     public function viewLogin(): View
     {
@@ -27,11 +24,16 @@ class AuthController extends Controller
     }
 
     public function updateProfile(Request $request)
-    {
-        $request->validate([
+    {   
+    $userId = Auth::user()->id; // hoặc Auth::id(), hoặc Auth::user()->getKey()
+
+       $request->validate([
             'full_name' => 'required|string|max:255',
+            'user_name' => "required|string|max:255|unique:users,user_name,{$userId},id",
+            'email' => "nullable|email|max:255|unique:users,email,{$userId},id",
             'password' => 'nullable|string|min:6|confirmed',
         ]);
+
 
         $user = Auth::user();
         $user->full_name = $request->full_name;
@@ -42,27 +44,9 @@ class AuthController extends Controller
 
         $user->save();
 
-        return redirect()->route('edit_profile')->with('success', 'Cập nhật thông tin thành công!');
+        return redirect()->route('edit-profile')->with('success', 'Cập nhật thông tin thành công!');
     }
 
-    // public function register(Request $request) {
-    //     $validated = $request->validate([
-    //         'user_name' => 'required|unique:users',
-    //         'password' => 'required|min:8',
-    //         'full_name' => 'required',
-    //         'email' => 'required',
-    //     ]);
-        
-    //     $user = User::create([
-    //         'user_name' => $validated['user_name'],
-    //         'password' => Hash::make($validated['password']),
-    //         'full_name' => $validated['full_name'],
-    //         'email' => $validated['email'],
-    //         'role_id' => 1
-    //     ]);
-
-    //     return redirect('/login')->with(['message' => 'User registered successfully', 'user' => $user]);
-    // }
 
     public function login(Request $request)
     {
@@ -75,7 +59,7 @@ class AuthController extends Controller
         $credentials = $request->only('user_name', 'password');
 
         if (!auth()->attempt($credentials)) {
-            return redirect('/login')->withErrors(['error' => 'Invalid credentials']);
+            return redirect('/login')->with('error', 'Tài khoản hoặc mật khẩu không đúng.');
         }
 
         $user = $user = User::where('user_name', $request->user_name)->first();

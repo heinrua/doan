@@ -15,7 +15,7 @@
                     : null,
                 $index > 0 ? 'dark:before:bg-chevron-white' : null,
     
-                !$light && $active ? 'text-slate-800 cursor-text dark:text-slate-400' : null,
+                !$light && $active ? 'text-slate-800 cursor-text' : null,
                 $light && $active ? 'text-white/70' : null,
             ]),
         ) }}>

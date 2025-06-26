@@ -28,7 +28,7 @@ class FloodingConstructionController extends Controller
         $commune_id = $request->input('commune_id');
         $type_of_construction = $request->input('type_of_construction');
 
-        $query = Construction::whereRelation('type_of_calamities', 'slug', 'ngap-lut')
+        $query = Construction::whereRelation('risk_level.type_of_calamities', 'slug', 'ngap-lut')
             ->with(['type_of_constructions', 'communes']);
 
         if (!empty($search)) {
@@ -191,7 +191,7 @@ class FloodingConstructionController extends Controller
             'culver_code' => $request['culver_code'],
             'management_unit' => $request['management_unit'],
             'update_time' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $request->update_time)->format('Y-m-d'),
-            'updated_by_user_id' => $user->id,
+            
         ];
         if ($request->hasFile('video')) {
             if ($construction->video) {

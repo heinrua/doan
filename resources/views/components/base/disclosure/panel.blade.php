@@ -5,7 +5,7 @@
     id="{{ $id }}-collapse"
     aria-labelledby="{{ $id }}"
     @class([
-        'accordion-collapse collapse mt-3 text-slate-700 leading-relaxed dark:text-slate-400',
+        'accordion-collapse collapse mt-3 text-slate-700 leading-relaxed',
         '[&.collapse:not(.show)]:hidden [&.collapse.show]:visible',
         'show' => $selectedIndex == $index,
     ])

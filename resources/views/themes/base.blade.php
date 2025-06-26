@@ -34,26 +34,26 @@
 
     <div class=" px-5 sm:px-8 py-5 ">
         <!-- BEGIN: Mobile Menu -->
-        <x-mobile-menu />
-        <div class="mt-[4.7rem] flex md:mt-0">
+        <x-mobile-menu/>
+        <div class="mt-7 flex md:mt-0">
             <!-- BEGIN: Side Menu -->
             <nav class=" hidden w-[80px] overflow-x-hidden pb-16 pr-5 md:block xl:w-[230px]">
                 <a class="intro-x flex items-center pl-5 pt-4" href="/">
-                    <span class="ml-3 hidden text-lg text-white xl:block"> PCTT CÀ MAU </span>
+                    <span class=" lg:text-2xl xl:text-3xl  font-bold uppercase text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-600">Quản lý thiên tai</span>
                 </a>
                 <div class=" my-3"></div>
-                <ul>
+                <ul >
                     @if (!empty($mainMenu))
                     @foreach ($mainMenu as $menuKey => $menu)
                         @if ($menu == 'divider')
                             <li class="my-6 border-t border-slate-700"></li>
                         @else
                             <li>
-                                <a class="flex items-center justify-between px-4 py-3 hover:bg-slate-700 transition rounded cursor-pointer {{ isset($menu['sub_menu']) ? 'toggle-submenu' : '' }}"
+                                <a class="flex items-center justify-between px-4 py-3 hover:bg-white hover:text-black text-white transition rounded cursor-pointer {{ isset($menu['sub_menu']) ? 'toggle-submenu' : '' }}"
                                     href="{{ isset($menu['route_name']) ? route($menu['route_name'], isset($menu['params']) ? $menu['params'] : []) : 'javascript:;' }}">
                                     
-                                    <div class="flex items-center gap-2">
-                                        {!! $icons['menu'] !!}
+                                    <div class="flex items-center gap-2" title="{{ $menu['title'] }}">
+                                        <div title="{{ $menu['title'] }}">{!! $icons[$menu['icon']] !!}</div>
                                         <span class="hidden xl:inline" >{{ $menu['title'] }}</span>
                                     </div>
 
@@ -68,7 +68,7 @@
                                                 <a class="flex items-center justify-between px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-700 rounded transition {{ isset($subMenu['sub_menu']) ? 'toggle-submenu' : '' }}"
                                                     href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name'], isset($subMenu['params']) ? $subMenu['params'] : []) : 'javascript:;' }}">
                                                    <div class="flex items-center gap-2">
-                                                        {!! $icons['sub-menu'] !!}
+                                                        {!! $icons[$subMenu['icon']] !!}
                                                         <span class="hidden xl:inline">{{ $subMenu['title'] }}</span>
                                                     </div>
                                                     @if (isset($subMenu['sub_menu']))
@@ -101,18 +101,27 @@
             </nav>
             <!-- END: Side Menu -->
             <!-- BEGIN: Content -->
-            <div class="md:max-w-auto overflow-x-hidden min-h-screen min-w-0 max-w-full flex-1 rounded-[30px] bg-slate-100 px-4 pb-10 before:block before:h-px before:w-full before:content-[''] dark:bg-darkmode-700 md:px-[22px]">
+            <div class="md:max-w-auto overflow-x-hidden overflow-y-auto max-h-[100vh] min-w-0 max-w-full flex-1 rounded-[30px] bg-slate-100 px-4 pb-10 before:block before:h-px before:w-full before:content-[''] md:px-[22px]">
                 <!-- BEGIN: Top Bar -->
-                <div class="relative z-[51] flex h-[67px] items-center border-b border-slate-200">
-                    <!-- BEGIN: Breadcrumb -->
-                    
-                    <x-base.breadcrumb class="-intro-x mr-auto hidden sm:flex">
-                        {{-- <x-base.breadcrumb.link :index="0">Application</x-base.breadcrumb.link> --}}
-                        <x-base.breadcrumb.link :index="1" :active="true">
-                            Trang chủ
-                        </x-base.breadcrumb.link>
-                    </x-base.breadcrumb>
-                    <!-- END: Breadcrumb -->
+                <div class="relative sticky top-0 z-2 flex items-center h-[68px] px-4 border-b border-slate-100 bg-slate-100">
+  
+                    <div class="mr-auto"> 
+                       <div style="border-radius: 8px; 
+                                overflow: hidden; 
+                                width: 320px; 
+                                height: 40px; 
+                                background-color: #1E3A8A;  /* giống màu nền của widget */
+                                border: 2px solid #133086;  /* viền xanh đậm cho nổi bật */
+                                box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;">
+                    <!--Begin thoitiet.app widget --><iframe src="https://thoitiet247.vn/widget/embed/ca-mau?style=6&day=7&td=%232e0000&ntd=%231e3a8a&mvb=%23000205&mv=%231e3a8a&mdk=%23000000&htd=true" 
+                        id="widgeturl" width="325px" height="55px" scrolling="no" frameborder="0" allowtransparency="true" style="border:none;overflow:hidden;"></iframe><!-- End thoitiet.app widget -->
+                    </div>
+
+
+                    </div>
                     
                     <!-- BEGIN: Account Menu -->
                     <div class="relative">
@@ -122,18 +131,18 @@
                                 {!! $icons['user-circle'] !!}
                             </button>
 
-                            <div class="hidden absolute right-0 mt-2 w-48 z-50 text-base bg-white divide-y divide-gray-100 rounded-lg shadow-lg dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
+                            <div class="hidden absolute right-0 mt-2 w-48 z-1 text-base bg-white divide-y divide-gray-100 rounded-lg shadow-lg" id="user-dropdown">
                                 <div class="px-4 py-3">
-                                    <span class="block text-sm text-gray-900 dark:text-white">Tên: {{ Auth::user()->full_name ?? 'user' }}</span>
-                                    <span class="block text-sm text-gray-500 truncate dark:text-gray-400">Tên đăng nhập: {{ Auth::user()->user_name ?? '' }}</span>
+                                    <span class="block text-sm text-gray-900">Tên: {{ Auth::user()->full_name ?? 'user' }}</span>
+                                    <span class="block text-sm text-gray-500 truncate">Tên đăng nhập: {{ Auth::user()->user_name ?? '' }}</span>
                                 </div>
                                 <ul class="py-2" aria-labelledby="user-menu-button">
                                     <li>
-                                        <a href="{{ route('edit-profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Hồ sơ</a>
+                                        <a href="{{ route('edit-profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Hồ sơ</a>
                                     </li>
                                    
                                     <li>
-                                        <a href="{{ route('logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Đăng xuất</a>
+                                        <a href="{{ route('logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Đăng xuất</a>
                                     </li>
                                 </ul>
                             </div>
@@ -141,8 +150,8 @@
 
                         @guest
                             <!-- Nếu chưa đăng nhập -->
-                            <a href="{{ route('login') }}" class="text-sm text-gray-700 dark:text-gray-200 hover:underline">
-                                Đăng nhập
+                            <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:underline">
+                                <button>Đăng nhập</button>
                             </a>
                         @endguest
                     </div>
@@ -159,28 +168,7 @@
 </body>
 
 </html>
-<!-- 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const btn = document.getElementById('user-menu-button');
-    const dropdown = document.getElementById('user-dropdown');
 
-    if (btn && dropdown) {
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        dropdown.classList.toggle('hidden');
-      });
-
-      document.addEventListener('click', function (e) {
-        if (!dropdown.classList.contains('hidden') &&
-            !dropdown.contains(e.target) &&
-            !btn.contains(e.target)) {
-          dropdown.classList.add('hidden');
-        }
-      });
-    }
-  });
-</script> -->
 <script>
     
     document.addEventListener("DOMContentLoaded", function () {

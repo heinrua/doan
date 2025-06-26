@@ -24,14 +24,11 @@ class Administrative extends Model
         'commune_id',
         'population',
         'created_at',
-        'updated_at',
-        'created_by_user_id',
-        'updated_by_user_id'
+        'updated_at'
     ];
 
     protected $casts = [
-        'commune_id' => 'integer',
-        'district_id' => 'integer'
+        'commune_id' => 'integer'
     ];
 
     public function communes()

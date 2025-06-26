@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Bão GIL 1998</name>
+    <Style id="line-4600A1-1000-normal">
+      <LineStyle>
+        <color>ffa10046</color>
+        <width>1</width>
+      </LineStyle>
+    </Style>
+    <Style id="line-4600A1-1000-highlight">
+      <LineStyle>
+        <color>ffa10046</color>
+        <width>1.5</width>
+      </LineStyle>
+    </Style>
+    <StyleMap id="line-4600A1-1000">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#line-4600A1-1000-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#line-4600A1-1000-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Placemark>
+      <name>Bão GIL 1998</name>
+      <description><![CDATA[Bão GIL 1998<br> <br> capBao Bão <br> ngayThuNha  <br> ngayCapNha  <br> capDoRuiRo 0 <br> ten GIL_1998 <br> Shape_Leng 1264277.399193 <br> maNhanDang 250NQV0621PB0100000015 <br> maDoiTuong PB0100 <br> diaDiemDoB <br> khuVucAnhH <br> phanLoai Bão]]></description>
+      <styleUrl>#line-4600A1-1000</styleUrl>
+      <LineString>
+        <tessellate>1</tessellate>
+        <coordinates>
+          100.001779,8.099011,500
+          101.30178,8.199005,500
+          102.50178,8.199,500
+          103.701779,8.198994,500
+          104.801777,8.098989,500
+          105.701775,8.098985,500
+          106.501773,8.098982,500
+          107.401769,7.898978,500
+          108.101766,7.698975,500
+          108.801762,7.298973,500
+          109.601757,6.99897,500
+          110.301754,6.898968,500
+          111.001748,6.298967,500
+        </coordinates>
+      </LineString>
+    </Placemark>
+  </Document>
+</kml>

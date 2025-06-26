@@ -26,7 +26,7 @@
                         {!! $icons['search'] !!}
                     </div>
                     <input type="text" name="name" placeholder="Tìm kiếm..." value="{{ request('name') }}"
-                        class="block w-full p-4 ps-10 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                        class="block w-full p-4 ps-10 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 <button type="submit"
@@ -38,7 +38,7 @@
             @auth
                 <a href="{{ route('create-type-of-calamity') }}">
                     <button type="button"
-                        class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600">
+                        class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">
                         {!! $icons['plus-circle'] !!} Tạo Mới Loại Hình Thiên Tai
                     </button>
                 </a>
@@ -48,51 +48,51 @@
         <div class="intro-y col-span-3 text-base text-gray-800 bg-gray-300 rounded-md px-4 py-2 shadow-sm text-center">
             Tổng số loại thiên tai: <span class="font-semibold">{{ $data->total() }}</span>
         </div>
-
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
-            <table class="w-full text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        
+        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
+            <table class="-mt-2 border-separate border-spacing-y-[10px]">
+                <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                        <th class="px-6 py-3">#</th>
-                        <th class="px-6 py-3">Tên loại thiên tai</th>
-                        <th class="px-6 py-3">Mô tả</th>
-                        <th class="px-6 py-3">Hành động</th>
+                        <th class="sticky left-0 z-20 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                        <th class="sticky left-[40px] z-20 bg-blue-100 px-4 py-4 ">Tên loại thiên tai</th>
+                        <th class="px-6 py-4  min-w-[200px]  max-w-[300px]">Mô tả</th>
+                        @auth <th class="px-6 py-4 whitespace-nowrap min-w-[160px]">Hành động</th> @endauth
                     </tr>
                 </thead>
-                <tbody>
-                    @if ($data->isEmpty())
+               <tbody>
+                        @if ($data->isEmpty())
                         <tr>
-                            <td colspan="4" class="text-center py-6">
+                            <td colspan="11" class="text-center py-6">
                                 <div class="flex flex-col items-center justify-center text-slate-500">
                                     {!! $icons['frown'] !!}
                                     <div class="mt-2 text-lg">Hiện tại không có dữ liệu</div>
                                 </div>
                             </td>
                         </tr>
-                    @else
+                        @else
                         @foreach ($data as $key => $value)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">{{ $data->firstItem() + $key }}</td>
-                                <td class="px-6 py-4">
-                                    <a class="font-medium text-blue-600" href="/edit-type-of-calamity/{{ $value->id }}">
-                                        {{ $value->name }}
-                                    </a>
+                            <tr class="bg-white ">
+                                <td class="sticky left-0 z-20 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                                <td class="sticky left-[40px] z-20 bg-white px-4 py-4 font-bold">
+                                    <a href="/edit-type-of-calamity/{{ $value->id }}">{{ $value->name }}</a>
                                 </td>
-                                <td class="px-6 py-4">{{ $value->description }}</td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center justify-center gap-3">
+                                <td class="px-6 py-4 min-w-[200px] max-w-[300px] ">{{ $value->description }}</td>
+                                @auth
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
+                                    <div class="flex gap-3 justify-center">
                                         <a href="/edit-type-of-calamity/{{ $value->id }}" class="text-blue-700 flex items-center">
                                             {!! $icons['edit-2'] !!} Sửa
                                         </a>
-                                        @if ($userCurrent->is_master || $userCurrent->hasPermission('delete-type-of-calamity'))
-                                            <a href="javascript:void(0);"
-                                               onclick="openDeleteModal('{{ route('delete-type-of-calamity', ['id' => $value->id]) }}')"
-                                               class="text-red-600 flex items-center">
-                                                {!! $icons['trash-2'] !!} Xoá
-                                            </a>
-                                        @endif
+                                        
+                                        <a href="javascript:void(0);"
+                                            onclick="openDeleteModal('{{ route('delete-type-of-calamity', ['id' => $value->id]) }}')"
+                                            class="text-red-600 flex items-center">
+                                            {!! $icons['trash-2'] !!} Xoá
+                                        </a>
+                                        
                                     </div>
                                 </td>
+                                @endauth
                             </tr>
                         @endforeach
                     @endif
@@ -139,6 +139,18 @@
         document.getElementById('delete-confirmation-modal').classList.add('hidden');
     }
 
+      function openDeleteModal(url) {
+        const modal = document.getElementById('delete-confirmation-modal');
+        modal.classList.remove('hidden');
+        setDeleteUrl(url);
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('delete-confirmation-modal').classList.add('hidden');
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
+    });
     function setDeleteUrl(url) {
         document.getElementById('confirm-delete').setAttribute('href', url);
     }

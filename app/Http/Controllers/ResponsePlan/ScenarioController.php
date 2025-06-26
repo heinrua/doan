@@ -93,7 +93,7 @@ class ScenarioController extends Controller
         $data['document_text'] = $validated['document_text'];
         $data['status'] = $validated['status'];
         $data['updated_time'] = Carbon::createFromFormat('d \T\h\á\n\g m, Y', $request->updated_time)->format('Y-m-d');
-        $data['created_by_user_id'] = $user->id;
+          
         Scenario::create($data);
         return redirect('/list-scenarios');
     }

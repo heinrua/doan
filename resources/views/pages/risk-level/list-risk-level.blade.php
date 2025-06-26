@@ -23,7 +23,7 @@
         <div class="intro-y col-span-12 flex flex-wrap items-start gap-3">
             <form action="{{ route('view-risk-level') }}" method="GET" class="flex flex-wrap items-center gap-3 grow">
                 <select name="type_of_calamity_id"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
                     <option value="">-- Chọn loại thiên tai --</option>
                     @foreach ($typeOfCalamities as $type)
                         <option value="{{ $type->id }}" {{ request('type_of_calamity_id') == $type->id ? 'selected' : '' }}>
@@ -37,7 +37,7 @@
                         {!! $icons['search'] !!}
                     </div>
                     <input type="text" name="name" placeholder="Tên cấp độ..." value="{{ request('name') }}"
-                           class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                           class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 <button type="submit"
@@ -49,7 +49,7 @@
             @if ($userCurrent->is_master || $userCurrent->hasPermission('create-risk-level'))
                 <a href="{{ route('create-risk-level') }}">
                     <button type="button"
-                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
                         {!! $icons['plus-circle'] !!} Tạo mới cấp độ
                     </button>
                 </a>
@@ -60,58 +60,58 @@
             Tổng số cấp độ thiên tai: <span class="font-semibold">{{ $data->total() }}</span>
         </div>
 
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
-            <table class="w-full text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3">#</th>
-                    <th scope="col" class="px-6 py-3">Tên loại thiên tai</th>
-                    <th scope="col" class="px-6 py-3">Tên cấp độ</th>
-                    <th scope="col" class="px-6 py-3">Mô tả</th>
-                    <th scope="col" class="px-6 py-3">Hành động</th>
-                </tr>
+        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
+            <table class="-mt-2 border-separate border-spacing-y-[10px]">
+                <thead class="text-gray-700 uppercase bg-blue-100">
+                    <tr>
+                        <th scope="col" class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                        <th scope="col" class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4 ">Tên cấp độ</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Thuộc loại</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Mô tả</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Hành động</th>
+                    </tr>
                 </thead>
                 <tbody>
-                @if ($data->isEmpty())
+               @if ($data->isEmpty())
                     <tr>
-                        <td colspan="5" class="text-center py-6">
+                        <td colspan="11" class="text-center py-6">
                             <div class="flex flex-col items-center justify-center text-slate-500">
                                 {!! $icons['frown'] !!}
                                 <div class="mt-2 text-lg">Hiện tại không có dữ liệu</div>
                             </div>
                         </td>
                     </tr>
-                @else
+                    @else
                     @foreach ($data as $key => $value)
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $data->firstItem() + $key }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $value->type_of_calamities->name ?? '' }}
-                            </td>
-                            <td class="px-6 py-4">
+                        <tr class="bg-white ">
+                            <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                            <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
                                 <a class="whitespace-nowrap font-medium" href="/edit-risk-level/{{ $value->id }}">
                                     {{ $value->name }}
                                 </a>
+                               
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                                {{ $value->type_of_calamities->name ?? '' }}
+                            </td>
+                            <td class="px-6 py-4  min-w-[160px]">
                                 {{ $value->description }}
                             </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center justify-center">
-                                    <a class="mr-3 flex items-center text-blue-700" href="/edit-risk-level/{{ $value->id }}">
+                            @auth
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                                <div class="flex gap-3 justify-center">
+                                    <a class="flex items-center text-blue-700" href="/edit-risk-level/{{ $value->id }}">
                                         {!! $icons['edit-2'] !!} Sửa
                                     </a>
-                                    @if ($userCurrent->is_master || $userCurrent->hasPermission('delete-risk-level'))
-                                        <a class="flex items-center text-danger"
-                                           onclick="openDeleteModal('{{ route('delete-risk-level', ['id' => $value->id]) }}')"
-                                           href="javascript:void(0);">
-                                            {!! $icons['trash-2'] !!} Xoá
-                                        </a>
-                                    @endif
+                                    <a class="flex items-center text-red-600"
+                                    onclick="openDeleteModal('{{ route('delete-risk-level', ['id' => $value->id]) }}')"
+                                    href="javascript:void(0);">
+                                        {!! $icons['trash-2'] !!} Xoá
+                                    </a>
+                                
                                 </div>
                             </td>
+                            @endauth
                         </tr>
                     @endforeach
                 @endif
@@ -164,11 +164,9 @@
     function closeDeleteModal() {
         document.getElementById('delete-confirmation-modal').classList.add('hidden');
     }
-
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
     });
-
     function setDeleteUrl(url) {
         document.getElementById('confirm-delete').setAttribute('href', url);
     }

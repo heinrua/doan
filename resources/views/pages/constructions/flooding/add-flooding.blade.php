@@ -15,9 +15,9 @@
                 @csrf
                 <!-- BEGIN: Flooding Information -->
                 <div class="intro-y box mt-5 p-5">
-                    <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                    <div class="rounded-md border border-slate-200/60 p-5">
                         <div
-                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                            class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Công Trình Ngập Lụt
                         </div>
                         {{-- Thông tin chính --}}
@@ -35,7 +35,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="name" id="name" type="text"
+                                        <input name="name" id="name" type="text"
                                             placeholder="Tên công trình" />
                                         @error('name')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -79,7 +79,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="address" id="address" type="text"
+                                        <input name="address" id="address" type="text"
                                             placeholder="Ví trí công trình" />
                                     </div>
                                 </div>
@@ -95,7 +95,6 @@
                                     </label>
                                     <div class="w-full">
                                         <select class="w-full" id="crud-form-2" name="type_of_construction_id">
-                    >
                                             @foreach ($typeOfConstructions as $key => $value)
                                                 <option name="type_of_construction_id" value="{{ $value->id }}">
                                                     {{ $value->name }}
@@ -172,7 +171,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="coordinates" id="coordinates" type="text"
+                                        <input name="coordinates" id="coordinates" type="text"
                                             placeholder="Toạ độ" />
                                     </div>
                                 </div>
@@ -188,7 +187,7 @@
                                     <div class="w-full">
                                         
                                         <input datepicker name="update_time" id="update_time" type="text" placeholder="Thời gian cập nhật"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" >
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" >
                                         
                                     </div>
                                 </div>
@@ -202,7 +201,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="characteristic" id="characteristic" type="text"
+                                        <input name="characteristic" id="characteristic" type="text"
                                             placeholder="Đặc điểm đặc dạng" />
                                     </div>
                                 </div>
@@ -216,7 +215,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="pillar_top_level" id="pillar_top_level" type="text"
+                                        <input name="pillar_top_level" id="pillar_top_level" type="text"
                                             placeholder="Cao trình đỉnh trụ pin (m)" />
                                     </div>
                                 </div>
@@ -230,7 +229,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="operation_method" id="operation_method" type="text"
+                                        <input name="operation_method" id="operation_method" type="text"
                                             placeholder="Hình thức vận hành" />
                                     </div>
                                 </div>
@@ -244,7 +243,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="culver_type" id="culver_type" type="text"
+                                        <input name="culver_type" id="culver_type" type="text"
                                             placeholder="Loại Cống" />
                                     </div>
                                 </div>
@@ -261,7 +260,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="year_of_construction" id="year_of_construction"
+                                        <input name="year_of_construction" id="year_of_construction"
                                             type="number" placeholder="Năm xây dựng" />
                                     </div>
                                 </div>
@@ -275,7 +274,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="main_function" id="main_function" type="text"
+                                        <input name="main_function" id="main_function" type="text"
                                             placeholder="Chức năng chính" />
                                     </div>
                                 </div>
@@ -289,7 +288,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="width_of_door" id="width_of_door" type="text"
+                                        <input name="width_of_door" id="width_of_door" type="text"
                                             placeholder="Bề rộng 1 cửa (m)" />
                                     </div>
                                 </div>
@@ -303,7 +302,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="total_door_width" id="total_door_width" type="text"
+                                        <input name="total_door_width" id="total_door_width" type="text"
                                             placeholder="Tổng bề rộng cửa (m)" />
                                     </div>
                                 </div>
@@ -317,7 +316,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="irrigation_system" id="irrigation_system" type="text"
+                                        <input name="irrigation_system" id="irrigation_system" type="text"
                                             placeholder="Hệ thống thuỷ lợi" />
                                     </div>
                                 </div>
@@ -331,7 +330,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="culver_code" id="culver_code" type="text"
+                                        <input name="culver_code" id="culver_code" type="text"
                                             placeholder="Mã Cống" />
                                     </div>
                                 </div>
@@ -348,7 +347,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="year_of_completion" id="year_of_completion"
+                                        <input name="year_of_completion" id="year_of_completion"
                                             type="number" placeholder="Năm hoàn thành" />
                                     </div>
                                 </div>
@@ -363,7 +362,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="scale" id="scale" type="text"
+                                        <input name="scale" id="scale" type="text"
                                             placeholder="Quy mô" />
                                     </div>
                                 </div>
@@ -377,7 +376,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="base_level" id="base_level" type="text"
+                                        <input name="base_level" id="base_level" type="text"
                                             placeholder="Cao trình đấy (m)" />
                                     </div>
                                 </div>
@@ -391,7 +390,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="notes" id="notes" type="text"
+                                        <input name="notes" id="notes" type="text"
                                             placeholder="Ghi Chú" />
                                     </div>
                                 </div>
@@ -405,7 +404,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="irrigation_area" id="irrigation_area" type="text"
+                                        <input name="irrigation_area" id="irrigation_area" type="text"
                                             placeholder="Vùng Thuỷ Lợi" />
                                     </div>
                                 </div>
@@ -419,7 +418,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="management_unit" id="management_unit" type="text"
+                                        <input name="management_unit" id="management_unit" type="text"
                                             placeholder="Đơn vị quản lý" />
                                     </div>
                                 </div>
@@ -440,7 +439,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="image" id="image" type="file"
+                                        <input name="image" id="image" type="file"
                                             placeholder="Hình ảnh" />
                                     </div>
                                 </div>
@@ -457,7 +456,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-input name="video" id="video" type="file"
+                                        <input name="video" id="video" type="file"
                                             placeholder="Video" />
                                     </div>
                                 </div>
@@ -467,7 +466,7 @@
                 </div>
                 <!-- END: Flooding Information -->
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
-                    <button class="w-full py-3 md:w-52" type="submit" variant="primary">
+                   <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
                         Lưu
                     </button>
                 </div>

@@ -5,6 +5,7 @@
 @endsection
 
 @section('subcontent')
+
     
     <div class="grid grid-cols-12 gap-6">
         <div class="col-span-12 2xl:col-span-12">
@@ -14,7 +15,8 @@
                     <div class="intro-y flex h-10 items-center">
                         <h2 class="flex items-center mr-5 uppercase text-lg font-medium">
                             {!! $icons['clipboard-minus'] !!}
-                            Báo Cáo Tổng Hợp
+                            Báo Cáo Tổng Hợp <a href="/list-district">...</a>
+
                         </h2>
                         <a class="ml-auto flex items-center text-primary" href="/">
                             {!! $icons['refresh-ccw'] !!}
@@ -22,7 +24,7 @@
                         </a>
                     </div>
                     <div class="mt-5 grid grid-cols-12 gap-6">
-                        <div class="intro-y col-span-12 sm:col-span-6 xl:col-span-4">
+                        <div class="intro-y col-span-12 sm:col-span-6 xl:col-span-4 ">
                             <div>
                                 <div
                                     class="box p-5 bg-gradient-to-r from-rose-500 to-purple-500 text-white rounded-lg shadow-lg">
@@ -108,7 +110,7 @@
                                         </div>
                                         @if (isset($typeOfCalamities[1]))
                                             <div class="text-center text-white text-xl font-semibold">
-                                                {{ $typeOfCalamities[1]->calamitiess_count }}
+                                                {{ $typeOfCalamities[1]->calamities_count }}
                                             </div>
                                         @else
                                             <div class="text-center text-xl font-semibold text-red-500">
@@ -171,14 +173,16 @@
                 <!-- BEGIN: New Post Calamity -->
                 <div class="col-span-12 xl:col-span-5 flex flex-col mt-5">
                     <div class="intro-y flex h-10 items-center">
+                        
                         <h2 class="flex items-center mr-5 uppercase text-lg font-medium">
                             {!! $icons['list'] !!}
                             Dữ Liệu Mới Nhất
                         </h2>
                     </div>
-                    <div class="mt-3 flex-1">
+                    <div class="mt-3 flex-1 space-y-3">
                         @foreach ($calamities as $calamity)
-                            <div class="intro-y bg-white border-[5px] border-white rounded-lg">
+                            <div class="intro-y bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-100 rounded-xl">
+
                                 <a href="/" class="block">
                                     <div class="box zoom-in mb-3 flex items-center px-5 py-5">
                                         <!-- Icon -->
@@ -187,8 +191,30 @@
                                         </div>
                                         <!-- Nội dung chính -->
                                         <div class="ml-4 flex-1 min-w-0">
-                                            <div class="font-medium truncate">{{ $calamity->name }}</div>
-                                        </div>
+                                            @if ($calamity->calamity_type == 'BÃO, ÁP THẤP NHIỆT ĐỚI')
+                                                    <div class="font-medium truncate">
+                                                    <a href="{{ route('view-calamity-storm') }}">
+                                                        {{ $calamity->name }}
+                                                    </a></div>
+                                                
+                                            @endif
+                                            @if ($calamity->calamity_type == 'NGẬP LỤT')
+                                                    <div class="font-medium truncate">
+                                                    <a href="{{ route('view-calamity-flooding') }}">
+                                                        {{ $calamity->name }}
+                                                    </a>
+</div>
+                                                
+                                            @endif
+                                            @if ($calamity->calamity_type == 'SẠT LỞ BỜ SÔNG & BỜ BIỂN')
+                                                    <div class="font-medium truncate">
+                                                    <a href="{{ route('view-calamity-river-bank') }}">
+                                                        {{ $calamity->name }}
+                                                    </a></div>
+                                                
+                                            @endif
+</div>
+                                    
                                         <!-- Thời gian -->
                                         <div
                                             class="rounded-full bg-success px-3 py-1 text-xs font-medium text-white whitespace-nowrap">
@@ -206,15 +232,15 @@
                     // Màu sắc đẹp hơn (xanh, cam, đỏ)
                     $colors = ['#2563eb', '#f59e0b', '#ef4444'];
                 @endphp
-               <div class="col-span-12 xl:col-span-7 flex flex-col mt-5 bg-white border-[5px] border-white rounded-lg">
+               <div class="col-span-12 p-4 xl:col-span-7 flex flex-col ">
 
                     <div class="intro-y flex h-10 items-center">
-                        <h2 class="flex items-center mr-5 uppercase text-lg font-medium">
+                        <h2 class="flex items-center mr-5 gap-x-2 uppercase text-lg font-medium">
                             {!! $icons['trending-up'] !!}
-                             Biểu Đồ Thiên Tai
+                            Biểu Đồ Thiên Tai
                         </h2>
                     </div>
-                    <div class="intro-y box mt-3 p-5 flex flex-1 items-center justify-center">
+                    <div class="intro-y box mt-3 p-5 flex flex-1 items-center bg-white border border-gray-100 rounded-2xl justify-center">
                         <!-- Biểu đồ -->
                         <div class="w-2/3 flex flex-col items-center justify-center h-full">
                             <div id="disaster-chart" class="h-[370px] w-full"></div>
@@ -252,13 +278,15 @@
                     <!-- Container chứa nút và danh sách checkbox trên cùng một hàng -->
                     <div class="intro-y flex items-center flex-wrap gap-x-4 mt-4">
                         <!-- Nút tạo -->
-                        @auth
+                      
                             <button class="mb-2" data-tw-toggle="modal" data-tw-target="#large-modal-size-preview"
                                 as="a" variant="primary">
                                 {!! $icons['plus'] !!}
-                                Tạo Mới Cảnh Báo Thiên Tai
+                                @auth Tạo Mới Cảnh Báo Thiên Tai @endauth
+                                @guest Đăng ký nhận thông tin thiên tai mới @endguest
                             </button>
-                        @endauth
+                       
+                       
                         <!-- Danh sách Checkbox -->
                         <div class="flex flex-wrap gap-x-4">
                             @foreach ($data7Days as $disaster)
@@ -290,6 +318,7 @@
                             class="rounded-lg shadow-lg border" allowfullscreen>
                         </iframe>
                     </div>
+                   
                 </div>
                 <!-- END: Map Windy Ca Mau -->
 
@@ -299,13 +328,15 @@
         <!-- Modal chứa Form -->
         <x-base.dialog id="large-modal-size-preview" size="xl">
             <x-base.dialog.panel class="p-5">
+                
+                @auth
                 <form enctype="multipart/form-data" class="validate-form" action="/create-disaster" method="post">
                     @csrf
                     <!-- BEGIN: Tạo Tỉnh Thành -->
                     <div class="intro-y box">
-                        <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
+                        <div class="rounded-md border border-slate-200/60 p-5">
                             <div
-                                class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
+                                class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                                 {!! $icons['chevron-down'] !!} 
                                 Thông Tin Cảnh Báo Thiên Tai
                             </div>
@@ -344,7 +375,7 @@
                                         <label class="md:w-80">
                                             <div class="text-left">
                                                 <div class="flex items-center">
-                                                    <div class="font-medium">Tác nhân</div>
+                                                    <div class="font-medium">Loại thiên tai phụ</div>
                                                     <div class="ml-2 text-red-500 text-xl font-bold">*</div>
                                                 </div>
                                             </div>
@@ -352,7 +383,7 @@
                                         <div class="w-full">
                                             <select class="w-full" id="sub-type-of-calamity-select"
                                                 name="sub_type_of_calamity_id">
-                                                <option value="">--Chọn tác nhân--</option>
+                                                <option value="">--Chọn thiên tai phụ--</option>
                                             </select>
                                             @error('sub_type_of_calamity_id')
                                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -392,7 +423,7 @@
                                             </div>
                                         </label>
                                         <div class="w-full">
-                                            <x-base.form-input type="text" id="coordinates" name="coordinates"
+                                            <input type="text" id="coordinates" name="coordinates"
                                                 placeholder="Nhập tọa độ (VD: 10.7769, 106.7009)"
                                                 onblur="updateMapFromInput()" />
                                         </div>
@@ -412,7 +443,7 @@
                                             </div>
                                         </label>
                                         <div class="w-full">
-                                            <x-base.form-input name="name" id="name" type="text"
+                                            <input name="name" id="name" type="text"
                                                 placeholder="Tên" />
                                             @error('name')
                                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -431,7 +462,7 @@
                                             </div>
                                         </label>
                                         <div class="w-full">
-                                            <x-base.form-input name="address" id="address" type="text"
+                                            <input name="address" id="address" type="text"
                                                 placeholder="Địa chỉ" />
                                             @error('address')
                                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -468,27 +499,43 @@
 
                     <!-- Nút Lưu -->
                     <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
-                        <button class="w-full py-3 md:w-52" type="submit" variant="primary">
-                            Lưu
-                        <button>
+                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+                        Lưu
+                        </button>
                     </div>
                 </form>
+                @endauth
+                @guest
+                <form action="{{ route('guest.disaster.subscribe') }}" method="POST">
+
+                    @csrf
+                    <div class="mb-4">
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Tên của bạn</label>
+                        <input type="text" name="name" id="name" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email nhận thông tin</label>
+                        <input type="email" name="email" id="email"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                            @error('email')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+
+                    </div>
+                    <div class="text-right">
+                        <button type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-md">
+                            Đăng ký
+                        </button>
+                    </div>
+            </form>
+            @endguest
             </x-base.dialog.panel>
         </x-base.dialog>
-        <!-- END: Large Modal Content -->
-         <div class="chat-box h-[400px] overflow-y-auto border p-3" id="chatBox">
-            @foreach($messages as $msg)
-                <div class="mb-2">
-                    <strong>{{ $msg->sender_name }}</strong>: {{ $msg->message }}
-                </div>
-            @endforeach
-            </div>
-
-            <form id="chatForm">
-                <textarea name="message" class="w-full border p-2 mt-2" placeholder="Nhập tin nhắn..."></textarea>
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 mt-2 rounded">Gửi</button>
-            </form>
-
+        
+        
     </div>
 @endsection
 
@@ -499,52 +546,40 @@
         document.addEventListener("DOMContentLoaded", function() {
             const calamitySelect = document.getElementById("crud-form-2"); // type_of_calamity_id
             const riskLevelSelect = document.querySelector("#risk-level-select"); // risk_level_id
-            const subTypeOfCalamitySelect = document.querySelector(
-                "#sub-type-of-calamity-select"); // sub_type_of_calamity_id
-            const riskLevelTS = riskLevelSelect.tomselect;
-            const subTypeOfCalamityTS = subTypeOfCalamitySelect.tomselect;
+            const subTypeOfCalamitySelect = document.querySelector("#sub-type-of-calamity-select"); // sub_type_of_calamity_id
+            
             calamitySelect.addEventListener("change", function() {
                 const calamityId = calamitySelect.value;
+             
                 // Load cấp độ rủi ro
-                const riskLevelUrl =
-                    `{{ route('get-risk-levels') }}${calamityId ? '?calamity_id=' + calamityId : ''}`;
-                fetch(riskLevelUrl)
-                    .then(res => res.json())
-                    .then(data => {
-                        riskLevelTS.clear(); // Xóa giá trị đang chọn
-                        riskLevelTS.clearOptions(); // Xóa tất cả options cũ
-                        data.forEach(level => {
-                            riskLevelTS.addOption({
-                                value: level.id,
-                                text: level.name
-                            });
-                        });
-                        // Nếu cần set option đầu tiên mặc định
-                        if (data.length > 0) {
-                            riskLevelTS.setValue(data[0].id);
-                        }
-                    })
-                    .catch(error => console.error("Lỗi khi tải cấp độ rủi ro:", error));
-                // Load loại hình thiên tai
-                const subTypeUrl =
-                    `{{ route('get-sub-type-of-calamities') }}${calamityId ? '?calamity_id=' + calamityId : ''}`;
-                fetch(subTypeUrl)
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log("Sub types:", data);
-                        subTypeOfCalamityTS.clear();
-                        subTypeOfCalamityTS.clearOptions();
-                        data.forEach(item => {
-                            subTypeOfCalamityTS.addOption({
-                                value: item.id,
-                                text: item.name
-                            });
-                        });
-                        if (data.length > 0) {
-                            subTypeOfCalamityTS.setValue(data[0].id);
-                        }
-                    })
-                    .catch(error => console.error("Lỗi khi tải loại hình thiên tai:", error));
+        const riskLevelUrl = `{{ route('get-risk-levels') }}${calamityId ? '?calamity_id=' + calamityId : ''}`;
+        fetch(riskLevelUrl)
+            .then(res => res.json())
+            .then(data => {
+                riskLevelSelect.innerHTML = `<option value="">-- Chọn cấp độ --</option>`;
+                data.forEach(level => {
+                    const option = document.createElement("option");
+                    option.value = level.id;
+                    option.textContent = level.name;
+                    riskLevelSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error("Lỗi khi tải cấp độ rủi ro:", error));
+
+        // Load tác nhân (loại hình thiên tai phụ)
+        const subTypeUrl = `{{ route('get-sub-type-of-calamities') }}${calamityId ? '?calamity_id=' + calamityId : ''}`;
+        fetch(subTypeUrl)
+            .then(res => res.json())
+            .then(data => {
+                subTypeOfCalamitySelect.innerHTML = `<option value="">-- Chọn tác nhân --</option>`;
+                data.forEach(item => {
+                    const option = document.createElement("option");
+                    option.value = item.id;
+                    option.textContent = item.name;
+                    subTypeOfCalamitySelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error("Lỗi khi tải loại hình thiên tai:", error));
             });
         });
 
@@ -597,6 +632,9 @@
             }
         });
         let calamitiesData = @json($data7Days);
+console.log("🚨 Dữ liệu thiên tai 7 ngày:", calamitiesData);
+
+        
         let map;
         let markers = {}; // Lưu marker theo loại thiên tai
         let kmlLayers = {}; // Lưu KML Layer theo loại thiên tai
@@ -785,6 +823,10 @@
             markers = {}; // Reset markers
             let sharedInfoWindow = new google.maps.InfoWindow();
             calamitiesData.forEach(disaster => {
+                disaster.data.forEach(item => {
+                    console.log("📍 Marker:", item.name, item.coordinates);
+                });
+
                 let type = disaster.type;
                 let slug = removeVietnameseTones(type); // Ví dụ: "sat-lo", "ngap-lut", "bao"
                 markers[slug] = [];
@@ -862,7 +904,7 @@
                             </div>
                         </div>
                     <div style="padding: 16px 20px; font-size: 14.5px; color: #333; line-height: 1.8;">
-                        <div style="margin-bottom: 6px;"><strong>🌍 Thiên tai:</strong> ${calamity.type_of_calamities.name || "Không có"}</div>
+                            <div style="margin-bottom: 6px;"><strong>🌍 Thiên tai:</strong> ${calamity.risk_level.type_of_calamities.name || "Không có"}</div>
                             <div style="margin-bottom: 6px;"><strong>🌀 Tác nhân:</strong> ${calamity.sub_type_of_calamities[0].name || "Không có"}</div>
                             <div style="margin-bottom: 6px;"><strong>⚠️ Cấp độ:</strong> ${calamity.risk_level.name || "Không có"}</div>
                             <div style="margin-bottom: 6px;"><strong>📍 Địa chỉ:</strong> ${calamity.address || "Không có"}</div>
@@ -921,4 +963,15 @@
     <script async
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMhd9dHKpWfJ57Ndv2alnxEcSvP_-_uN8&libraries=places&callback=initMap">
     </script>
+    @if (session('success') || $errors->any())
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalEl = document.getElementById('large-modal-size-preview');
+        if (modalEl) {
+            tailwind.Modal.getOrCreateInstance(modalEl).show();
+        }
+    });
+</script>
+@endif
+
 @endpush
