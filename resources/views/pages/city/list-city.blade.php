@@ -97,7 +97,7 @@
                             </td>
                             @auth
                             <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                                <div class="flex gap-3 justify-center">
+                                <div class="flex gap-3 text-center">
                                     <a class="flex items-center text-blue-700" href="/edit-city/{{ $value->id }}">
                                         {!! $icons['edit-2'] !!}
                                         Sửa
@@ -112,9 +112,10 @@
                             @endauth
                         </tr>
                     @endforeach
-                </tbody>
+                @endif 
+            </tbody>
             </table>
-            @endif
+            
         </div>
 
     <!-- END: Data List -->

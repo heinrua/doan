@@ -34,7 +34,7 @@ class GeographicalDataController extends Controller
 
     public function viewForm($type)
     {
-        $calamities = TypeOfCalamities::where('slug', 'sat-lo-bo-song-bo-bien')->get();
+        $calamities = TypeOfCalamities::all();
         $communes = Commune::all();
         return view("pages/geographical/{$type}/add-{$type}", compact('calamities', 'communes'));
     }
@@ -55,7 +55,7 @@ class GeographicalDataController extends Controller
     public function show($id)
     {
         $data = GeographicalData::findOrFail($id);
-        $calamities = TypeOfCalamities::where('slug', 'sat-lo-bo-song-bo-bien')->get();
+        $calamities = TypeOfCalamities::all();
         $communes = Commune::all();
         return view("pages/geographical/{$data->type}/edit-{$data->type}", compact('data', 'calamities', 'communes'));
     }
@@ -86,10 +86,11 @@ class GeographicalDataController extends Controller
 
 
     private function validateRequest($request, $id = null)
-    {
+    {  
         return $request->validate([
             'name' => "required|string|unique:geographical_data,name,$id,id",
             'type' => 'required|string|in:erosion,shoreline,cross-section,monitoring',
+            'type_of_calamity_id' =>'required',
             'commune_id' => 'required',
             'category' => 'nullable|string',
             'progress' => 'nullable|string',
@@ -111,8 +112,14 @@ class GeographicalDataController extends Controller
             'river' => 'nullable|string',
             'elevation_z' => 'nullable|numeric',
             'description' => 'nullable|string',
+            'last_updated'=> 'nullable|string',
+            'video' => 'nullable|file|mimes:mp4',
+            'image' => 'nullable|file|mimes:jpg,jpeg,png',
+            'map' => 'nullable|max:51200',
+            'population'=>'nullable|numeric',
         ]);
     }
+        
 
     private function formatDate($date)
     {

@@ -3,7 +3,7 @@
 @section('subhead')
     <title>Danh Sách Thiên Tai Ngập Lụt - PCTT Cà Mau Dashboard</title>
 @endsection
-
+@vite(['resources/js/district-commune.js'])
 @section('subcontent')
     <div class="intro-y mt-5  flex items-center justify-between">
         <div class="flex items-center text-lg font-medium uppercase">
@@ -107,8 +107,8 @@
             <table class="-mt-2 border-separate border-spacing-y-[10px]">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                        <th class="sticky left-0 z-20 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
-                        <th class="sticky left-[40px] z-20 bg-blue-100 px-4 py-4 ">Tên khu vực ngập</th>
+                        <th class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                        <th class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4 ">Tên khu vực ngập</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Loại hình ngập</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Địa phương</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Cấp độ rủi ro</th>
@@ -148,9 +148,9 @@
                         @else
                         @foreach ($data as $key => $value)
                             <tr class="bg-white ">
-                                <td class="sticky left-0 z-20 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
-                                <td class="sticky left-[40px] z-20 bg-white px-4 py-4 font-bold">
-                                    <a href="/calamity/edit-flooding/{{ $value->id }}">{{ $value->name }}</a>
+                                <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                                <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
+                                    <a class="whitespace-nowrap font-medium" href="/calamity/edit-flooding/{{ $value->id }}">{{ $value->name }}</a>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
                                     {!! $value->sub_type_of_calamities->count() > 1
@@ -238,7 +238,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->updated_at }}</td>
                                 @auth
                                 <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                                    <div class="flex gap-3 justify-center">
+                                    <div class="flex gap-3 text-center">
                                         <a href="/calamity/edit-flooding/{{ $value->id }}" class="text-blue-700 flex items-center">
                                             {!! $icons['edit-2'] !!} Sửa
                                         </a>
@@ -253,9 +253,10 @@
                                 @endauth
                             </tr>
                         @endforeach
+                        @endif
                     </tbody>
                 </table>
-            @endif
+         
         </div>
 
     </div>

@@ -157,7 +157,7 @@
                                         </div>
                                         @if (isset($typeOfCalamities[0]))
                                             <div class="text-center text-xl font-semibold">
-                                                {{ $typeOfCalamities[0]->constructions_count }}
+                                                {{ $typeOfCalamities[0]->calamities_count }}
                                             </div>
                                         @else
                                             <div class="text-center text-xl font-semibold text-red-500">

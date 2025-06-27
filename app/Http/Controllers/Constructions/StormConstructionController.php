@@ -70,7 +70,7 @@ class StormConstructionController extends Controller
     public function viewFormStorm()
     {
         $calamities = TypeOfCalamities::where('slug', 'bao-ap-thap-nhiet-doi')->get();
-        $typeOfConstructions = TypeOfConstruction::whereRelation('risk_level.type_of_calamities', 'slug', 'bao-ap-thap-nhiet-doi')->get();
+        $typeOfConstructions = TypeOfConstruction::whereRelation('type_of_calamities', 'slug', 'bao-ap-thap-nhiet-doi')->get();
         $communes = Commune::all();
         $risk_levels = RiskLevel::whereRelation('type_of_calamities', 'slug', 'bao-ap-thap-nhiet-doi')->get();
         return view('pages/constructions/storm/add-storm', compact('calamities', 'typeOfConstructions', 'communes', 'risk_levels'));
@@ -186,7 +186,6 @@ class StormConstructionController extends Controller
     public function destroy($id)
     {
         $calamity = Construction::findOrFail($id);
-        $calamity->sub_type_of_calamities()->detach();
         $calamity->communes()->detach();
         $calamity->delete();
         return redirect('/construction/list-storm')->with('success', 200);

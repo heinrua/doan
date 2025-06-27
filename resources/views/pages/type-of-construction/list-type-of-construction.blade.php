@@ -4,9 +4,7 @@
     <title>Danh Sách Loại Công Trình - PCTT Cà Mau Dashboard</title>
 @endsection
 
-@php
-    $userCurrent = auth()->user();
-@endphp
+
 
 @section('subcontent')
     <div class="intro-y mt-5 flex items-center justify-between">
@@ -59,57 +57,61 @@
             Tổng số loại công trình: <span class="font-semibold">{{ $data->total() }}</span>
         </div>
 
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
-            <table class="w-full text-left text-gray-500">
-                <thead class="text-gray-700 uppercase bg-gray-50">
+         <!-- BEGIN: Data List -->
+       <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
+            <table class="-mt-2 border-separate border-spacing-y-[10px]">
+                <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                        <th class="px-6 py-3">#</th>
-                        <th class="px-6 py-3">Loại thiên tai</th>
-                        <th class="px-6 py-3">Tên loại công trình</th>
-                        <th class="px-6 py-3">Mô tả</th>
-                        <th class="px-6 py-3">Hành động</th>
+                        <th class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                        <th class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4 ">Tên loại công trình</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Loại thiên tai</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Mô tả</th>
+                        @auth<th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Hành động</th> @endauth
                     </tr>
                 </thead>
                 <tbody>
                     @if ($data->isEmpty())
-                        <tr>
-                            <td colspan="5" class="text-center py-6">
-                                <div class="flex flex-col items-center justify-center text-slate-500">
-                                    {!! $icons['frown'] !!}
-                                    <div class="mt-2 text-lg">Hiện tại không có dữ liệu</div>
+                    <tr>
+                        <td colspan="11" class="text-center py-6">
+                            <div class="flex flex-col items-center justify-center text-slate-500">
+                                {!! $icons['frown'] !!}
+                                <div class="mt-2 text-lg">Hiện tại không có dữ liệu</div>
+                            </div>
+                        </td>
+                    </tr>
+                    @else
+                    @foreach ($data as $key => $value)
+                        <tr class="bg-white ">
+                            <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                            <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
+                                <a class="whitespace-nowrap font-medium" href="/edit-type-of-construction/{{ $value->id }}">
+                                    {{ $value->name }}
+                                </a>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->type_of_calamities->name ?? '' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->description }}</td>
+                            @auth
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                                <div class="flex gap-3 text-center">
+                                    <a class="flex items-center text-blue-700" href="/edit-type-of-construction/{{ $value->id }}" >
+                                        {!! $icons['edit-2'] !!} Sửa
+                                    </a>
+                                    
+                                    <a class="flex items-center text-red-600"
+                                    onclick="openDeleteModal('{{ route('delete-type-of-construction', ['id' => $value->id]) }}')"
+                                    href="javascript:void(0);">
+                                        {!! $icons['trash-2'] !!} Xoá
+                                    </a>
                                 </div>
                             </td>
+                            @endauth
                         </tr>
-                    @else
-                        @foreach ($data as $key => $value)
-                            <tr class="bg-white border-b">
-                                <td class="px-6 py-4">{{ $data->firstItem() + $key }}</td>
-                                <td class="px-6 py-4">{{ $value->type_of_calamities->name ?? '' }}</td>
-                                <td class="px-6 py-4">
-                                    <a class="font-medium text-blue-600" href="/edit-type-of-construction/{{ $value->id }}">
-                                        {{ $value->name }}
-                                    </a>
-                                </td>
-                                <td class="px-6 py-4">{{ $value->description }}</td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center justify-center gap-3">
-                                        <a href="/edit-type-of-construction/{{ $value->id }}" class="text-blue-700 flex items-center">
-                                            {!! $icons['edit-2'] !!} Sửa
-                                        </a>
-                                        @auth
-                                            <a href="javascript:void(0);"
-                                               onclick="openDeleteModal('{{ route('delete-type-of-construction', ['id' => $value->id]) }}')"
-                                               class="text-red-600 flex items-center">
-                                                {!! $icons['trash-2'] !!} Xoá
-                                            </a>
-                                        @endauth
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @endif
+                    @endforeach
+                 @endif
                 </tbody>
+                
             </table>
+           
         </div>
 
         <div class="intro-y col-span-12">
@@ -143,15 +145,6 @@
 
 <script>
     function openDeleteModal(url) {
-        document.getElementById('delete-confirmation-modal').classList.remove('hidden');
-        setDeleteUrl(url);
-    }
-
-    function closeDeleteModal() {
-        document.getElementById('delete-confirmation-modal').classList.add('hidden');
-    }
-
-      function openDeleteModal(url) {
         const modal = document.getElementById('delete-confirmation-modal');
         modal.classList.remove('hidden');
         setDeleteUrl(url);
@@ -166,8 +159,4 @@
     function setDeleteUrl(url) {
         document.getElementById('confirm-delete').setAttribute('href', url);
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
-    });
 </script>

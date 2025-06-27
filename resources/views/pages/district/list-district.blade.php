@@ -92,61 +92,61 @@
                                 href="/edit-district/{{ $value->id }}">
                                 {{ $value->name }}
                             </a>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->code }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->city->name ?? '' }}
-                        </td>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->code }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                                {{ $value->city->name ?? '' }}
+                            </td>
 
-                       <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->coordinates }}
-                        </td>
-                       <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ number_format($value->population, 0, ',', '.') }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            @php
-                                $maps = json_decode($value->map, true);
-                            @endphp
-                            @if (!empty($maps) && is_array($maps))
-                                <div class="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
-                                    style="max-height: {{ count($maps) > 4 ? '150px' : 'auto' }};">
-                                    <ul class="list-disc text-left pl-4">
-                                        @foreach ($maps as $map)
-                                            <li>
-                                                <a href="{{ asset($map) }}" target="_blank"
-                                                    class="text-blue-500 hover:underline">
-                                                    {{ basename($map) }}
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                                    {{ $value->coordinates }}
+                                </td>
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                                    {{ number_format($value->population, 0, ',', '.') }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                                @php
+                                    $maps = json_decode($value->map, true);
+                                @endphp
+                                @if (!empty($maps) && is_array($maps))
+                                    <div class="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
+                                        style="max-height: {{ count($maps) > 4 ? '150px' : 'auto' }};">
+                                        <ul class="list-disc text-left pl-4">
+                                            @foreach ($maps as $map)
+                                                <li>
+                                                    <a href="{{ asset($map) }}" target="_blank"
+                                                        class="text-blue-500 hover:underline">
+                                                        {{ basename($map) }}
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @else
+                                    <span class="text-gray-500">Không có bản đồ</span>
+                                @endif
+                            </td>
+                            @auth
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                                <div class="flex gap-3 text-center">
+                                    <a href="/edit-district/{{ $value->id }}" class="text-blue-700 flex items-center">
+                                        {!! $icons['edit-2'] !!} Sửa
+                                    </a>
+                                    <a class="flex items-center text-red-600"
+                                    onclick="openDeleteModal('{{ route('delete-district', ['id' => $value->id]) }}')"
+                                    href="javascript:void(0);">
+                                        {!! $icons['trash-2'] !!} Xoá
+                                    </a>
+                                
                                 </div>
-                            @else
-                                <span class="text-gray-500">Không có bản đồ</span>
-                            @endif
-                        </td>
-                        @auth
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            <div class="flex gap-3 justify-center">
-                                <a href="/edit-district/{{ $value->id }}" class="text-blue-700 flex items-center">
-                                    {!! $icons['edit-2'] !!} Sửa
-                                </a>
-                                <a class="flex items-center text-red-600"
-                                onclick="openDeleteModal('{{ route('delete-district', ['id' => $value->id]) }}')"
-                                href="javascript:void(0);">
-                                    {!! $icons['trash-2'] !!} Xoá
-                                </a>
-                            
-                            </div>
-                        </td>
-                        @endauth
-                        
-                    </tr>
+                            </td>
+                            @endauth
+                        </tr>
                 @endforeach
+            @endif
             </tbody>
         </table>
-        @endif
+       
     </div>
     <!-- END: Data List -->
     <!-- BEGIN: Pagination -->

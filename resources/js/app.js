@@ -1,5 +1,6 @@
 import 'flowbite';
-// Load static files
+
+
 import.meta.glob(["../images/**"]);
 // import jQuery from 'jquery';
 window.$ = window.jQuery = jQuery;
@@ -9,3 +10,4 @@ window.Echo.channel('chat-room')
         const box = document.getElementById('chatBox');
         box.innerHTML += `<div class="mb-1"><strong>${e.sender}:</strong> ${e.message}</div>`;
     });
+

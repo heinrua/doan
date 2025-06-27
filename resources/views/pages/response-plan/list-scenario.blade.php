@@ -70,85 +70,88 @@
         </div>
 
         <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <table class="w-full text-left text-gray-500">
-                <thead class="text-gray-700 uppercase bg-gray-50">
+            <table class="-mt-2 border-separate border-spacing-y-[10px]">
+                <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                        <th class="px-4 py-3">#</th>
-                        <th class="px-4 py-3">Tên phương án</th>
-                        <th class="px-4 py-3">Mô tả ngắn</th>
-                        <th class="px-4 py-3">Loại thiên tai</th>
-                        <th class="px-4 py-3">Quận/Huyện</th>
-                        <th class="px-4 py-3">Cập nhật</th>
-                        <th class="px-4 py-3">Trạng thái</th>
-                        <th class="px-4 py-3">Mô tả văn bản</th>
-                        <th class="px-4 py-3">Tệp tin</th>
-                        <th class="px-4 py-3">Hành động</th>
+                        <th class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                        <th class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4 ">Tên phương án</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Mô tả ngắn</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Loại thiên tai</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Quận/Huyện</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Cập nhật</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Trạng thái</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Mô tả văn bản</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Tệp tin</th>
+                        @auth
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Hành động</th>
+                        @endauth
                     </tr>
                 </thead>
                 <tbody>
                     @if ($data->isEmpty())
-                        <tr>
-                            <td colspan="10" class="text-center py-6">
-                                <div class="flex flex-col items-center justify-center text-slate-500">
-                                    {!! $icons['frown'] !!}
-                                    <div class="mt-2 text-lg">Hiện tại không có dữ liệu</div>
-                                </div>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="11" class="text-center py-6">
+                            <div class="flex flex-col items-center justify-center text-slate-500">
+                                {!! $icons['frown'] !!}
+                                <div class="mt-2 text-lg">Hiện tại không có dữ liệu</div>
+                            </div>
+                        </td>
+                    </tr>
                     @else
-                        @foreach ($data as $key => $value)
-                            <tr class="bg-white border-b">
-                                <td class="px-4 py-2">{{ $data->firstItem() + $key }}</td>
-                                <td class="px-4 py-2">
-                                    <a class="font-medium text-blue-600" href="/edit-scenarios/{{ $value->id }}">
-                                        {{ $value->name }}
-                                    </a>
-                                </td>
-                                <td class="px-4 py-2">{{ $value->short_description }}</td>
-                                <td class="px-4 py-2">{{ $value->type_of_calamities->name ?? '' }}</td>
-                                <td class="px-4 py-2">{{ $value->districts->name ?? '' }}</td>
-                                <td class="px-4 py-2">{{ \Carbon\Carbon::parse($value->updated_time)->format('d-m-Y') }}</td>
-                                <td class="px-4 py-2">
-                                    <span class="inline-block px-2 py-1 text-sm font-semibold rounded
-                                        {{ $value->status === 'Hoạt động' ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
-                                        {{ $value->status }}
-                                    </span>
-                                </td>
-                                <td class="px-4 py-2">{{ $value->document_text }}</td>
-                                <td class="px-4 py-2">
-                                    @php $files = json_decode($value->document_path, true); @endphp
-                                    @if (!empty($files) && is_array($files))
-                                        <ul class="list-disc pl-5 space-y-1 max-h-32 overflow-y-auto">
-                                            @foreach ($files as $file)
-                                                <li>
-                                                    <a href="{{ asset($file) }}" target="_blank" class="text-blue-500 hover:underline">
-                                                        {{ basename($file) }}
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    @else
-                                        <span class="text-gray-500">Không có tệp tin</span>
-                                    @endif
-                                </td>
-                                <td class="px-4 py-2">
-                                    <div class="flex items-center justify-center gap-3">
-                                        <a href="/edit-scenarios/{{ $value->id }}" class="text-blue-600 flex items-center">
-                                            {!! $icons['edit-2'] !!} Sửa
-                                        </a>
-                                        @if ($userCurrent->is_master || $userCurrent->hasPermission('delete-scenarios'))
-                                            <a href="javascript:void(0);"
-                                               onclick="openDeleteModal('{{ route('delete-scenarios', ['id' => $value->id]) }}')"
-                                               class="text-red-600 flex items-center">
-                                                {!! $icons['trash-2'] !!} Xoá
+                    @foreach ($data as $key => $value)
+                    <tr class="bg-white ">
+                        <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                        <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
+                            <a class="whitespace-nowrap font-medium" href="/edit-scenarios/{{ $value->id }}">
+                                {{ $value->name }}
+                            </a>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->short_description }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->type_of_calamities->name ?? '' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->districts->name ?? '' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ \Carbon\Carbon::parse($value->updated_time)->format('d-m-Y') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                            <span class="inline-block px-2 py-1 text-sm font-semibold rounded
+                                {{ $value->status === 'Hoạt động' ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
+                                {{ $value->status }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->document_text }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                            @php $files = json_decode($value->document_path, true); @endphp
+                            @if (!empty($files) && is_array($files))
+                                <ul class="list-disc pl-5 space-y-1 max-h-32 overflow-y-auto">
+                                    @foreach ($files as $file)
+                                        <li>
+                                            <a href="{{ asset($file) }}" target="_blank" class="text-blue-500 hover:underline">
+                                                {{ basename($file) }}
                                             </a>
-                                        @endif
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <span class="text-gray-500">Không có tệp tin</span>
+                            @endif
+                        </td>
+                        @auth
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                            <div class="flex items-center justify-center gap-3">
+                                <a href="/edit-scenarios/{{ $value->id }}" class="text-blue-600 flex items-center">
+                                    {!! $icons['edit-2'] !!} Sửa
+                                </a>    
+                                <a class="flex items-center text-red-600"   
+                                onclick="openDeleteModal('{{ route('delete-scenarios', ['id' => $value->id]) }}')"
+                                href="javascript:void(0);">
+                                    {!! $icons['trash-2'] !!} Xoá
+                                </a>
+                            </div>
+                        </td>
+                        @endauth
+                    </tr>
+                    @endforeach
                     @endif
                 </tbody>
+                
             </table>
         </div>
 
@@ -191,15 +194,7 @@
         document.getElementById('delete-confirmation-modal').classList.add('hidden');
     }
 
-      function openDeleteModal(url) {
-        const modal = document.getElementById('delete-confirmation-modal');
-        modal.classList.remove('hidden');
-        setDeleteUrl(url);
-    }
-
-    function closeDeleteModal() {
-        document.getElementById('delete-confirmation-modal').classList.add('hidden');
-    }
+     
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
     });
@@ -207,7 +202,5 @@
         document.getElementById('confirm-delete').setAttribute('href', url);
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
-    });
+    
 </script>

@@ -4,9 +4,7 @@
     <title>Danh Sách Địa Điểm Y Tế - PCTT Cà Mau Dashboard</title>
 @endsection
 
-@php
-    $userCurrent = auth()->user();
-@endphp
+@vite(['resources/js/district-commune.js'])
 
 @section('subcontent')
 <div class="intro-y mt-5 flex items-center justify-between">
@@ -65,72 +63,74 @@
     </div>
 
     <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-        <table class="w-full min-w-[1500px] text-left text-gray-500">
-            <thead class="text-gray-700 uppercase bg-gray-50">
-                <tr>
-                    <th class="px-6 py-3">#</th>
-                    <th class="px-6 py-3">Tên địa điểm</th>
-                    <th class="px-6 py-3">Địa chỉ</th>
-                    <th class="px-6 py-3">Xã</th>
-                    <th class="px-6 py-3">Huyện</th>
-                    <th class="px-6 py-3">Loại hình</th>
-                    <th class="px-6 py-3">Phân loại</th>
-                    <th class="px-6 py-3">Mô tả</th>
-                    <th class="px-6 py-3">Tọa độ</th>
-                    <th class="px-6 py-3">Sức chứa</th>
-                    @auth
-                    <th class="px-6 py-3">Hành động</th>
-                    @endauth
+            <table class="-mt-2 border-separate border-spacing-y-[10px]">
+                <thead class="text-gray-700 uppercase bg-blue-100">
+                    <tr>
+                        <th class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                        <th class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4 ">Tên địa điểm</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Địa chỉ</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Xã</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Huyện</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Loại hình</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Phân loại</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Mô tả</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Tọa độ</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Sức chứa</th>
+                        @auth
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Hành động</th>
+                        @endauth
                 </tr>
             </thead>
             <tbody>
                 @if ($data->isEmpty())
-                    <tr>
-                        <td colspan="11" class="text-center py-6">
-                            <div class="flex flex-col items-center justify-center text-slate-500">
-                                {!! $icons['frown'] !!}
-                                <div class="mt-2 text-lg">Hiện tại không có dữ liệu</div>
-                            </div>
-                        </td>
-                    </tr>
-                @else
-                    @foreach ($data as $key => $value)
-                        <tr class="bg-white border-b">
-                            <td class="px-6 py-4">{{ $data->firstItem() + $key }}</td>
-                            <td class="px-6 py-4">
-                                <a class="font-medium text-blue-600"
-                                    href="/administrative/edit-medical/{{ $value->id }}">
-                                    {{ $value->name }}
-                                </a>
-                            </td>
-                            <td class="px-6 py-4">{{ $value->address ?? '' }}</td>
-                            <td class="px-6 py-4">{{ $value->communes->name ?? '' }}</td>
-                            <td class="px-6 py-4">{{ $value->communes->district->name ?? '' }}</td>
-                            <td class="px-6 py-4">{{ $value->classify }}</td>
-                            <td class="px-6 py-4">{{ $value->option }}</td>
-                            <td class="px-6 py-4">{{ $value->description }}</td>
-                            <td class="px-6 py-4">{{ $value->coordinates }}</td>
-                            <td class="px-6 py-4 text-center">
-                                {{ number_format($value->population, 0, ',', '.') }}
-                            </td>
-                            @auth
-                            <td class="px-6 py-4">
-                                <div class="flex items-center justify-center gap-3">
-                                    <a href="/administrative/edit-medical/{{ $value->id }}" class="text-blue-700 flex items-center">
-                                        {!! $icons['edit-2'] !!} Sửa
-                                    </a>
-                                    <a href="javascript:void(0);"
-                                            onclick="openDeleteModal('{{ route('delete-medical', ['id' => $value->id, 'type' => 'medical']) }}')"
-                                            class="text-red-600 flex items-center">
-                                            {!! $icons['trash-2'] !!} Xoá
-                                        </a>
-                                   
+                        <tr>
+                            <td colspan="11" class="text-center py-6">
+                                <div class="flex flex-col items-center justify-center text-slate-500">
+                                    {!! $icons['frown'] !!}
+                                    <div class="mt-2 text-lg">Hiện tại không có dữ liệu</div>
                                 </div>
                             </td>
-                            @endauth
                         </tr>
-                    @endforeach
-                @endif
+                        @else
+                        @foreach ($data as $key => $value)
+                            <tr class="bg-white ">
+                                <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                                <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
+                                    <a class="whitespace-nowrap font-medium"
+                                        href="/administrative/edit-medical/{{ $value->id }}">
+                                        {{ $value->name }}
+                                    </a>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->address ?? '' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->communes->name ?? '' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->communes->district->name ?? '' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->classify }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->option }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->description }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->coordinates }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] text-center">
+                                    {{ number_format($value->population, 0, ',', '.') }}
+                                </td>
+                                @auth
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
+                                    <div class="flex gap-3 text-center">
+                                        <a class="flex items-center text-blue-700"
+                                          href="/administrative/edit-medical/{{ $value->id }}">
+                                            {!! $icons['edit-2'] !!} Sửa
+                                        </a>
+                                        
+                                        <a class="flex items-center text-red-600"
+                                        onclick="openDeleteModal('{{ route('delete-medical', ['id' => $value->id, 'type' => 'medical']) }}')"
+                                        href="javascript:void(0);">
+                                            {!! $icons['trash-2'] !!} Xoá
+                                        </a>
+                                    
+                                    </div>
+                                </td>
+                                @endauth
+                            </tr>
+                        @endforeach
+                    @endif
             </tbody>
         </table>
     </div>
@@ -165,16 +165,7 @@
 @endsection
 
 <script>
-    function openDeleteModal(url) {
-        document.getElementById('delete-confirmation-modal').classList.remove('hidden');
-        setDeleteUrl(url);
-    }
-
-    function closeDeleteModal() {
-        document.getElementById('delete-confirmation-modal').classList.add('hidden');
-    }
-
-      function openDeleteModal(url) {
+   function openDeleteModal(url) {
         const modal = document.getElementById('delete-confirmation-modal');
         modal.classList.remove('hidden');
         setDeleteUrl(url);
@@ -190,59 +181,5 @@
         document.getElementById('confirm-delete').setAttribute('href', url);
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const districtSelect = document.querySelector("#districtSelect");
-        const communeSelect = document.querySelector("#communeSelect");
-        if (districtSelect && communeSelect) {
-            const districtTS = districtSelect.tomselect;
-            const communeTS = communeSelect.tomselect;
-
-            function getQueryParam(param) {
-                const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(param);
-            }
-
-            const selectedDistrictId = getQueryParam("district_id") || "";
-            const selectedCommuneId = getQueryParam("commune_id") || "";
-
-            function loadCommunes(districtId = "", selectedCommune = "") {
-                communeTS.clear();
-                communeTS.clearOptions();
-
-                let url = `{{ route('get-communes') }}`;
-                if (districtId) url += `?district_id=${districtId}`;
-
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        communeTS.clearOptions();
-                        data.forEach(commune => {
-                            communeTS.addOption({
-                                value: commune.id,
-                                text: commune.name
-                            });
-                        });
-                        if (selectedCommune && data.some(c => c.id == selectedCommune)) {
-                            communeTS.setValue(selectedCommune);
-                        }
-                    })
-                    .catch(() => {
-                        communeTS.clearOptions();
-                        communeTS.addOption({
-                            value: "",
-                            text: "Lỗi tải dữ liệu"
-                        });
-                    });
-            }
-
-            loadCommunes(selectedDistrictId, selectedCommuneId);
-
-            districtTS.on("change", function () {
-                const districtId = this.getValue();
-                loadCommunes(districtId);
-            });
-        }
-
-        document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
-    });
+    
 </script>

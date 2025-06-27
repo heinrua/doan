@@ -13,7 +13,6 @@ class Construction extends Model
 
     protected $fillable = [
         'id',
-        'type_of_calamity_id',
         'type_of_construction_id',
         'risk_level_id',
         'name',
@@ -58,10 +57,6 @@ class Construction extends Model
         'updated_at',
     ];
 
-    public function type_of_calamities()
-    {
-        return $this->belongsTo(TypeOfCalamities::class, 'type_of_calamity_id');
-    }
 
     public function type_of_constructions()
     {

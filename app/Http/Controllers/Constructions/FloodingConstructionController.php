@@ -79,11 +79,8 @@ class FloodingConstructionController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
-        $user = auth()->user();
         $validated = $request->validate([
             'name' => 'required|unique:constructions',
-            'type_of_calamity_id' => 'required',
             'type_of_construction_id' => 'required',
             'risk_level_id' => 'required',
             'video' => 'nullable|file|mimes:mp4',
@@ -93,7 +90,6 @@ class FloodingConstructionController extends Controller
         $data = [
             'name' => $validated['name'],
             'risk_level_id' => $validated['risk_level_id'],
-            'type_of_calamity_id' => $validated['type_of_calamity_id'],
             'type_of_construction_id' => $validated['type_of_construction_id'],
             'year_of_construction' => $request['year_of_construction'],
             'year_of_completion' => $request['year_of_completion'],
@@ -114,7 +110,7 @@ class FloodingConstructionController extends Controller
             'culver_code' => $request['culver_code'],
             'management_unit' => $request['management_unit'],
             'update_time' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $request->update_time)->format('Y-m-d'),
-            'created_by_user_id' => $user->id,
+            
         ];
         if ($request->hasFile('video')) {
             $videoFile = $request->file('video');
@@ -158,11 +154,11 @@ class FloodingConstructionController extends Controller
 
     public function update(Request $request)
     {
-        $user = auth()->user();
+        dd($request->update_time);
+
         $construction = Construction::findOrFail($request->id);
         $validated = $request->validate([
             'name' => 'required|unique:constructions,name,' . $request->id,
-            'type_of_construction_id' => 'required',
             'video' => 'nullable|file|mimes:mp4',
             'image' => 'nullable|file|mimes:jpg,jpeg,png',
             'risk_level_id' => 'required',

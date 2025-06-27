@@ -82,7 +82,7 @@
                 </tr>
             </thead>
             <tbody>
-                 @if ($data->isEmpty())
+                @if ($data->isEmpty())
                     <tr>
                         <td colspan="11" class="text-center py-6">
                             <div class="flex flex-col items-center justify-center text-slate-500">
@@ -91,14 +91,14 @@
                             </div>
                         </td>
                     </tr>
-                    @else
-                    @foreach ($data as $key => $value)
-                        <tr class="bg-white ">
-                            <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
-                            <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
-                            <a class="whitespace-nowrap font-medium" href="/edit-commune/{{ $value->id }}">
-                                {{ $value->name }}
-                            </a>
+                @else
+                @foreach ($data as $key => $value)
+                    <tr class="bg-white ">
+                        <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                        <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
+                        <a class="whitespace-nowrap font-medium" href="/edit-commune/{{ $value->id }}">
+                            {{ $value->name }}
+                        </a>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->district->name ?? '' }}
@@ -112,11 +112,11 @@
                         </td>
                         @auth
                         <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            <div class="flex gap-3 justify-center">
+                            <div class="flex gap-3 text-center">
                                 <a class="flex items-center text-blue-700" href="/edit-commune/{{ $value->id }}">
                                     {!! $icons['edit-2'] !!}
                                     Sửa
-                                </a><div class="flex gap-3 justify-center">
+                                </a>
                                 <a class="flex items-center text-red-600"
                                 onclick="openDeleteModal('{{ route('delete-commune', ['id' => $value->id]) }}')"
                                 href="javascript:void(0);">
@@ -127,9 +127,10 @@
                         @endauth
                     </tr>
                 @endforeach
+                @endif
             </tbody>
         </table>
-        @endif
+        
     </div>
     <!-- END: Data List -->
     <!-- BEGIN: Pagination -->
@@ -173,7 +174,7 @@
 @endsection
 
 <script>
-      function openDeleteModal(url) {
+    function openDeleteModal(url) {
         const modal = document.getElementById('delete-confirmation-modal');
         modal.classList.remove('hidden');
         setDeleteUrl(url);

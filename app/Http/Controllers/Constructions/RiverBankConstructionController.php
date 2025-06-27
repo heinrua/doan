@@ -82,7 +82,6 @@ class RiverBankConstructionController extends Controller
         $user = auth()->user();
         $validated = $request->validate([
             'name' => 'required|unique:constructions',
-            'type_of_calamity_id' => 'required',
             'risk_level_id' => 'required',
             'type_of_construction_id' => 'required',
             'video' => 'nullable|file|mimes:mp4',
@@ -108,7 +107,7 @@ class RiverBankConstructionController extends Controller
             $imageFile->move(public_path('uploads/constructions/river-bank/images'), $newFileName);
             $data['image'] = "uploads/constructions/river-bank/images/$newFileName";
         }
-        $data['type_of_calamity_id'] = $validated['type_of_calamity_id'];
+       
         $data['type_of_construction_id'] = $validated['type_of_construction_id'];
         $data['risk_level_id'] = $validated['risk_level_id'];
         $data['name'] = $validated['name'];

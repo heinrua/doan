@@ -106,18 +106,10 @@
                 <div class="relative sticky top-0 z-2 flex items-center h-[68px] px-4 border-b border-slate-100 bg-slate-100">
   
                     <div class="mr-auto"> 
-                       <div style="border-radius: 8px; 
-                                overflow: hidden; 
-                                width: 320px; 
-                                height: 40px; 
-                                background-color: #1E3A8A;  /* giống màu nền của widget */
-                                border: 2px solid #133086;  /* viền xanh đậm cho nổi bật */
-                                box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;">
-                    <!--Begin thoitiet.app widget --><iframe src="https://thoitiet247.vn/widget/embed/ca-mau?style=6&day=7&td=%232e0000&ntd=%231e3a8a&mvb=%23000205&mv=%231e3a8a&mdk=%23000000&htd=true" 
-                        id="widgeturl" width="325px" height="55px" scrolling="no" frameborder="0" allowtransparency="true" style="border:none;overflow:hidden;"></iframe><!-- End thoitiet.app widget -->
+                       <div class="rounded-[8px] overflow-hidden w-[200px] md:w-[325px] h-[40px] bg-[#1E3A8A] border-[2px] border-[#133086] shadow-[0_2px_6px_rgba(0,0,0,0.1)] flex items-center justify-center">
+                    <!--Begin thoitiet.app widget -->
+                    <iframe src="https://thoitiet247.vn/widget/embed/ca-mau?style=6&day=7&td=%232e0000&ntd=%231e3a8a&mvb=%23000205&mv=%231e3a8a&mdk=%23000000&htd=true" 
+                        id="widgeturl" class = "w-[200px] md:w-[325px]" height="55px" scrolling="no" frameborder="0" allowtransparency="true" style="border:none;overflow:hidden;"></iframe><!-- End thoitiet.app widget -->
                     </div>
 
 

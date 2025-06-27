@@ -46,14 +46,14 @@
                 </button>
             </form>
 
-            @if ($userCurrent->is_master || $userCurrent->hasPermission('create-risk-level'))
+            @auth
                 <a href="{{ route('create-risk-level') }}">
                     <button type="button"
                             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
                         {!! $icons['plus-circle'] !!} Tạo mới cấp độ
                     </button>
                 </a>
-            @endif
+            @endauth
         </div>
 
         <div class="intro-y col-span-3 overflow-auto lg:overflow-visible text-base text-gray-800 bg-gray-300 rounded-md px-4 py-2 shadow-sm text-center">
@@ -68,11 +68,11 @@
                         <th scope="col" class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4 ">Tên cấp độ</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Thuộc loại</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Mô tả</th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Hành động</th>
+                        @auth <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Hành động</th> @endauth
                     </tr>
                 </thead>
                 <tbody>
-               @if ($data->isEmpty())
+                    @if ($data->isEmpty())
                     <tr>
                         <td colspan="11" class="text-center py-6">
                             <div class="flex flex-col items-center justify-center text-slate-500">
@@ -99,7 +99,7 @@
                             </td>
                             @auth
                             <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                                <div class="flex gap-3 justify-center">
+                                <div class="flex gap-3 text-center">
                                     <a class="flex items-center text-blue-700" href="/edit-risk-level/{{ $value->id }}">
                                         {!! $icons['edit-2'] !!} Sửa
                                     </a>

@@ -3,9 +3,7 @@
 @section('subhead')
     <title>Danh Sách Công Trình Ngập Lụt - PCTT Cà Mau Dashboard</title>
 @endsection
-@php
-    $userCurrent = auth()->user();
-@endphp
+@vite(['resources/js/district-commune.js'])
 @section('subcontent')
     <div class="intro-y mt-5  flex items-center justify-between">
         <div class="flex items-center text-lg font-medium uppercase">
@@ -59,14 +57,14 @@
                     Tìm kiếm
                 </button>
             </form>
-            @if ($userCurrent->is_master || $userCurrent->hasPermission('create-construction-flooding'))
+            @auth
                 <a href="{{ route('create-construction-flooding') }}">
                     <button class="h-10 shadow-md" variant="primary">
                         {!! $icons['plus-circle'] !!}
                         Tạo mới công trình
                     </button>
                 </a>
-            @endif
+            @endauth
         </div>
         <!-- BEGIN: Total Records -->
         <div
@@ -76,208 +74,132 @@
         <!-- END: Total Records -->
         <!-- BEGIN: Data List -->
         <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            @if ($data->isEmpty())
-                <div class="text-center py-8">
-                    {!! $icons['frown'] !!}
-                    <div class="mt-3 text-xl text-slate-500">Hiện tại không có dữ liệu</div>
-                </div>
-        </div>
-    @else
-        <table class="-mt-2 border-separate border-spacing-y-[10px]">
-            <thead>
-                <tr>
-                    <table.th class="whitespace-nowrap  bg-white sticky left-0 z-10">
-                        #
-                    </table.th>
-                    <table.th
-                        class="whitespace-nowrap  text-center bg-white sticky left-12 z-10 uppercase">
-                        Tên công trình
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Loại công trình
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Cấp độ
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Vị trí công trình
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Xã
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Huyện
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Năm xây dựng
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Năm hoàn thành
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Thời gian cập nhật
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Toạ độ
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Quy mô
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Đặc điểm nhận dạng
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Bề rộng 1 cửa (m)
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Cao trình đấy (m)
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Cao trình đỉnh trụ pin (m)
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Hình thức vận hành
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Hệ thống thuỷ lợi
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Vùng thuỷ lợi
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Loại cống
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Mã cống
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Đơn vị quản lý
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Ghi chú
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Hình ảnh
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Video
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        Thời gian cập nhật
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center uppercase">
-                        HÀNH ĐỘNG
-                    </table.th>
+            <table class="-mt-2 border-separate border-spacing-y-[10px]">
+                <thead class="text-gray-700 uppercase bg-blue-100">
+                    <tr>
+                        <th class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                        <th class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4 ">
+                        Tên công trình</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Loại công trình</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]"><th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Cấp độ</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Vị trí công trình</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Xã</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Huyện</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Năm xây dựng</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Năm hoàn thành</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Thời gian cập nhật</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Toạ độ</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Quy mô</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Đặc điểm nhận dạng</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Bề rộng 1 cửa (m)</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Cao trình đấy (m)</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Cao trình đỉnh trụ pin (m)</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Hình thức vận hành</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Hệ thống thuỷ lợi</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Vùng thuỷ lợi</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Loại cống</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Mã cống</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Đơn vị quản lý</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Ghi chú</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Hình ảnh</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Video</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Thời gian cập nhật</th>
+                        @auth
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">HÀNH ĐỘNG</th>
+                        @endauth
                 </tr>
             </thead>
             <tbody>
-                @foreach ($data as $key => $value)
-                    <tr class="intro-x">
-                        <td
-                            class="box sticky rounded-l-none rounded-r-none border-x-0 left-0 z-10 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
-                            {{ $data->firstItem() + $key }}
+                @if ($data->isEmpty())
+                    <tr>
+                        <td colspan="11" class="text-center py-6">
+                            <div class="flex flex-col items-center justify-center text-slate-500">
+                                {!! $icons['frown'] !!}
+                                <div class="mt-2 text-lg">Hiện tại không có dữ liệu</div>
+                            </div>
                         </td>
-                        <td
-                            class="box sticky rounded-l-none rounded-r-none border-x-0 left-12 z-10 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r ">
+                    </tr>
+                @else
+                @foreach ($data as $key => $value)
+                    <tr class="bg-white ">
+                        <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                        <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
                             <a class="whitespace-nowrap font-medium"
                                 href="/construction/edit-flooding/{{ $value->id }}">
                                 {{ $value->name }}
                             </a>
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->type_of_constructions->name ?? '' }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->risk_level->name }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->address }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->communes[0]->name ?? '' }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->communes[0]->district->name ?? '' }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->year_of_construction }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->year_of_completion }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ \Carbon\Carbon::parse($value->update_time)->format('d-m-Y') }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->coordinates }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->scale }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->characteristic }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->width_of_door ?? '' }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->base_level ?? '' }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->pillar_top_level ?? '' }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->notes ?? '' }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->operation_method ?? '' }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->irrigation_system ?? '' }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->irrigation_area ?? '' }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->culver_type ?? '' }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->culver_code ?? '' }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->management_unit ?? '' }}
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             @if (!empty($value->image))
                                 <x-base.image-zoom class="w-full rounded-md" src="{{ asset($value->image) }}" />
                             @else
                                 <span class="text-gray-500 italic">Chưa có hình ảnh</span>
                             @endif
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             @if (!empty($value->video))
                                 <div class="relative w-24 h-16 cursor-pointer"
                                     onclick="openVideoModal('{{ asset($value->video) }}')">
@@ -294,35 +216,31 @@
                                 <span class="text-gray-500 italic">Chưa có video</span>
                             @endif
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             {{ $value->updated_at ?? '' }}
                         </td>
-                        <td @class([
-                            'box w-56 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r',
-                            'before:absolute before:inset-y-0 before:left-0 before:my-auto before:block before:h-8 before:w-px before:bg-slate-200 before:dark:bg-darkmode-400',
-                        ])>
-                            <div class="flex items-center justify-center">
-                                <a class="mr-3 flex items-center text-blue-700"
+                        @auth
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                            <div class="flex items-center text-center">
+                                <a class=" flex items-center text-blue-700"
                                     href="/construction/edit-flooding/{{ $value->id }}">
                                     {!! $icons['edit-2'] !!}
                                     Sửa
                                 </a>
-                                @if ($userCurrent->is_master || $userCurrent->hasPermission('delete-construction-flooding'))
-                                    <a class="flex items-center text-red-700" data-tw-toggle="modal"
-                                        data-tw-target="#delete-confirmation-modal"
-                                        onclick="setDeleteUrl('{{ route('delete-construction-flooding', ['id' => $value->id]) }}')"
-                                        href="javascript:void(0);">
-                                        {!! $icons['trash-2'] !!}> Xoá
-                                    </a>
-                                @endif
+                                <a class="flex items-center text-red-600"
+                                onclick="openDeleteModal('{{ route('delete-construction-flooding', ['id' => $value->id]) }}')"
+                                href="javascript:void(0);">
+                                    {!! $icons['trash-2'] !!} Xoá
+                                </a>  
                             </div>
                         </td>
+                        @endauth
                     </tr>
                 @endforeach
+                @endif
             </tbody>
         </table>
-        @endif
+        
     </div>
     <!-- END: Data List -->
     <!-- BEGIN: Pagination -->
@@ -354,10 +272,9 @@
                             class="bg-white px-4 py-2 rounded border text-gray-700 hover:bg-gray-100">
                         Hủy
                     </button>
-                    <a class="flex items-center text-red-600"
-                    onclick="openDeleteModal('{{ route('delete-user', ['id' => $value->id]) }}')"
-                    href="javascript:void(0);">
-                        {!! $icons['trash-2'] !!} Xoá
+                     <a href="#" id="confirm-delete"
+                    class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">
+                        Xoá
                     </a>
                 </div>
             </div>
@@ -374,7 +291,7 @@
 @endsection
 
 <script>
-      function openDeleteModal(url) {
+    function openDeleteModal(url) {
         const modal = document.getElementById('delete-confirmation-modal');
         modal.classList.remove('hidden');
         setDeleteUrl(url);
@@ -407,59 +324,5 @@
             }
         });
     });
-    document.addEventListener("DOMContentLoaded", function() {
-        let districtSelect = document.querySelector("#districtSelect");
-        let communeSelect = document.querySelector("#communeSelect");
-        if (districtSelect && communeSelect) {
-            let districtTS = districtSelect.tomselect;
-            let communeTS = communeSelect.tomselect;
-            //  Hàm lấy giá trị từ URL
-            function getQueryParam(param) {
-                let urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(param);
-            }
-            // Lấy giá trị từ URL
-            let selectedDistrictId = getQueryParam("district_id") || "";
-            let selectedCommuneId = getQueryParam("commune_id") || "";
-            //  Hàm tải danh sách xã
-            function loadCommunes(districtId = "", selectedCommune = "") {
-                communeTS.clear();
-                communeTS.clearOptions();
-
-                let url = `{{ route('get-communes') }}`;
-                if (districtId) {
-                    url += `?district_id=${districtId}`;
-                }
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        communeTS.clearOptions();
-                        data.forEach(commune => {
-                            communeTS.addOption({
-                                value: commune.id,
-                                text: commune.name
-                            });
-                        })
-                        // Nếu có xã đã chọn từ URL, đặt lại giá trị
-                        if (selectedCommune && data.some(c => c.id == selectedCommune)) {
-                            communeTS.setValue(selectedCommune);
-                        }
-                    })
-                    .catch(() => {
-                        communeTS.clearOptions();
-                        communeTS.addOption({
-                            value: "",
-                            text: "Lỗi tải dữ liệu"
-                        });
-                    });
-            }
-            //  Khi tải trang, luôn luôn load danh sách xã
-            loadCommunes(selectedDistrictId, selectedCommuneId);
-            //  Khi chọn huyện, load lại danh sách xã
-            districtTS.on("change", function() {
-                let districtId = this.getValue();
-                loadCommunes(districtId);
-            });
-        }
-    });
+    
 </script>

@@ -184,12 +184,20 @@
                                             </div>
                                         </div>
                                     </label>
-                                    <div class="w-full">
-                                        
-                                        <input datepicker name="update_time" id="update_time" type="text" placeholder="Thời gian cập nhật"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" >
-                                        
+                                   <div class="w-full">
+                                        <x-base.preview>
+                                            <x-base.litepicker class="mx-auto block" data-single-mode="true"
+                                                data-lang="vi-VN" name="update_time" id="update_time" />
+                                        </x-base.preview>
+
+                                        <x-base.source>
+                                            <x-base.highlight>
+                                                <x-base.litepicker class="mx-auto block" data-single-mode="true"
+                                                    data-lang="vi-VN" />
+                                            </x-base.highlight>
+                                        </x-base.source>
                                     </div>
+
                                 </div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>

@@ -16,6 +16,43 @@ use App\Exports\UsersExport;
 */
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
+Route::get('/upload-test', function () {
+    $token = csrf_token();
+    return <<<HTML
+<form method="POST" enctype="multipart/form-data" action="/upload-test">
+    <input type="hidden" name="_token" value="$token">
+    <input type="file" name="video">
+    <button type="submit">Upload</button>
+</form>
+HTML;
+});
+
+Route::post('/upload-test', function (\Illuminate\Http\Request $request) {
+    if (!$request->hasFile('video')) {
+        return '❌ Không có file video được gửi lên.';
+    }
+
+    $video = $request->file('video');
+
+    // Check thêm xem file có tồn tại trên disk hay không
+    $realPath = $video->getRealPath();
+
+    if (!$realPath || !file_exists($realPath)) {
+        return '❌ File không tồn tại thực sự trên ổ đĩa.';
+    }
+
+    return [
+        '✅ Đã nhận file video',
+        'realPath' => $realPath,
+        'is_file' => is_file($realPath),
+        'mimeType (PHP)' => mime_content_type($realPath),
+        'mimeType (Laravel)' => $video->getMimeType(),
+        'originalName' => $video->getClientOriginalName(),
+        'size' => $video->getSize(),
+    ];
+});
+
+
 
 Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
     ->middleware('guest')->name('password.request');
@@ -71,7 +108,9 @@ Route::get('/test-email', function () {
     Route::get('/get-sub-type-of-calamities', [App\Http\Controllers\AdminController::class, 'getSubTypeOfCalamities'])->name('get-sub-type-of-calamities');
     Route::post('/create-disaster', [App\Http\Controllers\AdminController::class, 'createDisaster'])->name('create-disaster');
 
-   
+    Route::get('/get-communes/{district_id}', [App\Http\Controllers\LocationController::class, 'getCommunes'])->name('get-communes');
+
+
     // CRUD User
     Route::middleware(['auth'])->group(function () {
         Route::get('/create-user', [App\Http\Controllers\UserController::class, 'viewFormUser'])->name('create-user');//->middleware('permission:create-user');

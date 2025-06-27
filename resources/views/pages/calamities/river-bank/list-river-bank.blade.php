@@ -3,7 +3,7 @@
 @section('subhead')
     <title>Danh Sách Thiên Tai Sạt Lở - PCTT Cà Mau Dashboard</title>
 @endsection
-
+@vite(['resources/js/district-commune.js'])
 @section('subcontent')
     <div class="intro-y mt-5 flex items-center justify-between">
         <div class="flex items-center text-lg font-medium uppercase">
@@ -90,8 +90,8 @@
             <table class="-mt-2 border-separate border-spacing-y-[10px]">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                    <th class="sticky left-0 z-20 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
-                    <th class="sticky left-[40px] z-20 bg-blue-100 px-4 py-4  min-w-[180px]">
+                    <th class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                    <th class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4  min-w-[180px]">
                         Tên vị trí sạt lở
                     </th>
                     <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
@@ -180,85 +180,48 @@
                     @else
                 @foreach ($data as $key => $value)
                     <tr class="bg-white ">
-                        <td class="sticky left-0 z-20 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}
+                        <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}
                         </td>
-                        <td class="sticky left-[40px] z-20 bg-white px-4 py-4 font-bold">
+                        <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
                                     <a href="/calamity/edit-river-bank/{{ $value->id }}">{{ $value->name }}</a>
                                 </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->sub_type_of_calamities[0]->name ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->sub_type_of_calamities[0]->name ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->risk_level->name ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->risk_level->name ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->address ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->address ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->communes[0]->name ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->communes[0]->name ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->communes[0]->district->name ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->communes[0]->district->name ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->length ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->length ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->width ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->width ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->acreage ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->acreage ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->coordinates ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->coordinates ?? '' }}
                         </td>
-                        <td
-                           class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ \Carbon\Carbon::parse($value->time)->format('d-m-Y') ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px] "> {{ \Carbon\Carbon::parse($value->time)->format('d-m-Y') ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->reason ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->reason ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->geology ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->geology ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->watermark_points ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->watermark_points ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->human_damage ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->human_damage ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->property_damage ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->property_damage ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->investment_level ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->investment_level ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->mitigation_measures ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->mitigation_measures ?? '' }}
                         </td>
-                        <td
-                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->support_policy ?? '' }}
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->support_policy ?? '' }}
                         </td>
-                        <td
-                           class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
                             @php
                                 $maps = json_decode($value->map, true);
                             @endphp
@@ -280,16 +243,14 @@
                                 <span class="text-gray-500">Không có bản đồ</span>
                             @endif
                         </td>
-                        <td
-                           class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
                             @if (!empty($value->image))
                                 <x-base.image-zoom class="w-full rounded-md" src="{{ asset($value->image) }}" />
                             @else
                                 <span class="text-gray-500 italic">Chưa có hình ảnh</span>
                             @endif
                         </td>
-                        <td
-                           class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
                             @if (!empty($value->video))
                                 <div class="relative w-24 h-16 cursor-pointer"
                                     onclick="openVideoModal('{{ asset($value->video) }}')">
@@ -331,9 +292,10 @@
                         @endauth
                     </tr>
                 @endforeach
+             @endif
             </tbody>
         </table>
-        @endif
+        
     </div>
     <!-- END: Data List -->
     <!-- BEGIN: Pagination -->
@@ -365,10 +327,9 @@
                             class="bg-white px-4 py-2 rounded border text-gray-700 hover:bg-gray-100">
                         Hủy
                     </button>
-                    <a class="flex items-center text-red-600"
-                    onclick="openDeleteModal('{{ route('delete-user', ['id' => $value->id]) }}')"
-                    href="javascript:void(0);">
-                        {!! $icons['trash-2'] !!} Xoá
+                    <a href="#" id="confirm-delete"
+                    class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">
+                        Xoá
                     </a>
                 </div>
             </div>
@@ -417,59 +378,5 @@
             }
         });
     });
-    document.addEventListener("DOMContentLoaded", function() {
-        let districtSelect = document.querySelector("#districtSelect");
-        let communeSelect = document.querySelector("#communeSelect");
-        if (districtSelect && communeSelect) {
-            let districtTS = districtSelect.tomselect;
-            let communeTS = communeSelect.tomselect;
-            //  Hàm lấy giá trị từ URL
-            function getQueryParam(param) {
-                let urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(param);
-            }
-            // Lấy giá trị từ URL
-            let selectedDistrictId = getQueryParam("district_id") || "";
-            let selectedCommuneId = getQueryParam("commune_id") || "";
-            //  Hàm tải danh sách xã
-            function loadCommunes(districtId = "", selectedCommune = "") {
-                communeTS.clear();
-                communeTS.clearOptions();
-
-                let url = `{{ route('get-communes') }}`;
-                if (districtId) {
-                    url += `?district_id=${districtId}`;
-                }
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        communeTS.clearOptions();
-                        data.forEach(commune => {
-                            communeTS.addOption({
-                                value: commune.id,
-                                text: commune.name
-                            });
-                        })
-                        // Nếu có xã đã chọn từ URL, đặt lại giá trị
-                        if (selectedCommune && data.some(c => c.id == selectedCommune)) {
-                            communeTS.setValue(selectedCommune);
-                        }
-                    })
-                    .catch(() => {
-                        communeTS.clearOptions();
-                        communeTS.addOption({
-                            value: "",
-                            text: "Lỗi tải dữ liệu"
-                        });
-                    });
-            }
-            //  Khi tải trang, luôn luôn load danh sách xã
-            loadCommunes(selectedDistrictId, selectedCommuneId);
-            //  Khi chọn huyện, load lại danh sách xã
-            districtTS.on("change", function() {
-                let districtId = this.getValue();
-                loadCommunes(districtId);
-            });
-        }
-    });
+    
 </script>

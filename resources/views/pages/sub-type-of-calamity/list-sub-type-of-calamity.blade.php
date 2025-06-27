@@ -63,8 +63,8 @@
             <table class="-mt-2 border-separate border-spacing-y-[10px]">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                        <th class="sticky left-0 z-20 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
-                        <th class="sticky left-[40px] z-20 bg-blue-100 px-4 py-4 ">Loại thiên tai phụ</th>
+                        <th class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                        <th class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4 ">Loại thiên tai phụ</th>
                         <th class="px-6 py-4 whitespace-nowrap min-w-[160px]">Loại thiên tai</th>
                         <th class="px-6 py-4 whitespace-nowrap min-w-[160px]">Mô tả</th>
                         @auth <th class="px-6 py-4 whitespace-nowrap min-w-[160px]">Hành động</th> @endauth
@@ -83,9 +83,9 @@
                         @else
                         @foreach ($data as $key => $value)
                             <tr class="bg-white ">
-                                <td class="sticky left-0 z-20 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                                <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
 
-                                <td class="sticky left-[40px] z-20 bg-white px-4 py-4 font-bold">
+                                <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
                                     <a class="font-medium text-black" href="/edit-sub-type-of-calamity/{{ $value->id }}">
                                         {{ $value->name }}
                                     </a>
@@ -95,7 +95,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->description }}</td>
                                 @auth
                                 <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                                    <div class="flex gap-3 justify-center">
+                                    <div class="flex gap-3 text-center">
                                         <a href="/edit-sub-type-of-calamity/{{ $value->id }}" class="text-blue-700 flex items-center">
                                             {!! $icons['edit-2'] !!} Sửa
                                         </a>

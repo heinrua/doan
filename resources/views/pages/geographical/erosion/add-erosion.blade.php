@@ -303,8 +303,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <input name="image" id="image" type="file"
-                                        placeholder="Hình ảnh" />
+                                    <input name="image" id="image" type="file" placeholder="Hình ảnh"  accept=".jpg,.jpeg,.png" />
                                 </div>
                             </div>
                         </div>
@@ -321,8 +320,7 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <input name="video" id="video" type="file"
-                                        placeholder="Video" />
+                                    <input name="video" id="video" type="file" placeholder="Video" accept=".mp4"  />
                                 </div>
                             </div>
                         </div>

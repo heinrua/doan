@@ -3,7 +3,7 @@
 @section('subhead')
     <title>Danh Sách Thiên Tai Bão Và Áp Thấp Nhiệt Đới - PCTT Cà Mau Dashboard</title>
 @endsection
-
+@vite(['resources/js/district-commune.js'])
 @section('subcontent')
     <div class="intro-y mt-5  flex items-center justify-between">
         <div class="flex items-center text-lg font-medium uppercase">
@@ -238,9 +238,10 @@
                         @endauth
                     </tr>
                 @endforeach
+                 @endif
             </tbody>
         </table>
-        @endif
+       
     </div>
     <!-- END: Data List -->
     <!-- BEGIN: Pagination -->
@@ -325,61 +326,7 @@
             }
         });
     });
-    document.addEventListener("DOMContentLoaded", function() {
-        let districtSelect = document.querySelector("#districtSelect");
-        let communeSelect = document.querySelector("#communeSelect");
-        if (districtSelect && communeSelect) {
-            let districtTS = districtSelect.tomselect;
-            let communeTS = communeSelect.tomselect;
-            //  Hàm lấy giá trị từ URL
-            function getQueryParam(param) {
-                let urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(param);
-            }
-            // Lấy giá trị từ URL
-            let selectedDistrictId = getQueryParam("district_id") || "";
-            let selectedCommuneId = getQueryParam("commune_id") || "";
-            //  Hàm tải danh sách xã
-            function loadCommunes(districtId = "", selectedCommune = "") {
-                communeTS.clear();
-                communeTS.clearOptions();
-
-                let url = `{{ route('get-communes') }}`;
-                if (districtId) {
-                    url += `?district_id=${districtId}`;
-                }
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        communeTS.clearOptions();
-                        data.forEach(commune => {
-                            communeTS.addOption({
-                                value: commune.id,
-                                text: commune.name
-                            });
-                        })
-                        // Nếu có xã đã chọn từ URL, đặt lại giá trị
-                        if (selectedCommune && data.some(c => c.id == selectedCommune)) {
-                            communeTS.setValue(selectedCommune);
-                        }
-                    })
-                    .catch(() => {
-                        communeTS.clearOptions();
-                        communeTS.addOption({
-                            value: "",
-                            text: "Lỗi tải dữ liệu"
-                        });
-                    });
-            }
-            //  Khi tải trang, luôn luôn load danh sách xã
-            loadCommunes(selectedDistrictId, selectedCommuneId);
-            //  Khi chọn huyện, load lại danh sách xã
-            districtTS.on("change", function() {
-                let districtId = this.getValue();
-                loadCommunes(districtId);
-            });
-        }
-    });
+    
     document.addEventListener("DOMContentLoaded", function() {
         let select = document.getElementById("riskLevelSelect");
         let selectedOption = select.options[select.selectedIndex]; // Lấy option đã chọn sau reload
