@@ -203,7 +203,7 @@
                                                     <a href="{{ route('view-calamity-flooding') }}">
                                                         {{ $calamity->name }}
                                                     </a>
-</div>
+                                            </div>
                                                 
                                             @endif
                                             @if ($calamity->calamity_type == 'SẠT LỞ BỜ SÔNG & BỜ BIỂN')
@@ -279,12 +279,12 @@
                     <div class="intro-y flex items-center flex-wrap gap-x-4 mt-4">
                         <!-- Nút tạo -->
                       
-                            <button class="mb-2" data-tw-toggle="modal" data-tw-target="#large-modal-size-preview"
-                                as="a" variant="primary">
-                                {!! $icons['plus'] !!}
-                                @auth Tạo Mới Cảnh Báo Thiên Tai @endauth
-                                @guest Đăng ký nhận thông tin thiên tai mới @endguest
-                            </button>
+                        <button class="mb-2" data-tw-toggle="modal" data-tw-target="#large-modal-size-preview"
+                            as="a" variant="primary">
+                            {!! $icons['plus'] !!}
+                            @auth Tạo Mới Cảnh Báo Thiên Tai @endauth
+                            @guest Đăng ký nhận thông tin thiên tai mới @endguest
+                        </button>
                        
                        
                         <!-- Danh sách Checkbox -->
@@ -552,36 +552,36 @@
                 const calamityId = calamitySelect.value;
              
                 // Load cấp độ rủi ro
-        const riskLevelUrl = `{{ route('get-risk-levels') }}${calamityId ? '?calamity_id=' + calamityId : ''}`;
-        fetch(riskLevelUrl)
-            .then(res => res.json())
-            .then(data => {
-                riskLevelSelect.innerHTML = `<option value="">-- Chọn cấp độ --</option>`;
-                data.forEach(level => {
-                    const option = document.createElement("option");
-                    option.value = level.id;
-                    option.textContent = level.name;
-                    riskLevelSelect.appendChild(option);
-                });
-            })
-            .catch(error => console.error("Lỗi khi tải cấp độ rủi ro:", error));
+                const riskLevelUrl = `{{ route('get-risk-levels') }}${calamityId ? '?calamity_id=' + calamityId : ''}`;
+                fetch(riskLevelUrl)
+                    .then(res => res.json())
+                    .then(data => {
+                        riskLevelSelect.innerHTML = `<option value="">-- Chọn cấp độ --</option>`;
+                        data.forEach(level => {
+                            const option = document.createElement("option");
+                            option.value = level.id;
+                            option.textContent = level.name;
+                            riskLevelSelect.appendChild(option);
+                        });
+                    })
+                .catch(error => console.error("Lỗi khi tải cấp độ rủi ro:", error));
 
-        // Load tác nhân (loại hình thiên tai phụ)
-        const subTypeUrl = `{{ route('get-sub-type-of-calamities') }}${calamityId ? '?calamity_id=' + calamityId : ''}`;
-        fetch(subTypeUrl)
-            .then(res => res.json())
-            .then(data => {
-                subTypeOfCalamitySelect.innerHTML = `<option value="">-- Chọn tác nhân --</option>`;
-                data.forEach(item => {
-                    const option = document.createElement("option");
-                    option.value = item.id;
-                    option.textContent = item.name;
-                    subTypeOfCalamitySelect.appendChild(option);
+                // Load tác nhân (loại hình thiên tai phụ)
+                const subTypeUrl = `{{ route('get-sub-type-of-calamities') }}${calamityId ? '?calamity_id=' + calamityId : ''}`;
+                fetch(subTypeUrl)
+                    .then(res => res.json())
+                    .then(data => {
+                        subTypeOfCalamitySelect.innerHTML = `<option value="">-- Chọn tác nhân --</option>`;
+                        data.forEach(item => {
+                            const option = document.createElement("option");
+                            option.value = item.id;
+                            option.textContent = item.name;
+                            subTypeOfCalamitySelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error("Lỗi khi tải loại hình thiên tai:", error));
+                    });
                 });
-            })
-            .catch(error => console.error("Lỗi khi tải loại hình thiên tai:", error));
-            });
-        });
 
         // load màu cho biểu đồ tròn
         document.addEventListener("DOMContentLoaded", function() {
@@ -631,8 +631,7 @@
                 initializeApp();
             }
         });
-        let calamitiesData = @json($data7Days);
-console.log("🚨 Dữ liệu thiên tai 7 ngày:", calamitiesData);
+        let calamitiesData = @json($data7Days)
 
         
         let map;

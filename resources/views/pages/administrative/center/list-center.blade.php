@@ -64,7 +64,9 @@
 
         
         <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <table class="-mt-2 border-separate border-spacing-y-[10px]">
+            <form action="{{ route('destroy-multiple-user') }}" method="POST">
+            @csrf
+            @method('DELETE')<table class="mt-2 border-separate border-spacing-y-[10px] table-fixed">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
                         <th scope="col" class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
@@ -92,9 +94,9 @@
                         </tr>
                     @else
                         @foreach ($data as $key => $value)
-                            <tr class="bg-white border-b">
-                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $data->firstItem() + $key }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                            <tr class="bg-white ">
+                                <td class="sticky left-0 z-1 pl-4 bg-white py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                                <td class="sticky whitespace-nowrap bg-white left-[40px] z-1 px-4 py-4">
                                     <a class="whitespace-nowrap font-medium"
                                         href="/administrative/edit-center/{{ $value->id }}" >
                                         {{ $value->name }}
@@ -103,10 +105,10 @@
                                 <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->address }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->communes->name ?? '' }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->communes->district->name ?? '' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] text-center">{{ $value->code ?? '' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] text-center">{{ $value->option ?? '' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] text-center">{{ $value->coordinates ?? '' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] text-center">{{ number_format($value->population, 0, ',', '.') }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->code ?? '' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->classify ?? '' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->coordinates ?? '' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ number_format($value->population, 0, ',', '.') }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->description ?? '' }}</td>
                                 @auth
                                 <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
@@ -128,6 +130,11 @@
                     @endif
                 </tbody>
             </table>
+            <button type="submit" class="bg-red-700" id="delete-multiple-btn" disabled>
+    {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
+</button>
+
+            </form>
         </div>
 
         <div class="intro-y col-span-12">

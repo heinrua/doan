@@ -1,3 +1,4 @@
+
 @extends('themes.base')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 

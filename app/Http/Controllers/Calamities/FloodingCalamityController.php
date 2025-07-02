@@ -19,7 +19,7 @@ class FloodingCalamityController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum');
+       
     }
 
     public function index(Request $request)
@@ -359,4 +359,5 @@ class FloodingCalamityController extends Controller
         $calamity->delete();
         return redirect('/calamity/list-flooding')->with('success', 200);
     }
+   
 }

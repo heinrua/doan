@@ -3,9 +3,7 @@
 @section('subhead')
     <title>Cập Nhật Loại Công Trình - PCTT Cà Mau Dashboard</title>
 @endsection
-@php
-    $userCurrent = auth()->user();
-@endphp
+
 @section('subcontent')
     <h2 class="intro-y mt-5 text-lg font-medium uppercase flex items-center">
         {!! $icons['chevron-right'] !!}
@@ -76,7 +74,7 @@
                                     <select class="w-full" id="crud-form-2" name="type_of_calamity_id">
                                         @foreach ($calamities as $calamity)
                                             <option value="{{ $calamity->id }}"
-                                                {{ $construction->type_of_calamity_id == $calamity->id ? 'selected' : '' }}>
+                                                {{ $construction->risk_level->type_of_calamity_id == $calamity->id ? 'selected' : '' }}>
                                                 {{ $calamity->name }}
                                             </option>
                                         @endforeach
@@ -94,11 +92,10 @@
                             class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
                             Huỷ Bỏ</button>
                     </a>
-                    @if ($userCurrent->is_master || $userCurrent->hasPermission('update-type-of-construction'))
-                       <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+                   <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
                         Lưu
                     </button>
-                    @endif
+                    
                 </div>
             </form>
         </div>

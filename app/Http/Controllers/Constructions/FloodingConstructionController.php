@@ -18,7 +18,7 @@ class FloodingConstructionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum');
+        
     }
     public function index(Request $request)
     {
@@ -29,7 +29,7 @@ class FloodingConstructionController extends Controller
         $type_of_construction = $request->input('type_of_construction');
 
         $query = Construction::whereRelation('risk_level.type_of_calamities', 'slug', 'ngap-lut')
-            ->with(['type_of_constructions', 'communes']);
+            ->with(['type_of_constructions', 'commune']);
 
         if (!empty($search)) {
             $query->where('name', 'LIKE', "%{$search}%");
@@ -37,18 +37,18 @@ class FloodingConstructionController extends Controller
         if (!empty($commune_id) && !empty($district_id)) {
             $validCommune = Commune::where('id', $commune_id)->where('district_id', $district_id)->exists();
             if ($validCommune) {
-                $query->whereHas('communes', function ($q) use ($commune_id) {
+                $query->whereHas('commune', function ($q) use ($commune_id) {
                     $q->where('id', $commune_id);
                 });
             } else {
                 $query->whereRaw('1 = 0'); // Tạo điều kiện luôn sai để không có dữ liệu nào
             }
         } elseif (!empty($commune_id)) {
-            $query->whereHas('communes', function ($q) use ($commune_id) {
+            $query->whereHas('commune', function ($q) use ($commune_id) {
                 $q->where('id', $commune_id);
             });
         } elseif (!empty($district_id)) {
-            $query->whereHas('communes', function ($q) use ($district_id) {
+            $query->whereHas('commune', function ($q) use ($district_id) {
                 $q->where('district_id', $district_id);
             });
         }
@@ -137,7 +137,7 @@ class FloodingConstructionController extends Controller
         $construction = Construction::create($data);
 
         if (isset($request['commune_id'])) {
-            $construction->communes()->sync($request['commune_id']);
+            $construction->commune()->sync($request['commune_id']);
         }
         return redirect('/construction/list-flooding')->with('success', 200);
     }
@@ -146,7 +146,7 @@ class FloodingConstructionController extends Controller
     {
         $calamities = TypeOfCalamities::where('slug', 'ngap-lut')->get();
         $construction = Construction::findOrFail($id);
-        $typeOfConstructions = TypeOfConstruction::where('type_of_calamity_id', $construction->type_of_calamity_id)->get();
+        $typeOfConstructions = TypeOfConstruction::where('type_of_calamity_id', $construction->risk_level->type_of_calamity_id)->get();
         $communes = Commune::all();
         $risk_levels = RiskLevel::whereRelation('type_of_calamities', 'slug', 'ngap-lut')->get();
         return view('pages/constructions/flooding/edit-flooding', compact('calamities', 'construction', 'typeOfConstructions', 'communes', 'risk_levels'));
@@ -219,7 +219,7 @@ class FloodingConstructionController extends Controller
         $construction->update($data);
 
         if (isset($request['commune_id'])) {
-            $construction->communes()->sync($request['commune_id']);
+            $construction->commune()->sync($request['commune_id']);
         }
 
         return redirect('/construction/list-flooding')->with('success', 200);
@@ -229,7 +229,7 @@ class FloodingConstructionController extends Controller
     public function destroy($id)
     {
         $construction = Construction::findOrFail($id);
-        $construction->communes()->detach();
+        $construction->commune()->detach();
         $construction->delete();
         return redirect('/construction/list-flooding')->with('success', 200);
     }

@@ -11,12 +11,14 @@
     </h2>
     <div class="mt-5 grid grid-cols-12 gap-6">
         <div class="intro-y col-span-12 mt-2 flex flex-wrap items-center sm:flex-nowrap">
+            @auth
             <a href="{{ route('create-monitoring') }}">
                 <button class="mr-2 shadow-md" variant="primary">
                     {!! $icons['plus-circle'] !!}
                     Tạo Mới Mốc Quan Trắc
                 </button>
             </a>
+            @endauth
              <div class="relative">
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         {!! $icons['search'] !!}
@@ -26,123 +28,103 @@
                 </div>
         </div>
         <!-- BEGIN: Data List -->
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            @if ($data->isEmpty())
-                <div class="text-center py-8">
-                    {!! $icons['frown'] !!}
-                    <div class="mt-3 text-xl text-slate-500">Hiện tại không có dữ liệu</div>
-                </div>
-        </div>
-    @else
-        <table class="-mt-2 border-separate border-spacing-y-[10px]">
-            <thead>
-                <tr>
-                    <table.th class="whitespace-nowrap  bg-white sticky left-0 z-10">
-                        #
-                    </table.th>
-                    <table.th
-                        class="whitespace-nowrap  text-center bg-white sticky left-12 z-10">
-                        Vị trí mốc quan trắc
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center">
-                        Xã
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center">
-                        Huyện
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center">
-                        Năm khảo sát
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center">
-                        Thuộc sông
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center">
-                        Thời gian cập nhật
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center">
-                        Cao trình Z
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center">
-                        Toạ độ (X,Y)
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center">
-                        Đặc điểm nhận dạng
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center">
-                        Bản đồ
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center">
-                        Hình ảnh
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center">
-                        Video
-                    </table.th>
-                    <table.th class="whitespace-nowrap bg-white sticky text-center">
-                        HÀNH ĐỘNG
-                    </table.th>
+        <!-- BEGIN: Data List -->
+         <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
+            <form action="{{ route('destroy-multiple-user') }}" method="POST">
+            @csrf
+            @method('DELETE')
+            @auth
+            <button type="submit" class="bg-red-700" id="delete-multiple-btn" disabled>
+                {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
+            </button>
+            @endauth
+            <table class="mt-2 border-separate border-spacing-y-[10px] table-fixed">
+                <thead class="text-gray-700 uppercase bg-blue-100">
+                    <tr>
+                        <th class="sticky left-0 z-1 bg-blue-100 w-[40px] min-w-[40px] max-w-[40px] px-1 text-center"><input type="checkbox" id="selectAll" class="block mx-auto"></th>
+                        <th class="sticky left-[40px] z-1 bg-blue-100 whitespace-nowrap px-4 py-4 ">Vị trí mốc quan trắc</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Xã</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Huyện</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Năm khảo sát</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Thuộc sông</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Thời gian cập nhật</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Cao trình Z</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Toạ độ (X,Y)</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Đặc điểm nhận dạng</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Bản đồ</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Hình ảnh</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Video</th>
+                        @auth
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">HÀNH ĐỘNG</th>
+                        @endauth
                 </tr>
             </thead>
             <tbody>
+                @if ($data->isEmpty())
+                    <tr>
+                        <td colspan="11" class="text-center py-6">
+                            <div class="flex flex-col items-center justify-center text-slate-500">
+                                {!! $icons['frown'] !!}
+                                <div class="mt-2 text-lg">Hiện tại không có dữ liệu</div>
+                            </div></td>
+                    </tr>
+                @else
                 @foreach ($data as $key => $value)
-                    <tr class="intro-x">
-                        <td
-                            class="box sticky rounded-l-none rounded-r-none border-x-0 left-0 z-10 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
-                            {{ $data->firstItem() + $key }}
+                    <tr class="bg-white ">
+                        <td class="sticky left-0 z-1 bg-white  w-[40px]" >
+                            <input type="checkbox" class="item-checkbox" name="ids[]" value="{{ $value->id }}">
+
                         </td>
-                        <td
-                            class="box sticky rounded-l-none rounded-r-none border-x-0 left-12 z-10 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r ">
-                            <a class="whitespace-nowrap font-medium">
+                        <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
+                            <a class="whitespace-nowrap font-medium" 
+                             href="/geographical/edit-monitoring/{{ $value->id }}">
                                 {{ $value->name }}
                             </a>
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
-                            {{ $value->communes->name ?? '' }}
-                        </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
-                            {{ $value->communes->district->name ?? '' }}
-                        </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
-                            {{ $value->survey_year ?? '' }}
-                        </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
-                            {{ $value->river ?? '' }}
-                        </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
-                            {{ \Carbon\Carbon::parse($value->last_updated)->format('d-m-Y') }}
-                        </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
-                            {{ number_format($value->elevation_z) ?? '' }}
-                        </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
-                            {{ $value->coordinates ?? '' }}
-                        </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-left shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
-                            {{ $value->description ?? '' }}
-                        </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
-                            {{ $value->map }}
-                        </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
-                            @if (!empty($value->image))
-                                <x-base.image-zoom class="w-full rounded-md"
-                                    src="{{ asset( $value->image) }}" />
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->communes->name ?? '' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->communes->district->name ?? '' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->survey_year ?? '' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->river ?? '' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ \Carbon\Carbon::parse($value->last_updated)->format('d-m-Y') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ number_format($value->elevation_z) ?? '' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->coordinates ?? '' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->description ?? '' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                            @php
+                                $maps = json_decode($value->map, true);
+                            @endphp
+                            @if (!empty($maps) && is_array($maps))
+                                <div class="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
+                                    style="max-height: {{ count($maps) > 4 ? '150px' : 'auto' }};">
+                                    <ul class="list-disc text-left pl-4">
+                                        @foreach ($maps as $map)
+                                            <li>
+                                                <a href="{{ asset($map) }}" target="_blank"
+                                                    class="text-blue-500 hover:underline">
+                                                    {{ basename($map) }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             @else
-                                <span class="text-gray-500 italic">Chưa có hình ảnh</span>
+                                <span class="text-gray-500">Không có bản đồ</span>
+                            @endif</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                            @if (!empty($value->image))
+                            <div class="relative w-24 h-16 cursor-pointer"
+                                onclick="openImageModal('{{ asset($value->image) }}')">
+                                <img src="{{ asset($value->image) }}"
+                                    class="w-full h-full object-cover rounded-md shadow-md pointer-events-none" />
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xs font-bold rounded-md">
+                                    Xem Hình
+                                </div>
+                            </div>
+                            @else
+                            <span class="text-gray-500 italic">Chưa có hình ảnh</span>
                             @endif
                         </td>
-                        <td
-                            class="box rounded-l-none rounded-r-none border-x-0 text-center shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r">
-                            @if (!empty($value->video))
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">@if (!empty($value->video))
                                 <div class="relative w-24 h-16 cursor-pointer"
                                     onclick="openVideoModal('{{ asset( $value->video) }}')">
                                     <video class="w-full h-full object-cover rounded-md shadow-md pointer-events-none">
@@ -158,24 +140,22 @@
                                 <span class="text-gray-500 italic">Chưa có video</span>
                             @endif
                         </td>
-                        <td @class([
-                            'box w-56 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r',
-                            'before:absolute before:inset-y-0 before:left-0 before:my-auto before:block before:h-8 before:w-px before:bg-slate-200 before:dark:bg-darkmode-400',
-                        ])>
-                            <div class="flex items-center justify-center">
-                                <a class="mr-3 flex items-center text-blue-700"
+                        @auth
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                            <div class="flex gap-3 text-center">
+                                <a class="flex items-center text-blue-700"
                                     href="/geographical/edit-monitoring/{{ $value->id }}">
                                     {!! $icons['edit-2'] !!}
                                     Sửa
                                 </a>
-                                <a class="flex items-center text-red-700" data-tw-toggle="modal"
-                                    data-tw-target="#delete-confirmation-modal"
-                                    onclick="setDeleteUrl('{{ route('delete-monitoring', ['id' => $value->id, 'type' => 'monitoring']) }}')"
+                                <a class="flex items-center text-red-700" 
+                                    onclick="openDeleteModal('{{ route('delete-monitoring', ['id' => $value->id, 'type' => 'monitoring']) }}')"
                                     href="javascript:void(0);">
                                     {!! $icons['trash-2'] !!}> Xoá
                                 </a>
                             </div>
                         </td>
+                        @endauth
                     </tr>
                 @endforeach
             </tbody>
@@ -212,10 +192,9 @@
                             class="bg-white px-4 py-2 rounded border text-gray-700 hover:bg-gray-100">
                         Hủy
                     </button>
-                    <a class="flex items-center text-red-600"
-                    onclick="openDeleteModal('{{ route('delete-user', ['id' => $value->id]) }}')"
-                    href="javascript:void(0);">
-                        {!! $icons['trash-2'] !!} Xoá
+                    <a href="#" id="confirm-delete"
+                       class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">
+                        Xoá
                     </a>
                 </div>
             </div>
@@ -228,6 +207,18 @@
             <video id="videoPlayer" class="w-full rounded-lg shadow-lg" controls>
                 <source id="videoSource" src="" type="video/mp4">
             </video>
+        </div>
+    </div>
+    <!-- Modal Hình -->
+    <div id="imageModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
+        <div class="relative w-[80%] max-w-3xl">
+            <img id="imagePreview"
+                src=""
+                class="w-full max-h-[80vh] object-contain rounded-lg shadow-lg" />
+            <button onclick="closeImageModal()"
+                    >
+                ×
+            </button>
         </div>
     </div>
 @endsection
@@ -254,13 +245,37 @@
         document.getElementById('videoPlayer').load();
         document.getElementById('videoModal').classList.remove('hidden');
     }
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        const countSpan = document.getElementById('selected-count');
+        const deleteBtn = document.getElementById('delete-multiple-btn');
+
+        function updateCount() {
+            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
+            countSpan.textContent = selectedCount;
+            deleteBtn.disabled = selectedCount === 0;
+        }
+
+        // Khi checkbox "Chọn tất cả" được click
+        selectAllCheckbox.addEventListener('change', function () {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateCount();
+        });
+
+        // Khi checkbox từng dòng được click
+        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
+
+        // Khởi tạo giá trị ban đầu (trường hợp reload giữ lại checkbox đã chọn)
+        updateCount();
+    });
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const videoModal = document.getElementById("videoModal");
         const videoPlayer = document.getElementById("videoPlayer");
 
-        // Đóng modal khi bấm ra ngoài vùng video
+       // Đóng modal khi bấm ra ngoài vùng video
         videoModal.addEventListener("click", function(event) {
             if (event.target === videoModal) {
                 videoModal.classList.add("hidden");
@@ -268,4 +283,16 @@
             }
         });
     });
+        function openImageModal(src) {
+        const modal = document.getElementById('imageModal');
+        const img = document.getElementById('imagePreview');
+        img.src = src;
+        modal.classList.remove('hidden');
+    }
+
+    function closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        modal.classList.add('hidden');
+        document.getElementById('imagePreview').src = ''; // clear ảnh
+    }
 </script>

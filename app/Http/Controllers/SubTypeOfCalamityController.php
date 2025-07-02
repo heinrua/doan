@@ -11,7 +11,7 @@ class SubTypeOfCalamityController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum');
+        
     }
 
     public function index(Request $request)
@@ -104,5 +104,18 @@ class SubTypeOfCalamityController extends Controller
     public function destroy($id) {
         SubTypeOfCalamities::destroy($id);
         return redirect('/list-sub-type-of-calamity')->with('success',200);
+    }
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (!$ids || count($ids) === 0) {
+            return redirect()->back()->with('error', 'Không có mục nào được chọn.');
+        }
+
+      
+        SubTypeOfCalamities::whereIn('id', $ids)->delete();
+
+        return redirect()->back()->with('success', 'Đã xoá các mục đã chọn.');
     }
 }

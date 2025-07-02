@@ -3,9 +3,7 @@
 @section('subhead')
     <title>Danh Sách Người Dùng - PCTT Cà Mau Dashboard</title>
 @endsection
-@php
-    $userCurrent = auth()->user();
-@endphp
+
 @section('subcontent')
     <div class="intro-y mt-5  flex items-center justify-between">
         <div class="flex items-center text-lg font-medium uppercase">
@@ -44,22 +42,21 @@
                 @csrf
 
                <div class="flex items-center gap-2">
-                <label for="fileImport"
-                    class="flex items-center cursor-pointer bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">
-                    {!! $icons['cloud-upload'] !!}
-                    <input type="file" id="fileImport" name="fileImport" />
-                </label>
+                    <input type="file" id="fileImport" name="fileImport" accept=".xls,.xlsx"
+                        class="block w-[200px] text-sm text-gray-900
+                        file:mr-2 file:py-1 file:px-3
+                        file:rounded file:border-0
+                        file:text-sm file:font-medium
+                        file:bg-blue-100 file:text-blue-700 file:w-[60px]
+                        hover:file:bg-blue-200 border border-gray-300 rounded-md">
 
                 <button type="submit"
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">
-                    Import
+                    Thêm nhiều người dùng
                 </button>
             </div>
-            </form>
+            </form> 
 
-
-
-            
         </div>
         <!-- BEGIN: Total Records -->
         <div
@@ -68,59 +65,72 @@
         </div>
         <!-- END: Total Records -->
         <!-- BEGIN: Data List -->
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-visible w-full overflow-x-auto">
-            <table class="w-full text-left rtl:text-right text-gray-500 ">
-                <thead class="text-gray-700 uppercase bg-gray-50">
+        
+        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
+            <form action="{{ route('destroy-multiple-user') }}" method="POST">
+            @csrf
+            @method('DELETE')
+             
+            <button type="submit" class="bg-red-700" id="delete-multiple-btn" disabled>
+                {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
+            </button>
+         
+            <table class="mt-2 border-separate border-spacing-y-[10px] table-fixed">
+            <table class="mt-2 border-separate border-spacing-y-[10px] table-fixed">
+                <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                        <th scope="col" class="px-6 py-3">#</th>
-                        <th scope="col" class="px-6 py-3">Tên người dùng</th>
-                        <th scope="col" class="px-6 py-3">Tên đăng nhập</th>
-                        <th scope="col" class="px-6 py-3">Email</th>
-                        <th scope="col" class="px-6 py-3">Hành động</th>
+                        <th class="sticky left-0 z-1 bg-blue-100 w-[40px] min-w-[40px] max-w-[40px] px-1 text-center"><input type="checkbox" id="selectAll" class="block mx-auto"></th>
+                        <th class="sticky left-[10px] z-1 bg-blue-100 whitespace-nowrap px-4 py-4 ">Tên người dùng</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Tên đăng nhập</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Email</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if ($data->isEmpty())
-                        <tr>
-                            <td colspan="5" class="text-center py-6">
-                                <div class="flex flex-col items-center justify-center text-slate-500">
-                                    {!! $icons['frown'] !!}
-                                    <div class="mt-2 text-lg">Hiện tại không có dữ liệu</div>
-                                </div>
-                            </td>
-                        </tr>
-                    @else
-                        @foreach ($data as $key => $value)
-                            <tr class="bg-white border-b border-gray-200">
-                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                    {{ $data->firstItem() + $key }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <a class="whitespace-nowrap font-medium" href="/edit-user/{{ $value->id }}">
-                                        {{ $value->full_name }}
-                                    </a>
-                                </td>
-                                <td class="px-6 py-4">{{ $value->user_name }}</td>
-                                 <td class="px-6 py-4">{{ $value->email }}</td>
-                                <td class="px-6 py-4 text-center">
-                                    <div class="flex items-center justify-center">
-                                        <a class="mr-3 flex items-center text-blue-700" href="/edit-user/{{ $value->id }}">
-                                            {!! $icons['edit-2'] !!} Sửa
-                                        </a>
-                                        <a class="flex items-center text-red-600"
-                                        onclick="openDeleteModal('{{ route('delete-user', ['id' => $value->id]) }}')"
-                                        href="javascript:void(0);">
-                                            {!! $icons['trash-2'] !!} Xoá
-                                        </a>
-                                       
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
+                    <tr>
+                        <td colspan="11" class="text-center py-6">
+                            <div class="flex flex-col items-center justify-center text-slate-500">
+                                {!! $icons['frown'] !!}
+                                <div class="mt-2 text-lg">Hiện tại không có dữ liệu</div>
+                            </div>
+                        </td>
+                    </tr>
+                @else
+                @foreach ($data as $key => $value)
+                    <tr class="bg-white ">
+                        <td class="sticky left-0 z-1 bg-white  w-[40px]" >
+                            <input type="checkbox" class="item-checkbox" name="ids[]" value="{{ $value->id }}">
+                        </td>
+                        <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
+                            <a class="whitespace-nowrap font-medium" href="/edit-user/{{ $value->id }}">
+                                {{ $value->full_name }}
+                            </a>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->user_name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->email }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                            <div class="flex gap-3 text-center">
+                                <a class="flex items-center text-blue-700" href="/edit-user/{{ $value->id }}">
+                                    {!! $icons['edit-2'] !!} Sửa
+                                </a>
+                                <a class="flex items-center text-red-600"
+                                onclick="openDeleteModal('{{ route('delete-user', ['id' => $value->id]) }}')"
+                                href="javascript:void(0);">
+                                    {!! $icons['trash-2'] !!} Xoá
+                                </a>
+                                
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
                     @endif
                 </tbody>
             </table>
+
+            </form>
         </div>
+        
 
 
     </div>
@@ -184,4 +194,30 @@
     function setDeleteUrl(url) {
         document.getElementById('confirm-delete').setAttribute('href', url);
     }
+
+     document.addEventListener('DOMContentLoaded', function () {
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        const countSpan = document.getElementById('selected-count');
+        const deleteBtn = document.getElementById('delete-multiple-btn');
+
+        function updateCount() {
+            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
+            countSpan.textContent = selectedCount;
+            deleteBtn.disabled = selectedCount === 0;
+        }
+
+        // Khi checkbox "Chọn tất cả" được click
+        selectAllCheckbox.addEventListener('change', function () {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateCount();
+        });
+
+        // Khi checkbox từng dòng được click
+        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
+
+        // Khởi tạo giá trị ban đầu (trường hợp reload giữ lại checkbox đã chọn)
+        updateCount();
+    });
+
 </script>

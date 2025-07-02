@@ -184,7 +184,10 @@ class MenuComposer
                 'icon' => 'chat',
                 'route_name' => 'chat',
                 'title' => 'Tham gia cộng đồng',
-            ]
+            ],
+           
+            
+            
         ];
     $user = null;
     $isMaster = false;
@@ -203,7 +206,10 @@ class MenuComposer
             if (isset($item['only_master']) && $item['only_master'] && (!$user || !$isMaster)) {
                 continue;
             }
-            
+            // 2. Kiểm tra menu chỉ dành cho người đã đăng nhập
+            if (isset($item['only_logged_in']) && $item['only_logged_in'] && !$user) {
+                continue;
+            }
 
             // 2. Nếu có submenu → đệ quy
             if (isset($item['sub_menu'])) {

@@ -16,7 +16,7 @@ class ScenarioController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum');
+        
     }
 
     public function viewFormScenarios()
@@ -176,5 +176,18 @@ class ScenarioController extends Controller
         $data = Scenario::findOrFail($id);
         $data->delete();
         return redirect('/list-scenarios')->with('success', 'Scenarios deleted successfully!');
+    }
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (!$ids || count($ids) === 0) {
+            return redirect()->back()->with('error', 'Không có mục nào được chọn.');
+        }
+
+        // Ví dụ model là City
+        Scenario::whereIn('id', $ids)->delete();
+
+        return redirect()->back()->with('success', 'Đã xoá các mục đã chọn.');
     }
 }

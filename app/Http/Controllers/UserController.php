@@ -153,4 +153,10 @@ class UserController extends Controller
         User::destroy($request->id);
         return redirect('/list-user');
     }
+    public function destroyMultipleUsers(Request $request)
+    {
+        User::whereIn('id', $request->ids)->delete();
+        return back()->with('success', 'Đã xoá người dùng được chọn');
+    }
+
 }

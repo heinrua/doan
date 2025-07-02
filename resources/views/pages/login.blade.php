@@ -11,87 +11,115 @@
     <meta name="author" content="LEFT4CODE">
 </head>
 <body >
-    
-    <div class = "
-        'p-3 sm:px-8 relative h-screen lg:overflow-hidden bg-primary xl:bg-white dark:bg-darkmode-800 xl:dark:bg-darkmode-600',
-        'before:hidden before:xl:block before:content-[\'\'] before:w-[57%] before:-mt-[28%] before:-mb-[16%] before:-ml-[13%] before:absolute before:inset-y-0 before:left-0 before:transform before:rotate-[-4.5deg] before:bg-primary/20 before:rounded-[100%] before:dark:bg-darkmode-400',
-        'after:hidden after:xl:block after:content-[\'\'] after:w-[57%] after:-mt-[20%] after:-mb-[13%] after:-ml-[13%] after:absolute after:inset-y-0 after:left-0 after:transform after:rotate-[-4.5deg] after:bg-primary after:rounded-[100%] after:dark:bg-darkmode-700',
-    ">
-        <div class="container relative z-10 sm:px-10">
-            <div class="block grid-cols-2 gap-4 xl:grid">
-                <!-- BEGIN: Login Info -->
-                <div class="hidden min-h-screen flex-col xl:flex">
-                    <div class="my-auto ">
-                        <img
-                        src="{{ Vite::asset('resources/images/camau.png') }}"
-                        alt=" PCTT Cà Mau"
-                        style="height: 100%; width:100%;"/>  
-                    </div>
+<!-- component -->
+<div class="flex h-screen">
+   <!-- Left Pane  -->
+  <div class="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
+    <div class="w-full h-full">
+        <img src="{{ asset('images/image.png') }}" alt="Hình ảnh" class="w-full h-full object-cover">
+    </div>
+
+  </div>
+  <!-- Right Pane -->
+  <div class="w-full bg-gray-100 lg:w-1/2 flex items-center justify-center">
+    <div class="max-w-md w-full p-6">
+      <h1 class="text-3xl font-semibold mb-6 text-black text-center">ĐĂNG NHẬP</h1>
+      <h1 class="text-sm font-semibold mb-6 text-gray-500 text-center">Đăng nhập với tài khoản của bạn</h1>
+      
+      
+      <form class="validate-form" action="/login" method="post">
+        @csrf
+        <div class="intro-x mt-6">
+            <div class="input-form mt-3">
+                <label for="user_name" class="inline-block text-sm/6 font-medium text-gray-900 ">Tên đăng nhập</label>
+                <div class="mt-2">
+                <input  name="user_name" id="user_name" type="text" placeholder="Tên Đăng Nhập" required="required" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                 </div>
-                <!-- END: Login Info -->
-                <!-- BEGIN: Login Form -->
-                <div class="my-10 flex h-screen py-5 xl:my-0 xl:h-auto xl:py-0">
-                    <div
-                        class="mx-auto my-auto w-full rounded-md bg-white px-5 py-8 shadow-md dark:bg-darkmode-600 sm:w-3/4 sm:px-8 lg:w-2/4 xl:ml-20 xl:w-auto xl:bg-transparent xl:p-0 xl:shadow-none">
-                        <h2 class="intro-x text-center text-2xl font-bold xl:text-left xl:text-3xl">
-                            Đăng nhập vào trang chủ
-                        </h2>
-                        <div class="intro-x mt-2 text-center text-slate-400 xl:hidden">
-                            Một vài cú nhấp chuột nữa để đăng nhập vào tài khoản của bạn
-                        </div>
-                        <form class="validate-form" action="/login" method="post">
-                            @csrf
-                            <div class="intro-x mt-6">
-                                <div class="input-form mt-3">
-                                    <label for="user_name" class="inline-block text-sm/6 font-medium text-gray-900 ">Tên đăng nhập</label>
-                                    <div class="mt-2">
-                                    <input  name="user_name" id="user_name" type="text" placeholder="Tên Đăng Nhập" required="required" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
-                                    </div>
-                                    
-                                   
-                                </div>
-                                <div class="input-form mt-3">
-                                    <div class="flex items-center justify-between">
-                                        <label for="validation-form-3" class="block text-sm/6 font-medium text-gray-900">Mật khẩu</label>
-                                        <div class="text-sm">
-                                            <a href="{{ route('password.request') }}" class="font-semibold text-indigo-600 hover:text-indigo-500">
-                                                Quên mật khẩu?
-                                            </a>
+            </div>
+            <div class="input-form mt-3">
+                <div class="flex items-center justify-between">
+                    <label for="validation-form-3" class="block text-sm/6 font-medium text-gray-900">Mật khẩu</label>
+                    <div class="text-sm">
+                        <a href="javascript:void(0)" onclick="openForgotPasswordModal()" class="font-semibold text-indigo-600 hover:text-indigo-500">
+                            Quên mật khẩu?
+                        </a>
+                    </div>
+                    </div>
+                    <div class="mt-2 relative">
+                        <input type="password" name="password" id ="password" class="w-full p-3 border border-gray-300 rounded">
+                    </div>
+                    @if (session('error'))
+                        <p class="text-sm text-red-600 mt-2">
+                            {{ session('error') }}
+                        </p>
+                    @endif
+            </div>
+             @if (session('status'))
+                <div class="mb-4 font-medium text-sm text-green-600">
+                    {{ session('status') }}
+                </div>
+            @endif
+        </div>
+        <div class="intro-x mt-5 text-center xl:mt-8 xl:text-left">
+            <button type="submit" class="w-full flex justify-center">
+                Đăng nhập
+            </button>
+            
 
+        </div>
 
-                                        </div>
-                                        </div>
-                                        <div class="mt-2 relative">
-                                            <input type="password" name="password" id ="password" class="w-full p-3 border border-gray-300 rounded">
-                                        </div>
-                                        @if (session('error'))
-                                            
-                                            <p class="text-sm text-red-600 mt-2">
-                                                {{ session('error') }}
-                                            </p>
-                                            
-                                        @endif
-
-                                </div>
-                            </div>
-                            <div class="intro-x mt-5 text-center xl:mt-8 xl:text-left">
-                                <button type="submit" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                    Đăng nhập
-                                </button>
-                                
+       </form>
+      
+    </div>
+  </div>
 </div>
 
-                        </form>
-                        
 
+ <!-- Quên mật khẩu -->
+<div id="forgot-password-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="fixed inset-0 bg-black/50"></div>
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Nhập tên đăng nhập của bạn
+                </h3>
+                <button type="button" onclick="closeForgotPasswordModal()" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal">
+                    x
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-4 md:p-5">
+                <form method="POST" action="{{ route('password.email') }}">
+                    @csrf
+                    <div>
+                        <label for="user_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên đăng nhập</label>
+                        <input  name="user_name" id="user_name"  required />
                     </div>
-                </div>
-                <!-- END: Login Form -->
+                    
+                    <button type="submit" class ="m-5">Gửi link khôi phục mật khẩu</button>
+                </form>
             </div>
         </div>
     </div>
-    
+</div>   
 </body>
+<script>
+    function openForgotPasswordModal() {
+        const modal = document.getElementById('forgot-password-modal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeForgotPasswordModal() {
+        const modal = document.getElementById('forgot-password-modal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+</script>
 
 
 </html>

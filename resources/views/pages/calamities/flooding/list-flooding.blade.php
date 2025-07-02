@@ -103,11 +103,20 @@
 
         <!-- END: Total Records -->
         <!-- BEGIN: Data List -->
+         
         <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <table class="-mt-2 border-separate border-spacing-y-[10px]">
+            <form action="{{ route('delete-multiple-calamity-flooding') }}" method="POST">
+            @csrf
+            @method('DELETE')
+            @auth
+            <button type="submit" class="bg-red-700 sticky left-0" id="delete-multiple-btn" disabled>
+                {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
+            </button>
+            @endauth
+            <table class="mt-2 border-separate border-spacing-y-[10px] ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                        <th class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                        <th class="sticky left-0 z-1 bg-blue-100 w-[40px] min-w-[40px] max-w-[40px] px-1 text-center"><input type="checkbox" id="selectAll" class="block mx-auto"></th>
                         <th class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4 ">Tên khu vực ngập</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Loại hình ngập</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Địa phương</th>
@@ -148,7 +157,9 @@
                         @else
                         @foreach ($data as $key => $value)
                             <tr class="bg-white ">
-                                <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                                <th class="sticky left-0 z-1 bg-white w-[40px] min-w-[40px] max-w-[40px]  text-center">
+                                    <input type="checkbox" class="item-checkbox" name="ids[]" value="{{ $value->id }}">
+                                </th>
                                 <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
                                     <a class="whitespace-nowrap font-medium" href="/calamity/edit-flooding/{{ $value->id }}">{{ $value->name }}</a>
                                 </td>
@@ -212,10 +223,18 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
                                     @if (!empty($value->image))
-                                        <x-base.image-zoom class="w-full rounded-md" src="{{ asset($value->image) }}" />
+                                    <div class="relative w-24 h-16 cursor-pointer"
+                                        onclick="openImageModal('{{ asset($value->image) }}')">
+                                        <img src="{{ asset($value->image) }}"
+                                            class="w-full h-full object-cover rounded-md shadow-md pointer-events-none" />
+                                        <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xs font-bold rounded-md">
+                                            Xem Hình
+                                        </div>
+                                    </div>
                                     @else
-                                        <span class="text-gray-500 italic">Chưa có hình ảnh</span>
+                                    <span class="text-gray-500 italic">Chưa có hình ảnh</span>
                                     @endif
+
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
                                     @if (!empty($value->video))
@@ -256,7 +275,8 @@
                         @endif
                     </tbody>
                 </table>
-         
+            
+            </form>
         </div>
 
     </div>
@@ -318,6 +338,9 @@
         modal.classList.remove('hidden');
         setDeleteUrl(url);
     }
+    function closeDeleteModal() {
+        document.getElementById('delete-confirmation-modal').classList.add('hidden');
+    }
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
     });
@@ -325,6 +348,30 @@
     function setDeleteUrl(url) {
         document.getElementById('confirm-delete').setAttribute('href', url);
     }
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        const countSpan = document.getElementById('selected-count');
+        const deleteBtn = document.getElementById('delete-multiple-btn');
+
+        function updateCount() {
+            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
+            countSpan.textContent = selectedCount;
+            deleteBtn.disabled = selectedCount === 0;
+        }
+
+        // Khi checkbox "Chọn tất cả" được click
+        selectAllCheckbox.addEventListener('change', function () {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateCount();
+        });
+
+        // Khi checkbox từng dòng được click
+        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
+
+        // Khởi tạo giá trị ban đầu (trường hợp reload giữ lại checkbox đã chọn)
+        updateCount();
+    });
 
     function openVideoModal(videoUrl) {
         document.getElementById('videoSource').src = videoUrl;
@@ -334,7 +381,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         const videoModal = document.getElementById("videoModal");
         const videoPlayer = document.getElementById("videoPlayer");
-        // Đóng modal khi bấm ra ngoài vùng video
+       // Đóng modal khi bấm ra ngoài vùng video
         videoModal.addEventListener("click", function(event) {
             if (event.target === videoModal) {
                 videoModal.classList.add("hidden");
@@ -342,6 +389,18 @@
             }
         });
     });
+        function openImageModal(src) {
+        const modal = document.getElementById('imageModal');
+        const img = document.getElementById('imagePreview');
+        img.src = src;
+        modal.classList.remove('hidden');
+    }
+
+    function closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        modal.classList.add('hidden');
+        document.getElementById('imagePreview').src = ''; // clear ảnh
+    }
     document.addEventListener("DOMContentLoaded", function() {
         let districtSelect = document.querySelector("#districtSelect");
         let communeSelect = document.querySelector("#communeSelect");

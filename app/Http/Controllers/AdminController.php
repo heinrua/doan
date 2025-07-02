@@ -19,18 +19,12 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('auth:sanctum');
-        $this->middleware('auth:sanctum')->except([
-        'dashboard',
-        'faq',
-        'getRiskLevels',
-        'getSubTypeOfCalamities',
-    ]);
+       
     }
 
     public function dashboard()
     {
-        $user = auth()->user();
+        
         $typeOfCalamities = TypeOfCalamities::withCount(['calamities', 'constructions'])->get();
 
         $calamities = DB::table('calamities')
@@ -99,7 +93,7 @@ class AdminController extends Controller
         
 
         // dd($data7Days);
-        return view('pages.dashboard', compact('user', 'typeOfCalamities', 'calamities', 'disasters', 'data7Days', 'communes'));
+        return view('pages.dashboard', compact( 'typeOfCalamities', 'calamities', 'disasters', 'data7Days', 'communes'));
     }
 
     public function getRiskLevels(Request $request)
@@ -159,7 +153,5 @@ class AdminController extends Controller
 
     }
 
-    public function faq(){
-        return view('pages.faq.faq');
-    }
+    
 }

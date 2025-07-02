@@ -87,83 +87,44 @@
         
 
         <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <table class="-mt-2 border-separate border-spacing-y-[10px]">
+            <form action="{{ route('delete-multiple-calamity-river-bank') }}" method="POST">
+            @csrf
+            @method('DELETE')
+            @auth
+            <button type="submit" class="bg-red-700" id="delete-multiple-btn" disabled>
+                {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
+            </button>
+            @endauth
+            <table class="mt-2 border-separate border-spacing-y-[10px] ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                    <th class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                    <th class="sticky left-0 z-1 bg-blue-100 w-[40px] min-w-[40px] max-w-[40px] px-1 text-center"><input type="checkbox" id="selectAll" class="block mx-auto"></th>
                     <th class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4  min-w-[180px]">
-                        Tên vị trí sạt lở
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Loại sạt lở
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Cấp độ rủi ro thiên tai
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Địa điểm
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Phường/Xã
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Quận/Huyện
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Chiều dài (m)
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Chiều rộng (m)
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Diện tích
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Toạ độ vị trí
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Thời gian
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Nguyên nhân
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Địa chất
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Đặc điểm thuỷ văn
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Thiệt hại về người
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Thiệt hại về tài sản
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Mức độ
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Các biện pháp giảm thiểu
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Chính sách hỗ trợ
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Bản đồ
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Hình ảnh
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Video
-                    </th>
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        Thời gian cập nhật
-                    </th>
+                        Tên vị trí sạt lở</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Loại sạt lở</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Cấp độ rủi ro thiên tai</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Địa điểm</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Phường/Xã</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Quận/Huyện</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Chiều dài (m)</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Chiều rộng (m)</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Diện tích</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Toạ độ vị trí</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Thời gian</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Nguyên nhân</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Địa chất</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Đặc điểm thuỷ văn</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Thiệt hại về người</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Thiệt hại về tài sản</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Mức độ</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Các biện pháp giảm thiểu</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Chính sách hỗ trợ</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Bản đồ</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Hình ảnh</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Video</th>
+                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Thời gian cập nhật</th>
                     @auth
-                    <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                        HÀNH ĐỘNG
-                    </th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">HÀNH ĐỘNG</th>
                     @endauth
                 </tr>
             </thead>
@@ -174,53 +135,35 @@
                             <div class="flex flex-col items-center justify-center text-slate-500">
                                 {!! $icons['frown'] !!}
                                 <div class="mt-2 text-lg">Hiện tại không có dữ liệu</div>
-                            </div>
-                        </td>
+                            </div> </td>
                     </tr>
                     @else
                 @foreach ($data as $key => $value)
                     <tr class="bg-white ">
-                        <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}
-                        </td>
+                        <th class="sticky left-0 z-1 bg-white w-[40px] min-w-[40px] max-w-[40px]  text-center">
+                            <input type="checkbox" class="item-checkbox" name="ids[]" value="{{ $value->id }}">
+                        </th>
                         <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
                                     <a href="/calamity/edit-river-bank/{{ $value->id }}">{{ $value->name }}</a>
                                 </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->sub_type_of_calamities[0]->name ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->risk_level->name ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->address ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->communes[0]->name ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->communes[0]->district->name ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->length ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->width ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->acreage ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->coordinates ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px] "> {{ \Carbon\Carbon::parse($value->time)->format('d-m-Y') ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->reason ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->geology ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->watermark_points ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->human_damage ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->property_damage ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->investment_level ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->mitigation_measures ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->support_policy ?? '' }}
-                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->sub_type_of_calamities[0]->name ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->risk_level->name ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->address ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->communes[0]->name ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->communes[0]->district->name ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->length ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->width ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->acreage ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->coordinates ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px] "> {{ \Carbon\Carbon::parse($value->time)->format('d-m-Y') ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->reason ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->geology ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->watermark_points ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->human_damage ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->property_damage ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->investment_level ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->mitigation_measures ?? '' }} </td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->support_policy ?? '' }} </td>
                         <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
                             @php
                                 $maps = json_decode($value->map, true);
@@ -241,15 +184,20 @@
                                 </div>
                             @else
                                 <span class="text-gray-500">Không có bản đồ</span>
-                            @endif
-                        </td>
+                            @endif </td>
                         <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            @if (!empty($value->image))
-                                <x-base.image-zoom class="w-full rounded-md" src="{{ asset($value->image) }}" />
-                            @else
-                                <span class="text-gray-500 italic">Chưa có hình ảnh</span>
-                            @endif
-                        </td>
+                           @if (!empty($value->image))
+                            <div class="relative w-24 h-16 cursor-pointer"
+                                onclick="openImageModal('{{ asset($value->image) }}')">
+                                <img src="{{ asset($value->image) }}"
+                                    class="w-full h-full object-cover rounded-md shadow-md pointer-events-none" />
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xs font-bold rounded-md">
+                                    Xem Hình
+                                </div>
+                            </div>
+                        @else
+                            <span class="text-gray-500 italic">Chưa có hình ảnh</span>
+                        @endif </td>
                         <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
                             @if (!empty($value->video))
                                 <div class="relative w-24 h-16 cursor-pointer"
@@ -265,12 +213,10 @@
                                 </div>
                             @else
                                 <span class="text-gray-500 italic">Chưa có video</span>
-                            @endif
-                        </td>
+                            @endif </td>
                         <td
                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            {{ $value->updated_at ?? '' }}
-                        </td>
+                            {{ $value->updated_at ?? '' }} </td>
                         @auth
                         <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
                             <div class="flex items-center justify-center">
@@ -287,8 +233,7 @@
                                         {!! $icons['trash-2'] !!}> Xoá
                                     </a>
                                 
-                            </div>
-                        </td>
+                            </div> </td>
                         @endauth
                     </tr>
                 @endforeach
@@ -296,6 +241,7 @@
             </tbody>
         </table>
         
+        </form>
     </div>
     <!-- END: Data List -->
     <!-- BEGIN: Pagination -->
@@ -344,6 +290,18 @@
             </video>
         </div>
     </div>
+    <!-- Modal Hình -->
+    <div id="imageModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
+        <div class="relative w-[80%] max-w-3xl">
+            <img id="imagePreview"
+                src=""
+                class="w-full max-h-[80vh] object-contain rounded-lg shadow-lg" />
+            <button onclick="closeImageModal()"
+                    >
+                ×
+            </button>
+        </div>
+    </div>
 @endsection
 <script>
       function openDeleteModal(url) {
@@ -370,13 +328,49 @@
     document.addEventListener("DOMContentLoaded", function() {
         const videoModal = document.getElementById("videoModal");
         const videoPlayer = document.getElementById("videoPlayer");
-        // Đóng modal khi bấm ra ngoài vùng video
+       // Đóng modal khi bấm ra ngoài vùng video
         videoModal.addEventListener("click", function(event) {
             if (event.target === videoModal) {
                 videoModal.classList.add("hidden");
                 videoPlayer.pause();
             }
         });
+    });
+    function openImageModal(src) {
+        const modal = document.getElementById('imageModal');
+        const img = document.getElementById('imagePreview');
+        img.src = src;
+        modal.classList.remove('hidden');
+    }
+
+    function closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        modal.classList.add('hidden');
+        document.getElementById('imagePreview').src = ''; // clear ảnh
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        const countSpan = document.getElementById('selected-count');
+        const deleteBtn = document.getElementById('delete-multiple-btn');
+
+        function updateCount() {
+            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
+            countSpan.textContent = selectedCount;
+            deleteBtn.disabled = selectedCount === 0;
+        }
+
+        // Khi checkbox "Chọn tất cả" được click
+        selectAllCheckbox.addEventListener('change', function () {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateCount();
+        });
+
+        // Khi checkbox từng dòng được click
+        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
+
+        // Khởi tạo giá trị ban đầu (trường hợp reload giữ lại checkbox đã chọn)
+        updateCount();
     });
     
 </script>

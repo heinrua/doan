@@ -259,12 +259,18 @@
     </div>
 @endsection
 <script>
-    document.getElementById('videoInput').addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const videoPreview = document.getElementById('videoPreview');
-            videoPreview.src = URL.createObjectURL(file);
-            videoPreview.load();
+    document.addEventListener('DOMContentLoaded', function() {
+        const videoInput = document.getElementById('videoInput');
+        if (videoInput) {
+            videoInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const videoPreview = document.getElementById('videoPreview');
+                    videoPreview.src = URL.createObjectURL(file);
+                    videoPreview.load();
+                }
+            });
         }
     });
 </script>
+

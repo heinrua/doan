@@ -85,7 +85,6 @@ class AdministrativeController extends Controller
     {
         $administrative = Administrative::findOrFail($request->id);
         $validated = $this->validateRequest($request, $administrative->id);
-        $validated['updated_by_user_id'] = auth()->id();
 
         $administrative->update($validated);
         return redirect()->route($this->redirectRoutes[$validated['type']])->with('success', 'Dữ liệu đã được cập nhật thành công!');
@@ -99,7 +98,7 @@ class AdministrativeController extends Controller
 
         return redirect()->route("view-$type")->with('success', 'Xóa thành công!');
     }
-
+    
 
     private function validateRequest($request, $id = null)
     {
@@ -113,7 +112,6 @@ class AdministrativeController extends Controller
             'description' => 'nullable|string',
             'code' => 'nullable|string',
             'classify' => 'nullable|string',
-            'option' => 'nullable|string',
             'population' => 'nullable',
         ]);
     }

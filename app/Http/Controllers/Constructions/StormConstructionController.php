@@ -17,7 +17,7 @@ class StormConstructionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum');
+        
     }
     public function index(Request $request)
     {
@@ -28,7 +28,7 @@ class StormConstructionController extends Controller
         $risk_level_id = $request->input('risk_level_id');
 
         $query = Construction::whereRelation('risk_level.type_of_calamities', 'slug', 'bao-ap-thap-nhiet-doi')
-            ->with(['risk_level', 'communes']);
+            ->with(['risk_level', 'commune']);
 
         if (!empty($search)) {
             $query->where('name', 'LIKE', "%{$search}%");
@@ -36,18 +36,18 @@ class StormConstructionController extends Controller
         if (!empty($commune_id) && !empty($district_id)) {
             $validCommune = Commune::where('id', $commune_id)->where('district_id', $district_id)->exists();
             if ($validCommune) {
-                $query->whereHas('communes', function ($q) use ($commune_id) {
+                $query->whereHas('commune', function ($q) use ($commune_id) {
                     $q->where('id', $commune_id);
                 });
             } else {
                 $query->whereRaw('1 = 0'); // Tạo điều kiện luôn sai để không có dữ liệu nào
             }
         } elseif (!empty($commune_id)) {
-            $query->whereHas('communes', function ($q) use ($commune_id) {
+            $query->whereHas('commune', function ($q) use ($commune_id) {
                 $q->where('id', $commune_id);
             });
         } elseif (!empty($district_id)) {
-            $query->whereHas('communes', function ($q) use ($district_id) {
+            $query->whereHas('commune', function ($q) use ($district_id) {
                 $q->where('district_id', $district_id);
             });
         }
@@ -78,7 +78,7 @@ class StormConstructionController extends Controller
 
     public function store(Request $request)
     {
-        $user = auth()->user();
+    
         $validated = $request->validate([
             'name' => 'required|unique:calamities',
             'type_of_calamity_id' => 'required',
@@ -99,22 +99,20 @@ class StormConstructionController extends Controller
         $data['status'] = $request['status'];
         $data['capital_source'] = $request['capital_source'];
         $data['operating_status'] = $request['operating_status'];
+        $data['coordinates'] = $request['coordinates'];
         $data['contractor'] = $request['contractor'];
         $data['efficiency_level'] = $request['efficiency_level'];
         $data['total_investment'] = $request['total_investment'];
           
-
         $slug = Str::slug($request->name);
         $count = Construction::where('slug', 'like', "{$slug}%")->count();
         if ($count > 0) {
             $slug = "{$slug}-{$count}";
         }
         $data['slug'] = $slug;
+        $data['commune_id'] = $request['commune_id'] ?? null;
         $construction = Construction::create($data);
 
-        if (isset($request['commune_id'])) {
-            $construction->communes()->sync($request['commune_id']);
-        }
         return redirect('/construction/list-storm')->with('success', 200);
     }
 
@@ -122,7 +120,7 @@ class StormConstructionController extends Controller
     {
         $calamities = TypeOfCalamities::where('slug', 'bao-ap-thap-nhiet-doi')->get();
         $construction = Construction::findOrFail($id);
-        $typeOfConstructions = TypeOfConstruction::where('type_of_calamity_id', $construction->type_of_calamity_id)->get();
+        $typeOfConstructions = TypeOfConstruction::where('type_of_calamity_id', $construction->risk_level->type_of_calamity_id)->get();
         $communes = Commune::all();
         $risk_levels = RiskLevel::whereRelation('type_of_calamities', 'slug', 'bao-ap-thap-nhiet-doi')->get();
         return view('pages/constructions/storm/edit-storm', compact('calamities', 'construction', 'typeOfConstructions', 'communes', 'risk_levels'));
@@ -160,7 +158,7 @@ class StormConstructionController extends Controller
         $data['contractor'] = $request->contractor;
         $data['efficiency_level'] = $request->efficiency_level;
         $data['total_investment'] = $request->total_investment;
-        $data['updated_by_user_id'] = $user->id;
+        
 
         // Xử lý slug (nếu thay đổi name thì cập nhật slug)
         if ($construction->name !== $request->name) {
@@ -175,7 +173,7 @@ class StormConstructionController extends Controller
         $construction->update($data);
 
         if (isset($request['commune_id'])) {
-            $construction->communes()->sync($request['commune_id']);
+            $construction->commune()->sync($request['commune_id']);
         }
 
         return redirect('/construction/list-storm')->with('success', 200);
@@ -186,7 +184,6 @@ class StormConstructionController extends Controller
     public function destroy($id)
     {
         $calamity = Construction::findOrFail($id);
-        $calamity->communes()->detach();
         $calamity->delete();
         return redirect('/construction/list-storm')->with('success', 200);
     }

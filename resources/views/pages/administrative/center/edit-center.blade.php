@@ -3,9 +3,7 @@
 @section('subhead')
     <title>Cập Nhật TT Hành Chính - PCTT Cà Mau Dashboard</title>
 @endsection
-@php
-    $userCurrent = auth()->user();
-@endphp
+
 @section('subcontent')
     <h2 class="intro-y mt-5 text-lg font-medium uppercase flex items-center">
         {!! $icons['aperture'] !!}
@@ -56,16 +54,16 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <select class="w-full" id="level-select" name="option">
+                                    <select class="w-full" id="level-select" name="classify">
                                         <option value="Cấp huyện"
-                                            {{ old('option', $data->option) == 'Cấp huyện' ? 'selected' : '' }}>Cấp huyện
-                                        </option>
+                                            {{ old('classify', $data->classify) == 'Cấp huyện' ? 'selected' : '' }}>Cấp huyện
+</option>
                                         <option value="Cấp xã"
-                                            {{ old('option', $data->option) == 'Cấp xã' ? 'selected' : '' }}>Cấp xã
-                                        </option>
+                                            {{ old('classify', $data->classify) == 'Cấp xã' ? 'selected' : '' }}>Cấp xã
+                                        </>
                                         <option value="Khác"
-                                            {{ old('option', $data->option) == 'Khác' ? 'selected' : '' }}>Khác
-                                        </option>
+                                            {{ old('classify', $data->classify) == 'Khác' ? 'selected' : '' }}>Khác
+</option>
                                     </select>
                                 </div>
                             </div>
@@ -85,10 +83,10 @@
                                 <div class="w-full">
                                     <select class="w-full" id="commune-select" name="commune_id">
                                         @foreach ($communes as $key => $value)
-                                            <option value="{{ $value->id }}"
+                                            <classify value="{{ $value->id }}"
                                                 {{ old('commune_id', $data->commune_id) == $value->id ? 'selected' : '' }}>
                                                 {{ $value->name }}
-                                            </option>
+                                            </classify>
                                         @endforeach
                                     </select>
                                 </div>
@@ -110,10 +108,10 @@
                                 <div class="w-full">
                                     <select class="w-full" id="district-select" name="district_id">
                                         @foreach ($districts as $key => $value)
-                                            <option value="{{ $value->id }}"
+                                            <classify value="{{ $value->id }}"
                                                 {{ old('district_id', $data->district_id) == $value->id ? 'selected' : '' }}>
                                                 {{ $value->name }}
-                                            </option>
+                                            </classify>
                                         @endforeach
                                     </select>
                                 </div>
@@ -218,11 +216,11 @@
                             class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
                             Huỷ Bỏ</button>
                     </a>
-                    ('update-center'))
+                        
                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
                         Lưu
                     </button>
-                    @endif
+                    
                 </div>
             </form>
         </div>

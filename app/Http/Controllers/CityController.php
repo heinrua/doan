@@ -11,7 +11,7 @@ class CityController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:sanctum');
+        
     }
 
     public function viewFormCity()
@@ -90,5 +90,18 @@ class CityController extends Controller
         $city = City::findOrFail($id);
         $city->delete();
         return redirect('/list-city')->with('success', 'Role deleted successfully!');
+    }
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (!$ids || count($ids) === 0) {
+            return redirect()->back()->with('error', 'Không có mục nào được chọn.');
+        }
+
+      
+        City::whereIn('id', $ids)->delete();
+
+        return redirect()->back()->with('success', 'Đã xoá các mục đã chọn.');
     }
 }

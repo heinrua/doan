@@ -59,10 +59,18 @@
 
          <!-- BEGIN: Data List -->
        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <table class="-mt-2 border-separate border-spacing-y-[10px]">
+            <form action="{{ route('delete-multiple-type-of-construction') }}" method="POST">
+            @csrf
+            @method('DELETE')
+            @auth
+            <button type="submit" class="bg-red-700" id="delete-multiple-btn" disabled>
+                {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
+            </button>
+            @endauth
+            <table class="mt-2 border-separate border-spacing-y-[10px] table-fixed">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                        <th class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                        <th class="sticky left-0 z-1 bg-blue-100 w-[40px] min-w-[40px] max-w-[40px] px-1 text-center"><input type="checkbox" id="selectAll" class="block mx-auto"></th>
                         <th class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4 ">Tên loại công trình</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Loại thiên tai</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Mô tả</th>
@@ -82,7 +90,10 @@
                     @else
                     @foreach ($data as $key => $value)
                         <tr class="bg-white ">
-                            <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                            <td class="sticky left-0 z-1 bg-white  w-[40px]" >
+                                <input type="checkbox" class="item-checkbox " name="ids[]" value="{{ $value->id }}">
+
+                            </td>
                             <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
                                 <a class="whitespace-nowrap font-medium" href="/edit-type-of-construction/{{ $value->id }}">
                                     {{ $value->name }}
@@ -109,9 +120,10 @@
                     @endforeach
                  @endif
                 </tbody>
-                
             </table>
            
+
+            </form>
         </div>
 
         <div class="intro-y col-span-12">
@@ -159,4 +171,28 @@
     function setDeleteUrl(url) {
         document.getElementById('confirm-delete').setAttribute('href', url);
     }
+     document.addEventListener('DOMContentLoaded', function () {
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        const countSpan = document.getElementById('selected-count');
+        const deleteBtn = document.getElementById('delete-multiple-btn');
+
+        function updateCount() {
+            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
+            countSpan.textContent = selectedCount;
+            deleteBtn.disabled = selectedCount === 0;
+        }
+
+        // Khi checkbox "Chọn tất cả" được click
+        selectAllCheckbox.addEventListener('change', function () {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateCount();
+        });
+
+        // Khi checkbox từng dòng được click
+        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
+
+        // Khởi tạo giá trị ban đầu (trường hợp reload giữ lại checkbox đã chọn)
+        updateCount();
+    });
 </script>

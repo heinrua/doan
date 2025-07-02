@@ -19,7 +19,6 @@ class Administrative extends Model
         'address',
         'coordinates',
         'description',
-        'option',
         'classify',
         'commune_id',
         'population',

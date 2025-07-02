@@ -3,9 +3,7 @@
 @section('subhead')
     <title>Danh Sách Công Trình Sạt Lở Bờ Sông & Bờ Biển - PCTT Cà Mau Dashboard</title>
 @endsection
-@php
-    $userCurrent = auth()->user();
-@endphp
+
 @section('subcontent')
     <div class="intro-y mt-5  flex items-center justify-between">
         <div class="flex items-center text-lg font-medium uppercase">
@@ -78,66 +76,38 @@
         <!-- END: Total Records -->
         <!-- BEGIN: Data List -->
         <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <table class="-mt-2 border-separate border-spacing-y-[10px]">
+            <form action="{{ route('delete-multiple-construction-river-bank') }}" method="POST">
+            @csrf
+            @method('DELETE')
+            @auth
+            <button type="submit" class="bg-red-700" id="delete-multiple-btn" disabled>
+                {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
+            </button>
+            @endauth
+            <table class="mt-2 border-separate border-spacing-y-[10px] ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                        <th class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
-                        <th class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4 min-w-[160px]">Tên công trình</th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Loại công trình
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Cấp độ rủi ro thiên tai
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Phường/Xã
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Quận/Huyện
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Tiến độ thực hiện
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Năm xây dựng
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Năm hoàn thành
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Chiều dài (km)
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Chiều rộng (m)
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Quy mô
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Mức độ ảnh hưởng
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Toạ độ
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Tổng mức đầu tư
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Nguồn vốn
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Hình ảnh
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Video
-                        </th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            Thời gian cập nhật
-                        </th>
+                        <th class="sticky left-0 z-1 bg-blue-100 w-[40px] min-w-[40px] max-w-[40px] px-1 text-center"><input type="checkbox" id="selectAll" class="block mx-auto"></th>
+                        <th class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4 ">Tên công trình</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Loại công trình</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Cấp độ rủi ro thiên tai</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Phường/Xã</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Quận/Huyện</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Tiến độ thực hiện</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Năm xây dựng</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Năm hoàn thành</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Chiều dài (km)</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Chiều rộng (m)</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Quy mô</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Mức độ ảnh hưởng</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Toạ độ</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Tổng mức đầu tư</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Nguồn vốn</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Hình ảnh</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Video</th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Thời gian cập nhật</th>
                         @auth
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            HÀNH ĐỘNG
-                        </th>
+                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">HÀNH ĐỘNG</th>
                         @endauth
                 </tr>
             </thead>
@@ -148,70 +118,47 @@
                             <div class="flex flex-col items-center justify-center text-slate-500">
                                 {!! $icons['frown'] !!}
                                 <div class="mt-2 text-lg">Hiện tại không có dữ liệu</div>
-                            </div>
-                        </td>
+                            </div></td>
                     </tr>
                 @else
                 @foreach ($data as $key => $value)
                     <tr class="bg-white ">
-                        <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                        <td class="sticky left-0 z-1 bg-white w-[40px] min-w-[40px] max-w-[40px]  text-center">
+                            <input type="checkbox" class="item-checkbox" name="ids[]" value="{{ $value->id }}">
+                        </td>
                         <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
                         <a class="whitespace-nowrap font-medium"
                                 href="/construction/edit-river-bank/{{ $value->id }}">
                                 {{ $value->name }}
-                            </a>
-                        </td>
+                            </a></td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->type_of_constructions->name ?? '' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->risk_level->name ?? '' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->commune->name ?? '' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->commune->district->name ?? '' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->progress }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->year_of_construction }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->year_of_completion }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->length }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->width }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->scale }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->influence_level }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->coordinates }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->total_investment }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->capital_source }}</td>
                         <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->type_of_constructions->name ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->risk_level->name ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->communes[0]->name ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->communes[0]->district->name ?? '' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->progress }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->year_of_construction }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->year_of_completion }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->length }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->width }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->scale }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->influence_level }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->coordinates }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->total_investment }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->capital_source }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            @if (!empty($value->image))
-                                <x-base.image-zoom class="w-full rounded-md" src="{{ asset($value->image) }}" />
-                            @else
-                                <span class="text-gray-500 italic">Chưa có hình ảnh</span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            @if (!empty($value->video))
+                           @if (!empty($value->image))
+                            <div class="relative w-24 h-16 cursor-pointer"
+                                onclick="openImageModal('{{ asset($value->image) }}')">
+                                <img src="{{ asset($value->image) }}"
+                                    class="w-full h-full object-cover rounded-md shadow-md pointer-events-none" />
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xs font-bold rounded-md">
+                                    Xem Hình
+                                </div>
+                            </div>
+                        @else
+                            <span class="text-gray-500 italic">Chưa có hình ảnh</span>
+                        @endif</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">@if (!empty($value->video))
                                 <div class="relative w-24 h-16 cursor-pointer"
                                     onclick="openVideoModal('{{ asset($value->video) }}')">
                                     <video class="w-full h-full object-cover rounded-md shadow-md pointer-events-none">
@@ -225,14 +172,10 @@
                                 </div>
                             @else
                                 <span class="text-gray-500 italic">Chưa có video</span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            {{ $value->updated_at ?? '' }}
-                        </td>
+                            @endif</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->updated_at ?? '' }}</td>
                         @auth
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
-                            <div class="flex items-center justify-center">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]"><div class="flex items-center justify-center">
                                 <a class="mr-3 flex items-center text-blue-700"
                                     href="/construction/edit-river-bank/{{ $value->id }}">
                                     {!! $icons['edit-2'] !!}
@@ -243,8 +186,7 @@
                                     href="javascript:void(0);">
                                     {!! $icons['trash-2'] !!} Xoá
                                 </a>
-                            </div>
-                        </td>
+                            </div></td>
                         @endauth
                     </tr>
                 @endforeach
@@ -299,6 +241,18 @@
             </video>
         </div>
     </div>
+    <!-- Modal Hình -->
+    <div id="imageModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
+        <div class="relative w-[80%] max-w-3xl">
+            <img id="imagePreview"
+                src=""
+                class="w-full max-h-[80vh] object-contain rounded-lg shadow-lg" />
+            <button onclick="closeImageModal()"
+                    >
+                ×
+            </button>
+        </div>
+    </div>
 @endsection
 
 @vite(['resources/js/district-commune.js'])
@@ -330,7 +284,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         const videoModal = document.getElementById("videoModal");
         const videoPlayer = document.getElementById("videoPlayer");
-        // Đóng modal khi bấm ra ngoài vùng video
+       // Đóng modal khi bấm ra ngoài vùng video
         videoModal.addEventListener("click", function(event) {
             if (event.target === videoModal) {
                 videoModal.classList.add("hidden");
@@ -338,7 +292,19 @@
             }
         });
     });
+        function openImageModal(src) {
+        const modal = document.getElementById('imageModal');
+        const img = document.getElementById('imagePreview');
+        img.src = src;
+        modal.classList.remove('hidden');
+    }
 
+    function closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        modal.classList.add('hidden');
+        document.getElementById('imagePreview').src = ''; // clear ảnh
+    }
+    
 
     document.addEventListener("DOMContentLoaded", function() {
         let select = document.getElementById("riskLevelSelect");
@@ -355,5 +321,28 @@
         select.addEventListener("change", function() {
             updateDisplayText(this.options[this.selectedIndex]);
         });
+
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        const countSpan = document.getElementById('selected-count');
+        const deleteBtn = document.getElementById('delete-multiple-btn');
+
+        function updateCount() {
+            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
+            countSpan.textContent = selectedCount;
+            deleteBtn.disabled = selectedCount === 0;
+        }
+
+        // Khi checkbox "Chọn tất cả" được click
+        selectAllCheckbox.addEventListener('change', function () {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateCount();
+        });
+
+        // Khi checkbox từng dòng được click
+        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
+
+        // Khởi tạo giá trị ban đầu (trường hợp reload giữ lại checkbox đã chọn)
+        updateCount();
     });
 </script>

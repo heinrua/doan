@@ -12,7 +12,7 @@ class TypeOfConstructionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum');
+        
     }
 
     public function index(Request $request)
@@ -106,4 +106,17 @@ class TypeOfConstructionController extends Controller
         TypeOfConstruction::destroy($id);
         return redirect('/list-type-of-construction')->with('success', 200);
     }
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (!$ids || count($ids) === 0) {
+            return redirect()->back()->with('error', 'Không có mục nào được chọn.');
+        }
+
+        TypeOfConstruction::whereIn('id', $ids)->delete();
+
+        return redirect()->back()->with('success', 'Đã xoá các mục đã chọn.');
+    }
+
 }

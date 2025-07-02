@@ -4,9 +4,7 @@
     <title>Danh Sách Phương Án Ứng Phó - PCTT Cà Mau Dashboard</title>
 @endsection
 
-@php
-    $userCurrent = auth()->user();
-@endphp
+
 
 @section('subcontent')
     <div class="intro-y mt-5 flex items-center justify-between">
@@ -55,25 +53,33 @@
                 </button>
             </form>
 
-            @if ($userCurrent->is_master || $userCurrent->hasPermission('create-scenarios'))
+           @auth
                 <a href="{{ route('create-scenarios') }}">
                     <button type="button"
                         class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">
                         {!! $icons['plus-circle'] !!} Thêm mới phương án
                     </button>
                 </a>
-            @endif
+            @endauth
         </div>
 
         <div class="intro-y col-span-3 overflow-auto lg:overflow-visible text-base text-gray-800 bg-gray-300 rounded-md px-4 py-2 shadow-sm text-center">
             Tổng số phương án: <span class="font-semibold">{{ $data->total() }}</span>
         </div>
-
+        
         <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <table class="-mt-2 border-separate border-spacing-y-[10px]">
+            <form action="{{ route('destroy-multiple-user') }}" method="POST">
+            @csrf
+            @method('DELETE')
+            @auth
+            <button type="submit" class="bg-red-700" id="delete-multiple-btn" disabled>
+                {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
+            </button>
+            @endauth
+            <table class="mt-2 border-separate border-spacing-y-[10px] min-w-max table-auto ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                        <th class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                        <th class="sticky left-0 z-1 bg-blue-100 w-[40px] min-w-[40px] max-w-[40px] px-1 text-center"><input type="checkbox" id="selectAll" class="block mx-auto"></th>
                         <th class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4 ">Tên phương án</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Mô tả ngắn</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Loại thiên tai</th>
@@ -100,7 +106,7 @@
                     @else
                     @foreach ($data as $key => $value)
                     <tr class="bg-white ">
-                        <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                        <th class="sticky left-0 z-1 bg-white w-[40px] min-w-[40px] max-w-[40px]  text-center"><input type="checkbox" class="item-checkbox" name="ids[]" value="{{ $value->id }}"></th>                
                         <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
                             <a class="whitespace-nowrap font-medium" href="/edit-scenarios/{{ $value->id }}">
                                 {{ $value->name }}
@@ -117,13 +123,14 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->document_text }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
                             @php $files = json_decode($value->document_path, true); @endphp
                             @if (!empty($files) && is_array($files))
                                 <ul class="list-disc pl-5 space-y-1 max-h-32 overflow-y-auto">
                                     @foreach ($files as $file)
                                         <li>
-                                            <a href="{{ asset($file) }}" target="_blank" class="text-blue-500 hover:underline">
+                                            
+                                            <a href="{{ asset($file) }}" onclick="openModal()" target="_blank" class="text-blue-500 hover:underline">
                                                 {{ basename($file) }}
                                             </a>
                                         </li>
@@ -133,6 +140,7 @@
                                 <span class="text-gray-500">Không có tệp tin</span>
                             @endif
                         </td>
+                                
                         @auth
                         <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             <div class="flex items-center justify-center gap-3">
@@ -153,6 +161,7 @@
                 </tbody>
                 
             </table>
+        </form>
         </div>
 
         <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
@@ -182,6 +191,17 @@
             </div>
         </div>
     </div>
+<!-- Modal đọc file
+<div id="fileReaderModal" class="fixed inset-0 bg-gray-700 bg-opacity-50 hidden items-center justify-center">
+<div class="bg-white p-4 rounded shadow-xl w-full max-w-xl">
+    <h2 class="text-xl font-bold mb-4">Đọc file trực tiếp</h2>
+    <input type="file" id="fileInput" class="mb-4" />
+    <div id="fileContent" class="border p-2 h-64 overflow-y-auto whitespace-pre-wrap bg-gray-100"></div>
+    <div class="flex justify-end mt-4">
+        <button onclick="closeModal()" class="px-4 py-2 bg-blue-500 text-white rounded">Đóng</button>
+    </div>
+</div>
+</div> -->
 @endsection
 
 <script>
@@ -194,7 +214,6 @@
         document.getElementById('delete-confirmation-modal').classList.add('hidden');
     }
 
-     
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
     });
@@ -202,5 +221,31 @@
         document.getElementById('confirm-delete').setAttribute('href', url);
     }
 
+   
+
     
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        const countSpan = document.getElementById('selected-count');
+        const deleteBtn = document.getElementById('delete-multiple-btn');
+
+        function updateCount() {
+            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
+            countSpan.textContent = selectedCount;
+            deleteBtn.disabled = selectedCount === 0;
+        }
+
+        // Khi checkbox "Chọn tất cả" được click
+        selectAllCheckbox.addEventListener('change', function () {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateCount();
+        });
+
+        // Khi checkbox từng dòng được click
+        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
+
+        // Khởi tạo giá trị ban đầu (trường hợp reload giữ lại checkbox đã chọn)
+        updateCount();
+    });
 </script>

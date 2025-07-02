@@ -34,10 +34,18 @@
         </div>
         <!-- BEGIN: Data List -->
          <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <table class="-mt-2 border-separate border-spacing-y-[10px]">
+            <form action="{{ route('destroy-multiple-user') }}" method="POST">
+            @csrf
+            @method('DELETE')
+            @auth
+            <button type="submit" class="bg-red-700" id="delete-multiple-btn" disabled>
+                {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
+            </button>
+            @endauth
+            <table class="mt-2 border-separate border-spacing-y-[10px] table-fixed">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                        <th class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                        <th class="sticky left-0 z-1 bg-blue-100 w-[40px] min-w-[40px] max-w-[40px] px-1 text-center"><input type="checkbox" id="selectAll" class="block mx-auto"></th>
                         <th class="sticky left-[40px] z-1 bg-blue-100 whitespace-nowrap px-4 py-4 ">Vị trí mặt cắt ngang</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Xã</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Huyện</th>
@@ -67,7 +75,10 @@
                 @else
                 @foreach ($data as $key => $value)
                     <tr class="bg-white ">
-                        <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                        <td class="sticky left-0 z-1 bg-white  w-[40px]" >
+                            <input type="checkbox" class="item-checkbox" name="ids[]" value="{{ $value->id }}">
+
+                        </td>
                         <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
                             <a class="whitespace-nowrap font-medium"
                                 href="/geographical/edit-cross-section/{{ $value->id }}">
@@ -81,14 +92,42 @@
                         <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->start_coordinates }}</td>
                         <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->end_coordinates }}</td>
                         <td class="px-6 py-4  min-w-[160px]">{{ $value->description }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">{{ $value->map }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
+                        @php
+                            $maps = json_decode($value->map, true);
+                        @endphp
+                        @if (!empty($maps) && is_array($maps))
+                            <div class="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
+                                style="max-height: {{ count($maps) > 4 ? '150px' : 'auto' }};">
+                                <ul class="list-disc text-left pl-4">
+                                    @foreach ($maps as $map)
+                                        <li>
+                                            <a href="{{ asset($map) }}" target="_blank"
+                                                class="text-blue-500 hover:underline">
+                                                {{ basename($map) }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @else
+                            <span class="text-gray-500">Không có bản đồ</span>
+                        @endif
+                    </td>
                         <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             @if (!empty($value->image))
-                                <x-base.image-zoom class="w-full rounded-md"
-                                    src="{{ asset( $value->image) }}" />
+                            <div class="relative w-24 h-16 cursor-pointer"
+                                onclick="openImageModal('{{ asset($value->image) }}')">
+                                <img src="{{ asset($value->image) }}"
+                                    class="w-full h-full object-cover rounded-md shadow-md pointer-events-none" />
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xs font-bold rounded-md">
+                                    Xem Hình
+                                </div>
+                            </div>
                             @else
-                                <span class="text-gray-500 italic">Chưa có hình ảnh</span>
-                            @endif</td>
+                            <span class="text-gray-500 italic">Chưa có hình ảnh</span>
+                            @endif
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap min-w-[160px]">
                             @if (!empty($value->video))
                                 <div class="relative w-24 h-16 cursor-pointer"
@@ -176,6 +215,18 @@
             </video>
         </div>
     </div>
+    <!-- Modal Hình -->
+    <div id="imageModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
+        <div class="relative w-[80%] max-w-3xl">
+            <img id="imagePreview"
+                src=""
+                class="w-full max-h-[80vh] object-contain rounded-lg shadow-lg" />
+            <button onclick="closeImageModal()"
+                    >
+                ×
+            </button>
+        </div>
+    </div>
 @endsection
 
 <script>
@@ -200,13 +251,35 @@
         document.getElementById('videoPlayer').load();
         document.getElementById('videoModal').classList.remove('hidden');
     }
-</script>
-<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        const countSpan = document.getElementById('selected-count');
+        const deleteBtn = document.getElementById('delete-multiple-btn');
+
+        function updateCount() {
+            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
+            countSpan.textContent = selectedCount;
+            deleteBtn.disabled = selectedCount === 0;
+        }
+
+        // Khi checkbox "Chọn tất cả" được click
+        selectAllCheckbox.addEventListener('change', function () {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateCount();
+        });
+
+        // Khi checkbox từng dòng được click
+        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
+
+        // Khởi tạo giá trị ban đầu (trường hợp reload giữ lại checkbox đã chọn)
+        updateCount();
+    });
     document.addEventListener("DOMContentLoaded", function() {
         const videoModal = document.getElementById("videoModal");
         const videoPlayer = document.getElementById("videoPlayer");
 
-        // Đóng modal khi bấm ra ngoài vùng video
+       // Đóng modal khi bấm ra ngoài vùng video
         videoModal.addEventListener("click", function(event) {
             if (event.target === videoModal) {
                 videoModal.classList.add("hidden");
@@ -214,4 +287,16 @@
             }
         });
     });
+        function openImageModal(src) {
+        const modal = document.getElementById('imageModal');
+        const img = document.getElementById('imagePreview');
+        img.src = src;
+        modal.classList.remove('hidden');
+    }
+
+    function closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        modal.classList.add('hidden');
+        document.getElementById('imagePreview').src = ''; // clear ảnh
+    }
 </script>

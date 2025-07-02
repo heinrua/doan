@@ -15,6 +15,7 @@ class Construction extends Model
         'id',
         'type_of_construction_id',
         'risk_level_id',
+        'commune_id',
         'name',
         'slug',
         'construction_code',
@@ -63,10 +64,11 @@ class Construction extends Model
         return $this->belongsTo(TypeOfConstruction::class, 'type_of_construction_id');
     }
 
-    public function communes()
+    public function commune()
     {
-        return $this->belongsToMany(Commune::class, 'construction_communes', 'construction_id', 'commune_id');
+        return $this->belongsTo(Commune::class, 'commune_id');
     }
+
 
     public function risk_level()
     {

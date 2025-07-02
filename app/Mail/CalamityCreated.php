@@ -25,6 +25,7 @@ class CalamityCreated extends Mailable
     {
          $text = "🌪 Cảnh báo thiên tai mới\n"
               . "Tên: {$this->calamity->name}\n"
+              . "Loại thiên tai: {$this->calamity->risk_level->type_of_calamity->name}\n"
               . "Địa điểm: {$this->calamity->address}\n"
               . "Cấp độ rủi ro: " . ($this->calamity->risk_level->name ?? 'Chưa xác định') . "\n"
               . "Thời gian: {$this->calamity->time}\n\n"
@@ -39,7 +40,7 @@ class CalamityCreated extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Calamity Created',
+            subject: 'Cảnh báo thiên tai mới',
         );
     }
 

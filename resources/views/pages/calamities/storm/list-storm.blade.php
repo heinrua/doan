@@ -73,21 +73,39 @@
                         Tạo Mới Bão & ATNĐ
                     </button>
                 </a>
+                <button>Tải file mẫu thêm dữ liệu bão</button>
+                <input type="file" name="map[]" id="map" 
+                                            class="block w-70 text-sm text-gray-900
+                                            file:mr-2 file:py-1 file:px-3
+                                            file:rounded file:border-0
+                                            file:text-sm file:font-medium
+                                            file:bg-blue-100 file:text-blue-700
+                                            hover:file:bg-blue-200 border border-gray-300 rounded-md">
+                <button>Đẩy dữ liệu lên</button>
+                <button>{!!$icons['download']!!}Tải dữ liệu</button>
             @endauth
         </div>
         <!-- BEGIN: Total Records -->
         <div
-            class="intro-y col-span-3 overflow-auto lg:overflow-visible text-base text-gray-800  bg-gray-300 rounded-md px-4 py-2 shadow-sm text-center">
+            class="intro-y col-span-3 overflow-visible lg:overflow-visible text-base text-gray-800  bg-gray-300 rounded-md px-4 py-2 shadow-sm text-center">
             Tổng số bão: <span class="font-semibold">{{ $data->total() }}</span>
         </div>
         <!-- END: Total Records -->
         <!-- BEGIN: Data List -->
          
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <table class="-mt-2 border-separate border-spacing-y-[10px]">
+        <div class="intro-y col-span-12 overflow-visible lg:overflow-x-auto">
+            <form action="{{ route('delete-multiple-calamity-storm') }}" method="POST">
+            @csrf
+            @method('DELETE')
+            @auth
+            <button type="submit" class="bg-red-700 sticky left-0" id="delete-multiple-btn" disabled>
+                {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
+            </button>
+            @endauth
+            <table class="mt-2 border-separate border-spacing-y-[10px] ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                    <th class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
+                    <th class="sticky left-0 z-1 bg-blue-100 w-[40px] min-w-[40px] max-w-[40px] px-1 text-center"><input type="checkbox" id="selectAll" class="block mx-auto"></th>
                     <th class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4  min-w-[180px]"> Tên bão
                     </th>
                     <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] " > Loại hình </th>
@@ -128,7 +146,8 @@
                     @else
                 @foreach ($data as $key => $value)
                     <tr class="bg-white ">
-                        <td class="sticky left-0 z-1 bg-white pl-4 py-4 min-w-[40px]">{{ $data->firstItem() + $key }}
+                        <td class="sticky left-0 z-1 bg-white w-[40px] min-w-[40px] max-w-[40px]  text-center">
+                            <input type="checkbox" class="item-checkbox" name="ids[]" value="{{ $value->id }}">
                         </td>
                         <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
                                     <a href="/calamity/edit-storm/{{ $value->id }}">{{ $value->name }}</a>
@@ -192,11 +211,18 @@
                         </td>
                         <td
                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                            @if (!empty($value->image))
-                                <x-base.image-zoom class="w-full rounded-md" src="{{ asset($value->image) }}" />
-                            @else
-                                <span class="text-gray-500 italic">Chưa có hình ảnh</span>
-                            @endif
+                           @if (!empty($value->image))
+                            <div class="relative w-24 h-16 cursor-pointer"
+                                onclick="openImageModal('{{ asset($value->image) }}')">
+                                <img src="{{ asset($value->image) }}"
+                                    class="w-full h-full object-cover rounded-md shadow-md pointer-events-none" />
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xs font-bold rounded-md">
+                                    Xem Hình
+                                </div>
+                            </div>
+                        @else
+                            <span class="text-gray-500 italic">Chưa có hình ảnh</span>
+                        @endif
                         </td>
                         <td
                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
@@ -229,7 +255,7 @@
                                 </a>
                                 <a class="flex items-center text-red-700" data-tw-toggle="modal"
                                     data-tw-target="#delete-confirmation-modal"
-                                    onclick="setDeleteUrl('{{ route('delete-calamity-storm', ['id' => $value->id]) }}')"
+                                    onclick="openDeleteModal('{{ route('delete-calamity-storm', ['id' => $value->id]) }}')"
                                     href="javascript:void(0);">
                                     {!! $icons['trash-2'] !!} Xoá
                                 </a>
@@ -242,6 +268,7 @@
             </tbody>
         </table>
        
+            </form>
     </div>
     <!-- END: Data List -->
     <!-- BEGIN: Pagination -->
@@ -273,10 +300,9 @@
                             class="bg-white px-4 py-2 rounded border text-gray-700 hover:bg-gray-100">
                         Hủy
                     </button>
-                    <a class="flex items-center text-red-600"
-                    onclick="openDeleteModal('{{ route('delete-user', ['id' => $value->id]) }}')"
-                    href="javascript:void(0);">
-                        {!! $icons['trash-2'] !!} Xoá
+                     <a href="#" id="confirm-delete"
+                    class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">
+                        Xoá
                     </a>
                 </div>
             </div>
@@ -289,6 +315,18 @@
             <video id="videoPlayer" class="w-full rounded-lg shadow-lg" controls>
                 <source id="videoSource" src="" type="video/mp4">
             </video>
+        </div>
+    </div>
+    <!-- Modal Hình -->
+    <div id="imageModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
+        <div class="relative w-[80%] max-w-3xl">
+            <img id="imagePreview"
+                src=""
+                class="w-full max-h-[80vh] object-contain rounded-lg shadow-lg" />
+            <button onclick="closeImageModal()"
+                    >
+                ×
+            </button>
         </div>
     </div>
 @endsection
@@ -318,7 +356,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         const videoModal = document.getElementById("videoModal");
         const videoPlayer = document.getElementById("videoPlayer");
-        // Đóng modal khi bấm ra ngoài vùng video
+       // Đóng modal khi bấm ra ngoài vùng video
         videoModal.addEventListener("click", function(event) {
             if (event.target === videoModal) {
                 videoModal.classList.add("hidden");
@@ -326,6 +364,18 @@
             }
         });
     });
+        function openImageModal(src) {
+        const modal = document.getElementById('imageModal');
+        const img = document.getElementById('imagePreview');
+        img.src = src;
+        modal.classList.remove('hidden');
+    }
+
+    function closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        modal.classList.add('hidden');
+        document.getElementById('imagePreview').src = ''; // clear ảnh
+    }
     
     document.addEventListener("DOMContentLoaded", function() {
         let select = document.getElementById("riskLevelSelect");
@@ -343,5 +393,28 @@
             updateDisplayText(this.options[this.selectedIndex]);
         });
     });
-    
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        const countSpan = document.getElementById('selected-count');
+        const deleteBtn = document.getElementById('delete-multiple-btn');
+
+        function updateCount() {
+            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
+            countSpan.textContent = selectedCount;
+            deleteBtn.disabled = selectedCount === 0;
+        }
+
+        // Khi checkbox "Chọn tất cả" được click
+        selectAllCheckbox.addEventListener('change', function () {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateCount();
+        });
+
+        // Khi checkbox từng dòng được click
+        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
+
+        // Khởi tạo giá trị ban đầu (trường hợp reload giữ lại checkbox đã chọn)
+        updateCount();
+    });
 </script>

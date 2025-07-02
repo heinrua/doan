@@ -19,11 +19,7 @@ class RiverBankCalamityController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->except([
-            'index',
-            'viewFormRiverbank',
-            'show',
-        ]);
+       
     }
 
     public function index(Request $request)
@@ -355,4 +351,19 @@ class RiverBankCalamityController extends Controller
         $calamity->delete();
         return redirect('/calamity/list-river-bank')->with('success', 200);
     }
+
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (!$ids || count($ids) === 0) {
+            return redirect()->back()->with('error', 'Không có mục nào được chọn.');
+        }
+
+     
+        Calamities::whereIn('id', $ids)->delete();
+
+        return redirect()->back()->with('success', 'Đã xoá các mục đã chọn.');
+    }
+
 }

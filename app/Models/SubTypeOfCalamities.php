@@ -19,8 +19,6 @@ class SubTypeOfCalamities extends Model
         'type_of_calamity_id',
         'created_at',
         'updated_at',
-        'created_by_user_id',
-        'updated_by_user_id'
     ];
 
     public function type_of_calamities()

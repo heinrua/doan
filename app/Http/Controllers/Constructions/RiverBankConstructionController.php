@@ -17,7 +17,7 @@ class RiverBankConstructionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum');
+        
     }
 
     public function index(Request $request)
@@ -29,7 +29,7 @@ class RiverBankConstructionController extends Controller
         $risk_level_id = $request->input('risk_level_id');
 
         $query = Construction::whereRelation('risk_level.type_of_calamities', 'slug', 'sat-lo-bo-song-bo-bien')
-            ->with(['risk_level', 'communes']);
+            ->with(['risk_level', 'commune']);
 
         if (!empty($search)) {
             $query->where('name', 'LIKE', "%{$search}%");
@@ -37,18 +37,18 @@ class RiverBankConstructionController extends Controller
         if (!empty($commune_id) && !empty($district_id)) {
             $validCommune = Commune::where('id', $commune_id)->where('district_id', $district_id)->exists();
             if ($validCommune) {
-                $query->whereHas('communes', function ($q) use ($commune_id) {
+                $query->whereHas('commune', function ($q) use ($commune_id) {
                     $q->where('id', $commune_id);
                 });
             } else {
                 $query->whereRaw('1 = 0'); // Tạo điều kiện luôn sai để không có dữ liệu nào
             }
         } elseif (!empty($commune_id)) {
-            $query->whereHas('communes', function ($q) use ($commune_id) {
+            $query->whereHas('commune', function ($q) use ($commune_id) {
                 $q->where('id', $commune_id);
             });
         } elseif (!empty($district_id)) {
-            $query->whereHas('communes', function ($q) use ($district_id) {
+            $query->whereHas('commune', function ($q) use ($district_id) {
                 $q->where('district_id', $district_id);
             });
         }
@@ -111,7 +111,6 @@ class RiverBankConstructionController extends Controller
         $data['type_of_construction_id'] = $validated['type_of_construction_id'];
         $data['risk_level_id'] = $validated['risk_level_id'];
         $data['name'] = $validated['name'];
-
         $data['progress'] = $request['progress'];
         $data['year_of_construction'] = $request['year_of_construction'];
         $data['year_of_completion'] = $request['year_of_completion'];
@@ -124,7 +123,6 @@ class RiverBankConstructionController extends Controller
         $data['total_investment'] = $request['total_investment'];
         $data['capital_source'] = $request['capital_source'];
           
-
         $slug = Str::slug($request->name);
         $count = Construction::where('slug', 'like', "{$slug}%")->count();
         if ($count > 0) {
@@ -133,8 +131,10 @@ class RiverBankConstructionController extends Controller
         $data['slug'] = $slug;
         $construction = Construction::create($data);
         if (isset($request['commune_id'])) {
-            $construction->communes()->sync($request['commune_id']);
+            $construction->commune_id = $request['commune_id'];
+            $construction->save();
         }
+
         return redirect('/construction/list-river-bank')->with('success', 200);
     }
 
@@ -142,9 +142,12 @@ class RiverBankConstructionController extends Controller
     {
         $calamities = TypeOfCalamities::where('slug', 'sat-lo-bo-song-bo-bien')->get();
         $construction = Construction::findOrFail($id);
-        $typeOfConstructions = TypeOfConstruction::where('type_of_calamity_id', $construction->type_of_calamity_id)->get();
+        $typeOfConstructions = TypeOfConstruction::where('type_of_calamity_id', $construction->risk_level->type_of_calamity_id)->get();
         $communes = Commune::all();
         $risk_levels = RiskLevel::whereRelation('type_of_calamities', 'slug', 'sat-lo-bo-song-bo-bien')->get();
+      
+
+
         return view('pages/constructions/river-bank/edit-river-bank', compact('calamities', 'construction', 'typeOfConstructions', 'communes', 'risk_levels'));
     }
 
@@ -198,7 +201,6 @@ class RiverBankConstructionController extends Controller
         $data['coordinates'] = $request['coordinates'];
         $data['total_investment'] = $request['total_investment'];
         $data['capital_source'] = $request['capital_source'];
-        $data['updated_by_user_id'] = $user->id;
 
         $slug = Str::slug($request->name);
         $count = Construction::where('slug', 'like', "{$slug}%")->where('id', '!=', $request->id)->count();
@@ -209,7 +211,7 @@ class RiverBankConstructionController extends Controller
 
         $construction->update($data);
         if (isset($request['commune_id'])) {
-            $construction->communes()->sync($request['commune_id']);
+            $construction->commune()->sync($request['commune_id']);
         }
         return redirect('/construction/list-river-bank')->with('success', 200);
     }

@@ -3,9 +3,7 @@
 @section('subhead')
     <title>Cập Nhật Xã Phường - PCTT Cà Mau Dashboard</title>
 @endsection
-@php
-    $userCurrent = auth()->user();
-@endphp
+
 @section('subcontent')
     <h2 class="intro-y mt-5 text-lg font-medium uppercase flex items-center">
         {!! $icons['home'] !!}
@@ -124,11 +122,11 @@
                             class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
                             Huỷ Bỏ</button>
                     </a>
-                    @if ($userCurrent->is_master || $userCurrent->hasPermission('update-commune'))
+                  
                         <button class="w-full md:w-auto px-6 py-3" type="submit" variant="primary">
                             Lưu
                         </button>
-                    @endif
+                  
                 </div>
             </form>
         </div>

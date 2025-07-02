@@ -24,7 +24,7 @@ class StormCalamityController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum');
+        
     }
 
     public function index(Request $request)
@@ -207,7 +207,7 @@ class StormCalamityController extends Controller
         $subscribers = DisasterSubscription::all();
         foreach ($subscribers as $subscriber) {
             Mail::to($subscriber->email)->send(
-                new CalamityCreated($calamity, $subscriber->name)
+                new CalamityCreated($calamities, $subscriber->name)
             );
         }
         return redirect('/calamity/list-storm')->with('success', 200);

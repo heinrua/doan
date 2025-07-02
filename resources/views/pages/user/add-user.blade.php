@@ -62,6 +62,24 @@
                                 <label class="md:w-64">
                                     <div class="text-left">
                                         <div class="flex items-center">
+                                            <div class="font-medium">Email</div>
+                                           <div class="ml-2 text-red-500 text-xl font-bold">*</div>
+                                        </div>
+                                    </div>
+                                </label>
+                                <div class="w-full">
+                                    <input name="email" id="email" type="email" placeholder="Email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                    @error('email')
+                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-5">
+                            <div>
+                                <label class="md:w-64">
+                                    <div class="text-left">
+                                        <div class="flex items-center">
                                             <div class="font-medium">Mật Khẩu</div>
                                            <div class="ml-2 text-red-500 text-xl font-bold">*</div>
                                         </div>
@@ -83,6 +101,11 @@
                 </div>
                 <!-- END: User Information -->
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
+                    <a href="{{ route('view-user') }}">
+                        <button type="button"
+                            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                            Huỷ Bỏ</button>
+                    </a>
                     <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
                         Lưu
                     </button>

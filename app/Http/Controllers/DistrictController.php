@@ -175,4 +175,18 @@ class DistrictController extends Controller
         $district->delete();
         return redirect('/list-district')->with('success', 'District deleted successfully!');
     }
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (!$ids || count($ids) === 0) {
+            return redirect()->back()->with('error', 'Không có mục nào được chọn.');
+        }
+
+        // Ví dụ model là City
+        District::whereIn('id', $ids)->delete();
+
+        return redirect()->back()->with('success', 'Đã xoá các mục đã chọn.');
+    }
+
 }

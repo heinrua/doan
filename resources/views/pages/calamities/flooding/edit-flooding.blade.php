@@ -3,9 +3,7 @@
 @section('subhead')
     <title>Cập Nhật Ngập Lụt - PCTT Cà Mau Dashboard</title>
 @endsection
-@php
-    $userCurrent = auth()->user();
-@endphp
+
 @section('subcontent')
     <h2 class="intro-y mt-5 text-lg font-medium uppercase flex items-center">
         {!! $icons['arlett-triangle'] !!}
@@ -473,8 +471,13 @@
                                             @endif
                                         </div>
                                         <!-- Input file -->
-                                        <input type="file" name="image" id="imageInput" accept="image/*"
-                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                                         <input type="file" name="image" id="imageInput" accept="image/*"
+                                            class="block w-full text-sm text-gray-900
+                                            file:mr-2 file:py-1 file:px-3
+                                            file:rounded file:border-0
+                                            file:text-sm file:font-medium
+                                            file:bg-blue-100 file:text-blue-700
+                                            hover:file:bg-blue-200 border border-gray-300 rounded-md">
                                         <!-- Nút Hoàn Tác (Hiện lại ảnh) -->
                                         <button type="button" id="restoreImage" onclick="showImage()"
                                             class="hidden mt-2 text-blue-600 hover:underline">
@@ -544,11 +547,11 @@
                             class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
                             Huỷ Bỏ</button>
                     </a>
-                    @if ($userCurrent->is_master || $userCurrent->hasPermission('update-calamity-flooding'))
-                       <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+                    
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
                         Lưu
                     </button>
-                    @endif
+                   
                 </div>
             </form>
             <div id="mapFlooding" class="mt-5 w-full h-[700px] rounded-lg border"></div>

@@ -3,9 +3,7 @@
 @section('subhead')
     <title>Cập Nhật Người Dùng - PCTT Cà Mau Dashboard</title>
 @endsection
-@php
-    $userCurrent = auth()->user();
-@endphp
+
 @section('subcontent')
     <h2 class="intro-y mt-5 text-lg font-medium uppercase flex items-center">
         {!! $icons['user'] !!}

@@ -119,4 +119,17 @@ class CommuneController extends Controller
         $communes = Commune::where('district_id', $districtId)->get();
         return response()->json($communes);
     }
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (!$ids || count($ids) === 0) {
+            return redirect()->back()->with('error', 'Không có mục nào được chọn.');
+        }
+
+      
+        Commune::whereIn('id', $ids)->delete();
+
+        return redirect()->back()->with('success', 'Đã xoá các mục đã chọn.');
+    }
 }
