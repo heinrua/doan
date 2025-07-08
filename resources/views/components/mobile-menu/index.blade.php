@@ -1,6 +1,6 @@
-<!-- BEGIN: Mobile Menu -->
+
 <div class="mobile-menu hidden lg:hidden fixed inset-0 bg-slate-900 text-white z-50 overflow-y-auto" style="background-color: #1E3A8A;">
-    <!-- Header -->
+    
     <div class="flex h-[70px] items-center px-4 sm:px-8 justify-between border-b border-slate-700 lg:hidden">
         <a href="{{ route('dashboard-overview') }}" class="flex items-center gap-2">
             <span class="font-semibold text-lg">Quản lý thiên tai</span>
@@ -12,7 +12,6 @@
 
     </div>
 
-    <!-- Menu list -->
     <ul class="py-4 px-4 space-y-2">
         @if (!empty($mainMenu))
             @foreach ($mainMenu as $menu)
@@ -69,9 +68,7 @@
         @endif
     </ul>
 </div>
-<!-- END: Mobile Menu -->
 
-<!-- BEGIN: Mobile Menu Toggle Button -->
 <div class="flex h-[10px] items-center px-3 sm:px-8 md:hidden" >
     <a class="mr-auto flex" href="{{ route('dashboard-overview') }}">
         <img class="w-6" src="{{ Vite::asset('resources/images/logo.svg') }}" alt="Logo" />
@@ -80,7 +77,6 @@
         {!! $icons['menu'] ?? '' !!}
     </a>
 </div>
-<!-- END: Toggle Button -->
 
 @pushOnce('styles')
     @vite('resources/css/vendors/simplebar.css')
@@ -90,5 +86,4 @@
 @pushOnce('vendors')
     @vite('resources/js/vendors/simplebar.js')
 @endPushOnce
-
 

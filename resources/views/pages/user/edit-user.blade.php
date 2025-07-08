@@ -9,9 +9,9 @@
         {!! $icons['user'] !!}
         Cập Nhật Người Dùng
     </h2>
-    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> {{-- Chỉnh thành grid-cols-1 để tối ưu mobile --}}
+    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> 
         <div class="intro-y">
-            <!-- BEGIN: User Information -->
+            
             <form class="validate-form" action="{{ route('update-user') }}" method="post">
                 <input type="hidden" name="id" value="{{ $userData->id }}">
                 @csrf
@@ -34,7 +34,7 @@
                                 </label>
                                 <div class="w-full">
                                     <input  name="name" id="name" type="text" placeholder="Tên"
-                                        value="{{ $userData->user_name }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        value="{{ $userData->full_name }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                 
                                 </div>
                         </div>
@@ -55,12 +55,54 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        
-                        
+                        <div class="mt-5">
+                            <div>
+                                <label class="md:w-64">
+                                    <div class="text-left">
+                                        <div class="flex items-center">
+                                            <div class="font-medium">Email</div>
+                                           <div class="ml-2 text-red-500 text-xl font-bold">*</div>
+                                        </div>
+                                    </div>
+                                </label>
+                                <div class="w-full">
+                                    <input name="email" id="email" type="email" placeholder="Email" value="{{ $userData->email }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                    @error('email')
+                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-5">
+                            <div>
+                                <label class="md:w-64">
+                                    <div class="text-left">
+                                        <div class="flex items-center">
+                                            <div class="font-medium">Mật Khẩu</div>
+                                           <div class="ml-2 text-red-500 text-xl font-bold">*</div>
+                                        </div>
+
+                                    </div>
+                                </label>
+                                <div class="w-full">
+                                    <input name="password" id="password" type="text" placeholder="Mật Khẩu" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                    
+                                    @error('password')
+                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-5">
+                            <div class="flex items-center mb-4">
+                                <input name="is_master" id="is_master" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="is_master" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Quản trị viên</label>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-                <!-- END: User Information -->
+                
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-user') }}">
                         <button type="button"

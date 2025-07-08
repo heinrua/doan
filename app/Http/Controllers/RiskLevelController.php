@@ -112,7 +112,6 @@ class RiskLevelController extends Controller
             return redirect()->back()->with('error', 'Không có mục nào được chọn.');
         }
 
-      
         RiskLevel::whereIn('id', $ids)->delete();
 
         return redirect()->back()->with('success', 'Đã xoá các mục đã chọn.');

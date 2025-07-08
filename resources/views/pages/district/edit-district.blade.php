@@ -9,12 +9,12 @@
         {!! $icons['home'] !!}
         Cập Nhật Quận Huyện
     </h2>
-    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> {{-- Chỉnh thành grid-cols-1 để tối ưu mobile --}}
+    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> 
         <div class="intro-y">
             <form enctype="multipart/form-data" class="validate-form" action="{{ route('update-district') }}" method="post">
                 <input type="hidden" name="id" value="{{ $district->id }}">
                 @csrf
-                <!-- BEGIN: Risk Level Information -->
+                
                 <div class="intro-y box mt-5 p-5">
                     <div class="rounded-md border border-slate-200/60 p-5">
                         <div
@@ -36,7 +36,7 @@
                                 <div class="w-full">
                                     <input name="name" id="name" type="text"
                                         placeholder="Tên Quận Huyện" value="{{ $district->name }}" />
-                                    <x-base.form-help class="text-right"> Tối thiểu 5 ký tự </x-base.form-help>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                                 <div class="w-full">
                                     <input name="code" id="code" type="text"
                                         placeholder="Mã Quận Huyện" value="{{ $district->code }}" />
-                                    <x-base.form-help class="text-right"> Tối thiểu 5 ký tự </x-base.form-help>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
                                 <div class="w-full">
                                     <input name="coordinates" id="coordinates" type="text"
                                         placeholder="Toạ Độ" value="{{ $district->coordinates }}" />
-                                    <x-base.form-help class="text-right"> Tối thiểu 5 ký tự </x-base.form-help>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -111,15 +111,15 @@
                                             @endforeach
                                         </div>
                                     @endif
-                                    <!-- Nút hoàn tác (ẩn mặc định) -->
+                                    
                                     <button type="button" id="restoreMap" onclick="showMap()"
                                         class="hidden mt-2 text-blue-600 hover:underline">
                                         Hoàn tác
                                     </button>
-                                    <!-- Input để chọn file mới -->
+                                    
                                     <input type="file" name="map[]" id="map" multiple
                                         class="mt-2 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
-                                    <!-- Input ẩn chứa danh sách file bị xoá -->
+                                    
                                     <input type="hidden" name="deleted_maps" id="deletedMaps" value="[]">
                                 </div>
                             </div>
@@ -170,7 +170,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- END: Product Information -->
+                
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-district') }}">
                         <button type="button"
@@ -188,7 +188,7 @@
     </div>
 @endsection
 <script>
-    //map
+    
     let deletedMaps = [];
 
     function hideMap(button) {

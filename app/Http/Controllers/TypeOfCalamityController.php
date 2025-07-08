@@ -89,7 +89,6 @@ class TypeOfCalamityController extends Controller
             return redirect()->back()->with('error', 'Không có mục nào được chọn.');
         }
 
-      
         TypeOfCalamities::whereIn('id', $ids)->delete();
 
         return redirect()->back()->with('success', 'Đã xoá các mục đã chọn.');

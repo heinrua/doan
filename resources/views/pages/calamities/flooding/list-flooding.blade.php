@@ -16,10 +16,10 @@
     </div>
     <div class="mt-5 grid grid-cols-12 gap-6">
         <div class="intro-y col-span-12 flex flex-wrap items-start gap-3">
-            <!-- Form tìm kiếm -->
+            
             <form action="{{ route('view-calamity-flooding') }}" method="GET"
                 class="flex flex-wrap items-center gap-3 grow">
-                <!-- Dropdown chọn loại -->
+                
                 <select id="yearSelect" name="year_id"
                     class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5">
                     <option value="">-- Chọn năm --</option>
@@ -30,7 +30,6 @@
     
                 </select>
 
-                <!-- Dropdown chọn huyện -->
                 <select id="districtSelect" name="district_id"
                     class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5">
                     <option value="">-- Chọn huyện --</option>
@@ -47,9 +46,7 @@
                   
                 </select>
 
-    
-
-                {{-- Chọn cấp độ thiên tai --}}
+                
                 <select id="riskLevelSelect" name="risk_level_id"
                     class="bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5">
                     <option value="">Cấp độ thiên tai</option>
@@ -60,8 +57,7 @@
                         </option>
                     @endforeach
                 </select>
-                
-                <!-- Ô tìm kiếm -->
+
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 flex items-center ps-3 pointer-events-none">
                         {!! $icons['search'] !!}
@@ -69,43 +65,34 @@
                     <input type="text" name="name" placeholder="Tìm kiếm..." value="{{ request('search') }}"
                         class="block w-full p-4 ps-10 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
                 </div>
-                
-                <!-- Nút tìm kiếm -->
+
                 <button type="submit"
                     class="h-10 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow-md transition-all">
                     Tìm kiếm
                 </button>
             </form>
-            <!-- Nút tạo mới -->
-            
-            
+
             @auth
                 <a href="{{ route('create-calamity-flooding') }}">
                     <button class="shadow-md h-10" variant="primary">
                         {!! $icons['plus-circle'] !!}
                         Tạo Mới Ngập Lụt
                     </button>
-                </a>
-                <a href="">
-                    <button class="shadow-md h-10" variant="primary">
-                        {!! $icons['download'] !!}
-                        Xuất dữ liệu
+                </a>    
+                <a href="{{ route('export-flooding-calamity') }}">
+                    <button class="h-10 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow-md transition-all">
+                    {!! $icons['download'] !!}Tải dữ liệu
                     </button>
-                </a>
+                </a> 
             @endauth
             
         </div>
-        <!-- BEGIN: Total Records -->
+        
         <div
             class="intro-y col-span-3 overflow-auto lg:overflow-visible text-base text-gray-800  bg-gray-300 rounded-md px-4 py-2 shadow-sm text-center">
             Tổng vị trí ngập lụt: <span class="font-semibold">{{ $data->total() }}</span>
         </div>
-
-        <!-- END: Total Records -->
-        <!-- BEGIN: Data List -->
-         
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <form action="{{ route('delete-multiple-calamity-flooding') }}" method="POST">
+        <form action="{{ route('delete-multiple-calamity-flooding') }}"class = "col-span-2" method="POST">
             @csrf
             @method('DELETE')
             @auth
@@ -113,6 +100,10 @@
                 {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
             </button>
             @endauth
+            
+        </form>
+
+        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
             <table class="mt-2 border-separate border-spacing-y-[10px] ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
@@ -280,15 +271,13 @@
         </div>
 
     </div>
-        <!-- END: Data List -->
-        <!-- BEGIN: Pagination -->
+
         <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
             {{ $data->links() }}
         </div>
-        <!-- END: Pagination -->
-        </div>
         
-        <!-- Modal Video -->
+        </div>
+
         <div id="videoModal" class="fixed inset-0 items-center justify-center bg-black bg-opacity-75 hidden z-50">
             <div class="relative w-[80%] max-w-4xl">
                 <video id="videoPlayer" class="w-full rounded-lg shadow-lg" controls>
@@ -297,13 +286,11 @@
             </div>
     </div>
 @endsection
-<!-- BEGIN: Delete Confirmation Modal -->
-    <!-- Modal xác nhận xoá -->
+
     <div class="fixed inset-0 z-50 hidden" id="delete-confirmation-modal" aria-modal="true">
-        <!-- Nền mờ -->
+        
         <div class="fixed inset-0 bg-black/50"></div>
 
-        <!-- Khung modal chính giữa màn hình -->
         <div class="flex min-h-screen items-center justify-center">
             <div class="bg-white rounded-lg shadow-xl w-full max-w-md z-50 p-6">
                 <div class="flex items-start space-x-3">
@@ -330,7 +317,7 @@
             </div>
         </div>
     </div>
-    <!-- END: Delete Confirmation Modal -->
+    
 <script>
       
     function openDeleteModal(url) {
@@ -360,16 +347,13 @@
             deleteBtn.disabled = selectedCount === 0;
         }
 
-        // Khi checkbox "Chọn tất cả" được click
         selectAllCheckbox.addEventListener('change', function () {
             checkboxes.forEach(cb => cb.checked = this.checked);
             updateCount();
         });
 
-        // Khi checkbox từng dòng được click
         checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
 
-        // Khởi tạo giá trị ban đầu (trường hợp reload giữ lại checkbox đã chọn)
         updateCount();
     });
 
@@ -381,7 +365,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         const videoModal = document.getElementById("videoModal");
         const videoPlayer = document.getElementById("videoPlayer");
-       // Đóng modal khi bấm ra ngoài vùng video
+       
         videoModal.addEventListener("click", function(event) {
             if (event.target === videoModal) {
                 videoModal.classList.add("hidden");
@@ -399,7 +383,7 @@
     function closeImageModal() {
         const modal = document.getElementById('imageModal');
         modal.classList.add('hidden');
-        document.getElementById('imagePreview').src = ''; // clear ảnh
+        document.getElementById('imagePreview').src = ''; 
     }
     document.addEventListener("DOMContentLoaded", function() {
         let districtSelect = document.querySelector("#districtSelect");
@@ -407,15 +391,15 @@
         if (districtSelect && communeSelect) {
             let districtTS = districtSelect.tomselect;
             let communeTS = communeSelect.tomselect;
-            //  Hàm lấy giá trị từ URL
+            
             function getQueryParam(param) {
                 let urlParams = new URLSearchParams(window.location.search);
                 return urlParams.get(param);
             }
-            // Lấy giá trị từ URL
+            
             let selectedDistrictId = getQueryParam("district_id") || "";
             let selectedCommuneId = getQueryParam("commune_id") || "";
-            //  Hàm tải danh sách xã
+            
             function loadCommunes(districtId = "", selectedCommune = "") {
                 communeTS.clear();
                 communeTS.clearOptions();
@@ -435,7 +419,7 @@
                                 text: commune.name
                             });
                         })
-                        // Nếu có xã đã chọn từ URL, đặt lại giá trị
+                        
                         if (selectedCommune && data.some(c => c.id == selectedCommune)) {
                             communeTS.setValue(selectedCommune);
                         }
@@ -448,9 +432,9 @@
                         });
                     });
             }
-            //  Khi tải trang, luôn luôn load danh sách xã
+            
             loadCommunes(selectedDistrictId, selectedCommuneId);
-            //  Khi chọn huyện, load lại danh sách xã
+            
             districtTS.on("change", function() {
                 let districtId = this.getValue();
                 loadCommunes(districtId);
@@ -459,8 +443,8 @@
     });
     document.addEventListener("DOMContentLoaded", function() {
         let select = document.getElementById("riskLevelSelect");
-        let selectedOption = select.options[select.selectedIndex]; // Lấy option đã chọn sau reload
-        let maxLength = 15; // Giới hạn ký tự
+        let selectedOption = select.options[select.selectedIndex]; 
+        let maxLength = 15; 
         function updateDisplayText(option) {
             let fullText = option.getAttribute("data-fulltext") || option.textContent;
             let displayText = fullText.length > maxLength ? fullText.substring(0, maxLength) + "..." : fullText;

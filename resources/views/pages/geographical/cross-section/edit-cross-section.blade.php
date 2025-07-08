@@ -9,14 +9,14 @@
         {!! $icons['cloud-rain'] !!}
         Cập Nhật Mặt Cắt Ngang
     </h2>
-    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> {{-- Chỉnh thành grid-cols-1 để tối ưu mobile --}}
+    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> 
         <div class="intro-y">
             <form enctype="multipart/form-data" class="validate-form" action="{{ route('update-cross-section') }}"
                 method="post">
                 <input type="hidden" name="id" value="{{ $data->id }}">
                 @csrf
                 <input type="hidden" name="type" value="cross-section">
-                <!-- BEGIN: Flooding Information -->
+                
                 <div class="intro-y box mt-5 p-5">
                     <div class="rounded-md border border-slate-200/60 p-5">
                         <div
@@ -206,12 +206,12 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <!-- Hiển thị ảnh nếu có -->
+                                    
                                     @if ($data->image)
                                         <x-base.image-zoom src="{{ asset( $data->image) }}" alt="Hình ảnh"
                                             class="mb-3 h-40 w-auto rounded-lg shadow" />
                                     @endif
-                                    <!-- Input để upload ảnh mới -->
+                                    
                                     <input name="image" id="image" type="file"
                                         placeholder="Hình ảnh" />
                                 </div>
@@ -228,10 +228,10 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <!-- Input file -->
+                                    
                                     <input type="file" name="video" id="videoInput" accept="video/mp4"
                                         class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
-                                    <!-- Hiển thị video nếu có -->
+                                    
                                     @if (!empty($data->video))
                                         <div class="mt-4">
                                             <video id="videoPreview" class="w-full max-w-md rounded-lg shadow-md"
@@ -246,7 +246,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- END: Flooding Information -->
+                
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-cross-section') }}">
                         <button type="button"

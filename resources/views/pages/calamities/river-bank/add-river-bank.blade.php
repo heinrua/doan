@@ -9,11 +9,11 @@
         {!! $icons['cloud-rain'] !!}
         Tạo Mới Sạt Lở
     </h2>
-    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> {{-- Chỉnh thành grid-cols-1 để tối ưu mobile --}}
+    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> 
         <div class="intro-y">
             <form enctype="multipart/form-data" class="validate-form" action="/calamity/create-river-bank" method="post">
                 @csrf
-                <!-- BEGIN: Risk Level Information -->
+                
                 <div class="intro-y box mt-5 p-5">
                     <div class="rounded-md border border-slate-200/60 p-5">
                         <div
@@ -21,9 +21,9 @@
                             {!! $icons['chevron-down'] !!} Thông Tin Sạt Lở
                         </div>
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <!-- Cột 1 -->
+                            
                             <div>
-                                <!-- Vị trí sạt lở -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -42,7 +42,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <!-- Loại hình thiên tai -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -64,7 +64,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <!-- Loại sạt lở -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -87,9 +87,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Cột 2 -->
+                            
                             <div>
-                                <!-- Tọa độ vị trí -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -109,7 +109,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Cấp độ thiên tai -->
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -128,7 +127,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <!-- Thời gian -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -145,9 +144,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Cột 3 -->
+                            
                             <div>
-                                <!-- Địa điểm -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -163,7 +162,7 @@
                                             placeholder="Địa điểm" />
                                     </div>
                                 </div>
-                                <!-- Phường/Xã -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -185,7 +184,7 @@
                             </div>
                         </div>
 
-                        {{-- VẠCH KẺ NGANG --}}
+                       
                         <div class="w-full border-t-2 border-gray-300 my-4"></div>
 
                         <div class="mt-5">
@@ -215,9 +214,9 @@
                             </div>
                         </div>
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <!-- Cột 1 -->
+                            
                             <div>
-                                <!-- Nguyên nhân -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -233,7 +232,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Địa chất -->
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -248,7 +246,7 @@
                                             placeholder="Địa chất" />
                                     </div>
                                 </div>
-                                <!-- Chính sách hỗ trợ -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -265,9 +263,8 @@
                                 </div>
                             </div>
 
-                            <!-- Cột 2 -->
                             <div>
-                                <!-- Đặc điểm thuỷ văn -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -283,7 +280,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Các biện pháp giảm thiểu -->
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -298,7 +294,7 @@
                                             type="text" placeholder="Các biện pháp giảm thiểu" />
                                     </div>
                                 </div>
-                                <!-- Mức độ -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -315,9 +311,8 @@
                                 </div>
                             </div>
 
-                            <!-- Cột 3 -->
                             <div>
-                                <!-- Thiệt hại về người -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -333,7 +328,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Thiệt hại về tài sản -->
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -351,9 +345,9 @@
                             </div>
                         </div>
 
-                        {{-- map,image,video --}}
+                        
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <!-- Cột 1 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -370,7 +364,7 @@
                                 </div>
 
                             </div>
-                            <!-- Cột 2 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -386,7 +380,7 @@
 </div>
                                 </div>
                             </div>
-                            <!-- Cột 3 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -405,7 +399,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- END: Product Information -->
+                
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-calamity-river-bank') }}">
                         <button type="button"

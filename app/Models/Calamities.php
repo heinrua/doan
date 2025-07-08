@@ -43,7 +43,9 @@ class Calamities extends Model
         'data_source',
         'flood_range',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'created_by_user_id',
+        'updated_by_user_id'
     ];
 
    
@@ -62,5 +64,14 @@ class Calamities extends Model
     public function communes()
     {
         return $this->belongsToMany(Commune::class, 'calamity_communes', 'calamity_id','commune_id', );
+    }
+     public function created_by_user()
+    {
+        return $this->belongsTo(User::class, 'created_by_user_id');
+    }
+
+    public function updated_by_user()
+    {
+        return $this->belongsTo(User::class, 'updated_by_user_id');
     }
 }

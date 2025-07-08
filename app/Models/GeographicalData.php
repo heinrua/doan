@@ -20,7 +20,9 @@ class GeographicalData extends Model
         'monitoring_position', 'river', 'elevation_z', 'description','type_of_calamity_id','commune_id',
         'video','map','image','population',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'created_by_user_id',
+        'updated_by_user_id'
     ];
 
     public function type_of_calamities()
@@ -31,5 +33,14 @@ class GeographicalData extends Model
     public function communes()
     {
         return $this->belongsTo(Commune::class, 'commune_id');
+    }
+     public function created_by_user()
+    {
+        return $this->belongsTo(User::class, 'created_by_user_id');
+    }
+
+    public function updated_by_user()
+    {
+        return $this->belongsTo(User::class, 'updated_by_user_id');
     }
 }

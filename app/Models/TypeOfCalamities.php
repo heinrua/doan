@@ -40,34 +40,32 @@ class TypeOfCalamities extends Model
     public function calamities()
     {
         return $this->hasManyThrough(
-            Calamities::class,         // Model cuối cùng cần lấy
-            RiskLevel::class,        // Model trung gian
-            'type_of_calamity_id',   // Khóa ngoại trên RiskLevel (tới TypeOfCalamities)
-            'risk_level_id',         // Khóa ngoại trên Calamity (tới RiskLevel)
-            'id',                    // Khóa chính local của TypeOfCalamities
-            'id'                     // Khóa chính local của RiskLevel
+            Calamities::class,        
+            RiskLevel::class,        
+            'type_of_calamity_id',   
+            'risk_level_id',         
+            'id',                    
+            'id'                     
     );
     }
 
     public function constructions()
     {
             return $this->hasManyThrough(
-            Construction::class,       // Model đích
-            RiskLevel::class,          // Model trung gian
-            'type_of_calamity_id',     // foreign key trên RiskLevel (trỏ đến TypeOfCalamities)
-            'risk_level_id',           // foreign key trên Construction (trỏ đến RiskLevel)
-            'id',                      // local key của TypeOfCalamities
-            'id'                       // local key của RiskLevel
+            Construction::class,       
+            RiskLevel::class,          
+            'type_of_calamity_id',     
+            'risk_level_id',           
+            'id',                      
+            'id'                       
     );
     }
 
-    // Hàm đếm số lượng calamitiesCount
     public function calamitiesCount()
     {
         return $this->calamities()->count();
     }
 
-    // Hàm đếm số lượng calamitiesCount
     public function constructionsCount()
     {
         return $this->constructions()->count();

@@ -12,15 +12,15 @@ class MapController extends Controller
 {
     public function viewRiverBank()
     {
-        $years = Calamities::whereRelation('risk_level.type_of_calamities', 'slug', 'sat-lo-bo-song-bo-bien')->selectRaw('YEAR(time) as year')
+        $years_has_riverbank = Calamities::whereRelation('risk_level.type_of_calamities', 'slug', 'sat-lo-bo-song-bo-bien')->selectRaw('YEAR(time) as year')
             ->distinct()
             ->orderByDesc('year')
             ->pluck('year');
 
-        $locations = [];
+        $locations_river_bank = [];
 
-        foreach ($years as $year) {
-            $locations[$year] = District::with([
+        foreach ($years_has_riverbank as $year) {
+            $locations_river_bank[$year] = District::with([
                 'communes' => function ($query) use ($year) {
                     $query->with(['calamities' => function ($query) use ($year) {
                         $query->whereRelation('risk_level.type_of_calamities', 'slug', 'sat-lo-bo-song-bo-bien')
@@ -54,7 +54,6 @@ class MapController extends Controller
                                                 'commune' => $calamity->communes->first()->name ?? '',
                                                 'district' => $calamity->communes->first()->district->name ?? '',
 
-
                                             ];
                                         })->toArray()
                                     ]
@@ -69,11 +68,9 @@ class MapController extends Controller
                 'id'=>$district->id,
                 'name' => $district->name,
                 'coordinates'=>$district->coordinates,
-                'map' => json_decode($district->map, true) // Chuyển chuỗi JSON thành mảng
+                'map' => json_decode($district->map, true) 
             ];
         });
-
-       
 
         $constructionTypes = TypeOfConstruction::select('id', 'name')->get();
 
@@ -87,6 +84,7 @@ class MapController extends Controller
                     'name' => $construction->name,
                     'risk_level_name' => $construction->risk_level->name ?? '',
                     'address' => $construction->address,
+                    'population'=>$construction->population,
                     'commune' => $construction->commune->name ?? '',
                     'district' => $construction->commune->district->name ?? '',
                     'year_of_construction' => $construction->year_of_construction ?? '',
@@ -96,10 +94,8 @@ class MapController extends Controller
             })
             ->groupBy('type_id');
 
-
-       
         $types = ['school', 'medical', 'center'];
-        $classifies = ['Cấp xã', 'Cấp huyện']; // hoặc các giá trị classify bạn muốn lọc
+        $classifies = ['Cấp xã', 'Cấp huyện']; 
 
         $administratives = Administrative::whereIn('type', $types)
             ->when($classifies, function ($query) use ($classifies) {
@@ -118,6 +114,7 @@ class MapController extends Controller
                     'type' => $item->type,
                     'classify' => $item->classify,
                     'address' => $item->address,
+                    'population'=>$item->population,
                     'commune' => optional($item->communes)->name,
                     'district' => optional(optional($item->communes)->district)->name,
                     'description' => $item->description,
@@ -125,68 +122,6 @@ class MapController extends Controller
                     'longitude' => $coordinates[1] ?? null,
                 ];
             });
-
-        // $schools = Administrative::where('type', 'school')->get()->map(function ($school) {
-        //     return [
-        //         'id' => $school->id,
-        //         'name' => $school->name,
-        //         'type' => $school->type,
-        //         'address' => $school->address,
-        //         'commune' => $school->communes->name,
-        //         'district' => $school->communes->district->name,
-        //         'description' => $school->description,
-        //         'latitude' => explode(',', $school->coordinates)[0],
-        //         'longitude' => explode(',', $school->coordinates)[1],
-        //     ];
-        // });
-
-        // $medicals = Administrative::where('type', 'medical')->get()->map(function ($medical) {
-        //     return [
-        //         'id' => $medical->id,
-        //         'name' => $medical->name,
-        //         'type' => $medical->type,
-        //         'classify' => $medical->classify,
-        //         'address' => $medical->address,
-        //         'commune' => $medical->communes->name,
-        //         'district' => $medical->communes->district->name,
-        //         'address' => $medical->address,
-        //         'description' => $medical->description,
-        //         'latitude' => explode(',', $medical->coordinates)[0],
-        //         'longitude' => explode(',', $medical->coordinates)[1],
-        //     ];
-        // });
-
-        // $center_communes = Administrative::where('type', 'center')->where('classify','Cấp xã')->get()->map(function ($center_commune) {
-        //     return [
-        //         'id' => $center_commune->id,
-        //         'name' => $center_commune->name,
-        //         'type' => $center_commune->type,
-        //         'address' => $center_commune->address,
-        //         'classify' => $center_commune->classify,
-        //         'commune' => $center_commune->communes->name,
-        //         'district' => $center_commune->communes->district->name,
-        //         'address' => $center_commune->address,
-        //         'description' => $center_commune->description,
-        //         'latitude' => explode(',', $center_commune->coordinates)[0],
-        //         'longitude' => explode(',', $center_commune->coordinates)[1],
-        //     ];
-        // });
-
-        // $center_districts = Administrative::where('type', 'center')->where('classify', 'Cấp huyện')->get()->map(function ($center_district) {
-        //     return [
-        //         'id' => $center_district->id,
-        //         'name' => $center_district->name,
-        //         'type' => $center_district->type,
-        //         'address' => $center_district->address,
-        //         'classify' => $center_district->classify,
-        //         'commune' => $center_district->communes->name,
-        //         'district' => $center_district->communes->district->name,
-        //         'address' => $center_district->address,
-        //         'description' => $center_district->description,
-        //         'latitude' => explode(',', $center_district->coordinates)[0],
-        //         'longitude' => explode(',', $center_district->coordinates)[1],
-        //     ];
-        // });
 
         $duongSoTanFiles = [];
         $duongSoTanPath = public_path('uploads/calamities/flooding/DuongSoTan');
@@ -200,14 +135,8 @@ class MapController extends Controller
             }
         }
 
-        return view('pages.map', compact('locations', 'districts','constructionTypes','duongSoTanFiles' ,'constructions','constructionTypes', 'administratives'));
-    }
-
-    public function viewFlooding()
-    {
         $sortedLevels = ['all', '0-0.5m', '0.5-1m', '1-1.5m', '1.5-2m', '>2m'];
 
-        // Lấy danh sách mức ngập thực tế từ database, loại bỏ khoảng trắng
         $levels = Calamities::whereHas('risk_level.type_of_calamities', function ($query) {
             $query->where('slug', 'ngap-lut');
         })
@@ -216,18 +145,15 @@ class MapController extends Controller
             ->distinct()
             ->pluck('flood_range')
             ->map(fn($level) => trim($level))
-            ->toArray(); // Chuyển về mảng để sắp xếp
+            ->toArray(); 
 
-        // Sắp xếp theo thứ tự mong muốn
         usort($levels, function ($a, $b) use ($sortedLevels) {
             return array_search($a, $sortedLevels) - array_search($b, $sortedLevels);
         });
 
-        // Khởi tạo danh sách dữ liệu ngập theo mức độ
-        $calamitiesByFloodRange = [];
+        $floodByRange = [];
 
-        // Thêm 'all' vào đầu danh sách
-        $calamitiesByFloodRange['all'] = Calamities::whereHas('risk_level.type_of_calamities', function ($query) {
+        $floodByRange['all'] = Calamities::whereHas('risk_level.type_of_calamities', function ($query) {
             $query->where('slug', 'ngap-lut');
         })
             ->whereNotNull('flood_range')
@@ -241,10 +167,9 @@ class MapController extends Controller
                 'map' => $calamity->map,
             ])->toArray();
 
-        // Duyệt qua từng mức ngập và lấy dữ liệu tương ứng
         foreach ($levels as $level) {
-            $calamitiesByFloodRange[$level] = Calamities::whereRaw("TRIM(flood_range) = ?", [$level])
-                ->whereHas('type_of_calamities', function ($query) {
+            $floodByRange[$level] = Calamities::whereRaw("TRIM(flood_range) = ?", [$level])
+                ->whereHas('risk_level.type_of_calamities', function ($query) {
                     $query->where('slug', 'ngap-lut');
                 })
                 ->select('id', 'name', 'coordinates', 'map')
@@ -258,14 +183,7 @@ class MapController extends Controller
                 ])->toArray();
         }
 
-
-      
-       return view('pages/map/flooding-map', compact('calamitiesByFloodRange'));
-    }
-
-    public function viewStorm()
-    {
-        $years = Calamities::whereHas('risk_level.type_of_calamities', function ($query) {
+        $years_has_storm = Calamities::whereHas('risk_level.type_of_calamities', function ($query) {
             $query->where('slug', 'bao-ap-thap-nhiet-doi');
         })
             ->whereNotNull('time_start')
@@ -273,9 +191,9 @@ class MapController extends Controller
             ->distinct()
             ->orderByDesc('year')
             ->pluck('year');
-        $calamitiesByYear = [];
+        $stormsByYear = [];
 
-        $calamitiesByYear['all'] = Calamities::whereHas('risk_level.type_of_calamities', function ($query) {
+        $stormsByYear['all'] = Calamities::whereHas('risk_level.type_of_calamities', function ($query) {
             $query->where('slug', 'bao-ap-thap-nhiet-doi');
         })
             ->select('id', 'name', 'coordinates', 'map')
@@ -287,9 +205,9 @@ class MapController extends Controller
                 'longitude' => explode(',', $calamity->coordinates)[1] ?? null,
                 'map' => $calamity->map,
             ])->toArray();
-        foreach ($years as $year) {
-            $calamitiesByYear[$year] = Calamities::whereYear('time_start', $year)
-                ->whereHas('type_of_calamities', function ($query) {
+        foreach ($years_has_storm as $year) {
+            $stormsByYear[$year] = Calamities::whereYear('time_start', $year)
+                ->whereHas('risk_level.type_of_calamities', function ($query) {
                     $query->where('slug', 'bao-ap-thap-nhiet-doi');
                 })
                 ->select('id', 'name', 'coordinates', 'map')
@@ -303,23 +221,15 @@ class MapController extends Controller
                 ])->toArray();
         }
 
-       
-
-    
-
-      
-
-        return view('pages/map/storm-map', compact( 'calamitiesByYear'));
+        return view('pages.map', compact('locations_river_bank', 'districts','constructionTypes','duongSoTanFiles' ,'constructions', 'administratives','floodByRange','stormsByYear'));
     }
 
-
-    // API trả về dữ liệu con theo danh mục
     public function getCategoryData()
     {
         $districts = District::all()->map(function ($district) {
             return [
                 'name' => $district->name,
-                'map' => json_decode($district->map, true) // Chuyển chuỗi JSON thành mảng
+                'map' => json_decode($district->map, true) 
             ];
         });
 

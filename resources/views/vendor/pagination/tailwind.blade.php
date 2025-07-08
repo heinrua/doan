@@ -107,7 +107,6 @@
                         @endif
                     @endforeach
 
-
                     {{-- Next Page Link --}}
                     @if ($paginator->hasMorePages())
                         <a href="{{ $paginator->nextPageUrl() }}" rel="next"

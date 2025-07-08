@@ -32,22 +32,23 @@
                             class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" />
             </div>
         </div>
-        <!-- BEGIN: Data List -->
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <form action="{{ route('destroy-multiple-user') }}" method="POST">
+        <form action="{{ route('destroy-multiple-user') }}" class=" col-span-2" method="POST">
             @csrf
             @method('DELETE')
             @auth
-            <button type="submit" class="bg-red-700" id="delete-multiple-btn" disabled>
+            <button type="submit" class="bg-red-700 z-1 sticky left-0" id="delete-multiple-btn" disabled>
                 {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
             </button>
             @endauth
-            <table class="mt-2 border-separate border-spacing-y-[10px] table-fixed">
+</form>
+        
+        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
+            <table class="mt-2 border-separate border-spacing-y-[10px] ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                        <th class="sticky left-0 z-1 bg-blue-100 w-[40px] min-w-[40px] max-w-[40px] px-1 text-center"><input type="checkbox" id="selectAll" class="block mx-auto"></th>
-                        <th class="sticky left-[40px] z-1 bg-blue-100 whitespace-nowrap px-4 py-4 ">
-                        Tên khu vực xói bồi</th>
+                    <th class="sticky left-0 z-1 bg-blue-100 w-[40px] min-w-[40px] max-w-[40px] px-1 text-center"><input type="checkbox" id="selectAll" class="block mx-auto"></th>
+                    <th class="sticky left-[40px] z-1 bg-blue-100 whitespace-nowrap px-4 py-4 ">
+                    Tên khu vực xói bồi</th>
                     <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Phân loại xói bồi</th>
                     <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Xã</th>
                     <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Huyện</th>
@@ -79,9 +80,8 @@
                 @else
                 @foreach ($data as $key => $value)
                     <tr class="bg-white ">
-                        <td class="sticky left-0 z-1 bg-white  w-[40px]" >
+                        <td class="sticky left-0 z-1 bg-white w-[40px] min-w-[40px] max-w-[40px]  text-center">
                             <input type="checkbox" class="item-checkbox" name="ids[]" value="{{ $value->id }}">
-
                         </td>
                         <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
                             <a class="whitespace-nowrap font-medium"
@@ -176,19 +176,17 @@
         </table>
         
     </div>
-    <!-- END: Data List -->
-    <!-- BEGIN: Pagination -->
+
     <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
         {{ $data->links() }}
     </div>
-    <!-- END: Pagination -->
+    
     </div>
-    <!-- BEGIN: Delete Confirmation Modal -->
+    
     <div class="fixed inset-0 z-50 hidden" id="delete-confirmation-modal" aria-modal="true">
-        <!-- Nền mờ -->
+        
         <div class="fixed inset-0 bg-black/50"></div>
 
-        <!-- Khung modal chính giữa màn hình -->
         <div class="flex min-h-screen items-center justify-center">
             <div class="bg-white rounded-lg shadow-xl w-full max-w-md z-50 p-6">
                 <div class="flex items-start space-x-3">
@@ -214,8 +212,7 @@
             </div>
         </div>
     </div>
-    <!-- END: Delete Confirmation Modal -->
-    <!-- Modal Video -->
+
     <div id="videoModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
         <div class="relative w-[80%] max-w-4xl">
             <video id="videoPlayer" class="w-full rounded-lg shadow-lg" controls>
@@ -223,7 +220,7 @@
             </video>
         </div>
     </div>
-    <!-- Modal Hình -->
+    
     <div id="imageModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
         <div class="relative w-[80%] max-w-3xl">
             <img id="imagePreview"
@@ -235,8 +232,6 @@
             </button>
         </div>
     </div>
-    
-
 
 @endsection
 
@@ -274,16 +269,13 @@
             deleteBtn.disabled = selectedCount === 0;
         }
 
-        // Khi checkbox "Chọn tất cả" được click
         selectAllCheckbox.addEventListener('change', function () {
             checkboxes.forEach(cb => cb.checked = this.checked);
             updateCount();
         });
 
-        // Khi checkbox từng dòng được click
         checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
 
-        // Khởi tạo giá trị ban đầu (trường hợp reload giữ lại checkbox đã chọn)
         updateCount();
     });
 </script>
@@ -292,7 +284,6 @@
         const videoModal = document.getElementById("videoModal");
         const videoPlayer = document.getElementById("videoPlayer");
 
-       // Đóng modal khi bấm ra ngoài vùng video
         videoModal.addEventListener("click", function(event) {
             if (event.target === videoModal) {
                 videoModal.classList.add("hidden");
@@ -310,6 +301,6 @@
     function closeImageModal() {
         const modal = document.getElementById('imageModal');
         modal.classList.add('hidden');
-        document.getElementById('imagePreview').src = ''; // clear ảnh
+        document.getElementById('imagePreview').src = ''; 
     }
 </script>

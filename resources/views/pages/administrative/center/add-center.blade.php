@@ -9,12 +9,12 @@
         {!! $icons['aperture'] !!}
         Tạo Mới TT Hành Chính
     </h2>
-    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> {{-- Chỉnh thành grid-cols-1 để tối ưu mobile --}}
+    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> 
         <div class="intro-y">
             <form enctype="multipart/form-data" class="validate-form" action="/administrative/create-center" method="post">
                 @csrf
                 <input type="hidden" name="type" value="center">
-                <!-- BEGIN: Flooding Information -->
+                
                 <div class="intro-y box mt-5 p-5">
                     <div class="rounded-md border border-slate-200/60 p-5">
                         <div
@@ -96,7 +96,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Dropdown Xã -->
+                        
                         <div class="mt-5" id="commune-container">
                             <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                 formInline>
@@ -175,7 +175,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- END: Flooding Information -->
+                
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-center') }}">
                         <button type="button"

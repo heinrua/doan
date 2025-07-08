@@ -7,9 +7,7 @@ use App\Models\User;
 
 class MenuComposer
 {
-    /**
-     * Bind menu to the view.
-     */
+    
     public function compose(View $view): void
     {
         
@@ -185,6 +183,11 @@ class MenuComposer
                 'route_name' => 'chat',
                 'title' => 'Tham gia cộng đồng',
             ],
+            'incident_report' =>[
+                'icon' => 'report',
+                'route_name' => 'incident-report',
+                'title' => 'Báo cáo sự cố',
+            ],
            
             
             
@@ -202,16 +205,16 @@ class MenuComposer
         $filtered = [];
         foreach ($items as $key => $item) {
 
-            // 1. Kiểm tra menu chỉ dành cho master
+         
             if (isset($item['only_master']) && $item['only_master'] && (!$user || !$isMaster)) {
                 continue;
             }
-            // 2. Kiểm tra menu chỉ dành cho người đã đăng nhập
+          
             if (isset($item['only_logged_in']) && $item['only_logged_in'] && !$user) {
                 continue;
             }
 
-            // 2. Nếu có submenu → đệ quy
+           
             if (isset($item['sub_menu'])) {
                 $item['sub_menu'] = $filterMenu($item['sub_menu']);
 
@@ -222,13 +225,12 @@ class MenuComposer
                 continue;
             }
 
-            // 3. Nếu chưa login → chỉ hiển thị menu không có 'only_master'
+            
             if (!$user) {
                 $filtered[$key] = $item;
                 continue;
             }
 
-            // 4. Nếu là master hoặc user thường → đều thấy (trừ menu bị giới hạn only_master)
             $filtered[$key] = $item;
     }
 
@@ -249,16 +251,13 @@ class MenuComposer
 
     
     }
-    /**
-     * Set active menu & submenu.
-     */
+   
     public function activeMenu($pageName, $menus): array
     {
         $first = '';
         $second = '';
         $third = '';
 
-        // Nhóm route cho từng menu
         $routeGroups = [
             'view-user' => ['view-user', 'create-user', 'edit-user'],
             'view-city' => ['view-city', 'create-city', 'edit-city'],
@@ -284,8 +283,7 @@ class MenuComposer
             'view-scenarios' => ['view-scenarios', 'create-scenarios', 'edit-scenarios'],
         ];
 
-        
-        // Xác định route chính tương ứng
+       
       
         foreach ($routeGroups as $main => $group) {
             if (in_array($pageName, $group)) {
@@ -294,7 +292,6 @@ class MenuComposer
             }
         }
 
-        // Xử lý active menu dựa trên route chính
        foreach ($menus as $menuKey => $menu) {
             if ($menu !== 'divider') {
                 if (($menu['route_name'] ?? '') === $pageName) {

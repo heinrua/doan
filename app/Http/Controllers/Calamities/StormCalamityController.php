@@ -19,7 +19,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Excel as ExcelFormat;
 
-
 class StormCalamityController extends Controller
 {
     public function __construct()
@@ -57,7 +56,7 @@ class StormCalamityController extends Controller
                     $q->where('id', $commune_id);
                 });
             } else {
-                $query->whereRaw('1 = 0'); // Tạo điều kiện luôn sai để không có dữ liệu nào
+                $query->whereRaw('1 = 0'); 
             }
         } elseif (!empty($commune_id)) {
             $query->whereHas('communes', function ($q) use ($commune_id) {
@@ -94,29 +93,6 @@ class StormCalamityController extends Controller
 
         return view('pages/calamities/storm/add-storm', compact('calamities', 'communes', 'sub_calamities', 'risk_levels'));
     }
-    public function export()
-    {
-        $data = Calamities::with(['risk_level', 'communes.district'])
-            ->whereRelation('risk_level.type_of_calamities', 'slug', 'bao-ap-thap-nhiet-doi')
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'Tên thiên tai' => $item->name,
-                    'Thời gian bắt đầu' => $item->time_start,
-                    'Thời gian kết thúc' => $item->time_end,
-                    'Cấp độ rủi ro' => optional($item->risk_level)->name,
-                    'Huyện' => $item->communes->pluck('district.name')->unique()->implode(', '),
-                    'Xã' => $item->communes->pluck('name')->implode(', '),
-                    'Thiệt hại người' => $item->human_damage,
-                    'Thiệt hại tài sản' => $item->property_damage,
-                ];
-            });
-
-        return Excel::download(new \Maatwebsite\Excel\Collections\SheetCollection([
-            'Danh sách bão - ATNĐ' => collect($data)
-        ]), 'bao-ap-thap-nhiet-doi.xlsx');
-    }
-
 
     public function store(Request $request)
     {
@@ -135,28 +111,28 @@ class StormCalamityController extends Controller
         if ($request->hasFile('map')) {
             $mapFiles = $request->file('map');
             $allowedMimeTypes = [
-                'application/vnd.google-earth.kmz', // KMZ
-                'application/vnd.google-earth.kml+xml', // KML
-                'application/octet-stream', // Một số server nhận KML/KMZ là kiểu này
-                'application/zip', // Một số server nhận diện KMZ là ZIP
-                'text/xml'  // Một số server nhận diện KML là XML
+                'application/vnd.google-earth.kmz', 
+                'application/vnd.google-earth.kml+xml',
+                'application/octet-stream', 
+                'application/zip',
+                'text/xml'  
             ];
-            $filePaths = []; // Mảng lưu đường dẫn file
+            $filePaths = []; 
             foreach ($mapFiles as $mapFile) {
                 if (!in_array($mapFile->getMimeType(), $allowedMimeTypes)) {
                     return back()->withErrors(['map' => 'Định dạng file không hợp lệ. Chỉ chấp nhận KML hoặc KMZ.']);
                 }
-                // Tạo tên file mới
+                
                 $slugName = Str::slug(pathinfo($mapFile->getClientOriginalName(), PATHINFO_FILENAME));
                 $timestamp = now()->format('YmdHis');
                 $newFileName = "{$slugName}-{$timestamp}.{$mapFile->getClientOriginalExtension()}";
-                // Lưu vào thư mục public/uploads/calamities/storm/maps
+                
                 $destinationPath = public_path('uploads/calamities/storm/maps');
                 $mapFile->move($destinationPath, $newFileName);
-                // Thêm đường dẫn vào danh sách
+                
                 $filePaths[] = "uploads/calamities/storm/maps/$newFileName";
             }
-            // Lưu vào DB dưới dạng JSON
+          
             $data['map'] = json_encode($filePaths);
         }
         if ($request->hasFile('video')) {
@@ -187,7 +163,7 @@ class StormCalamityController extends Controller
         $data['human_damage'] = $request['human_damage'];
         $data['property_damage'] = $request['property_damage'];
         $data['mitigation_measures'] = $request['mitigation_measures'];
-        
+        $data['created_by_user_id'] = $user->id;    
 
         $slug = Str::slug($request->name);
         $count = Calamities::where('slug', 'like', "{$slug}%")->count();
@@ -203,7 +179,7 @@ class StormCalamityController extends Controller
         if (isset($validated['sub_type_of_calamity_ids'])) {
             $calamities->sub_type_of_calamities()->sync($validated['sub_type_of_calamity_ids']);
         }
-        //Gửi mail toàn bộ người dùng
+        
         $subscribers = DisasterSubscription::all();
         foreach ($subscribers as $subscriber) {
             Mail::to($subscriber->email)->send(
@@ -213,36 +189,30 @@ class StormCalamityController extends Controller
         return redirect('/calamity/list-storm')->with('success', 200);
     }
 
-    
-        public function show($id)
-        {
-            $calamity = Calamities::with([
-            'communes',
-            'communes.district',
-            'sub_type_of_calamities',
-            'risk_level.type_of_calamities'
-            ])->findOrFail($id);
+    public function show($id)
+    {
+        $calamity = Calamities::with([
+        'communes',
+        'communes.district',
+        'sub_type_of_calamities',
+        'risk_level.type_of_calamities'
+        ])->findOrFail($id);
 
-            // Lấy type id thông qua risk_level
-            $typeId = $calamity->risk_level?->type_of_calamities?->id;
+        $typeId = $calamity->risk_level?->type_of_calamities?->id;
 
-            $subTypeOfCalamities = $typeId
-                ? SubTypeOfCalamities::where('type_of_calamity_id', $typeId)->get()
-                : collect();
+        $subTypeOfCalamities = $typeId
+            ? SubTypeOfCalamities::where('type_of_calamity_id', $typeId)->get()
+            : collect();
 
+        $typeOfCalamities = TypeOfCalamities::all();
+        $communes = Commune::all();
+        $risk_levels = RiskLevel::whereRelation('type_of_calamities', 'slug', 'bao-ap-thap-nhiet-doi')->get();
+        $calamities = TypeOfCalamities::where('slug', 'bao-ap-thap-nhiet-doi')->get();
 
-
-            // Dữ liệu bổ sung
-            $typeOfCalamities = TypeOfCalamities::all();
-            $communes = Commune::all();
-            $risk_levels = RiskLevel::whereRelation('type_of_calamities', 'slug', 'bao-ap-thap-nhiet-doi')->get();
-            $calamities = TypeOfCalamities::where('slug', 'bao-ap-thap-nhiet-doi')->get();
-
-            return view('pages.calamities.storm.edit-storm', compact(
-                'calamity', 'calamities', 'typeOfCalamities', 'subTypeOfCalamities', 'communes', 'risk_levels'
-            ));
-        }
-
+        return view('pages.calamities.storm.edit-storm', compact(
+            'calamity', 'calamities', 'typeOfCalamities', 'subTypeOfCalamities', 'communes', 'risk_levels'
+        ));
+    }
 
     public function update(Request $request)
     {
@@ -259,25 +229,25 @@ class StormCalamityController extends Controller
         ]);
         $data = $validated;
         if ($request->input('delete_map') == "1" ) {
-            @unlink(public_path($calamity->map)); // Xóa file khỏi server
-            $data['map'] = null; // Cập nhật DB
+            @unlink(public_path($calamity->map)); 
+            $data['map'] = null; 
         }
         if ($request->has('deleted_maps')) {
             $deletedMaps = json_decode($request->input('deleted_maps'), true);
             if (!empty($deletedMaps)) {
                 foreach ($deletedMaps as $deletedFile) {
-                    @unlink(public_path($deletedFile)); // Xóa từng file khỏi server
+                    @unlink(public_path($deletedFile)); 
                 }
             }
         }
-        // Lấy danh sách file cũ (trừ những file đã bị xóa)
+        
         $existingMaps = !empty($calamity->map) ? json_decode($calamity->map, true) : [];
-        $existingMaps = array_diff($existingMaps, $deletedMaps ?? []); // Loại bỏ file bị xóa
+        $existingMaps = array_diff($existingMaps, $deletedMaps ?? []); 
         if ($request->hasFile('map')) {
             $mapFiles = $request->file('map');
             $allowedMimeTypes = [
-                'application/vnd.google-earth.kmz', // KMZ
-                'application/vnd.google-earth.kml+xml', // KML
+                'application/vnd.google-earth.kmz', 
+                'application/vnd.google-earth.kml+xml', 
                 'application/octet-stream',
                 'application/zip',
                 'text/xml'
@@ -294,10 +264,10 @@ class StormCalamityController extends Controller
                 $mapFile->move($destinationPath, $newFileName);
                 $filePaths[] = "uploads/calamities/storm/maps/$newFileName";
             }
-            // Gộp danh sách file mới với danh sách file còn lại
+            
             $data['map'] = json_encode(array_merge($existingMaps, $filePaths));
         } else {
-            $data['map'] = json_encode($existingMaps); // Nếu không có file mới, chỉ lưu lại file còn lại
+            $data['map'] = json_encode($existingMaps); 
         }
         if ($request->input('delete_video') == "1") {
             if ($calamity->video) {
@@ -338,7 +308,7 @@ class StormCalamityController extends Controller
         $data['human_damage'] = $request->human_damage;
         $data['property_damage'] = $request->property_damage;
         $data['mitigation_measures'] = $request->mitigation_measures;
-       
+        $data['updated_by_user_id'] = $user->id;
         if ($calamity->name !== $request->name) {
             $slug = Str::slug($request->name);
             $count = Calamities::where('slug', 'like', "{$slug}%")->where('id', '!=', $request->id)->count();
@@ -357,7 +327,6 @@ class StormCalamityController extends Controller
 
         return redirect('/calamity/list-storm')->with('success', 'Cập nhật thành công!');
     }
-
 
     public function destroy($id)
     {

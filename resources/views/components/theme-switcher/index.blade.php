@@ -12,8 +12,8 @@
                         <div class="mt-0.5 text-slate-500">Choose your theme</div>
                         <div class="mt-5 grid grid-cols-2 gap-x-5 gap-y-3.5">
                             @php
-                                $activeTheme = $activeTheme ?? 'default-theme'; // Đặt giá trị mặc định nếu không có activeTheme
-                                $activeLayout = $activeLayout ?? 'default-layout'; // Đặt giá trị mặc định nếu không có activeLayout
+                                $activeTheme = $activeTheme ?? 'default-theme'; 
+                                $activeLayout = $activeLayout ?? 'default-layout'; 
                             @endphp
                             @foreach (['rubick'] as $themeKey => $theme)
                                 <div>

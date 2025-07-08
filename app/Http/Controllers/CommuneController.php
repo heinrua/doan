@@ -101,12 +101,11 @@ class CommuneController extends Controller
         return redirect('/list-commune')->with('success', 200);
     }
 
-
     public function destroy($id)
     {
         $commune = Commune::findOrFail($id);
         $commune->delete();
-        return redirect('/list-commune')->with('success', 'Role deleted successfully!');
+        return redirect('/list-commune')->with('success', 'Xóa thành công!');
     }
 
     public function getCommunesByDistrict(Request $request)
@@ -127,7 +126,6 @@ class CommuneController extends Controller
             return redirect()->back()->with('error', 'Không có mục nào được chọn.');
         }
 
-      
         Commune::whereIn('id', $ids)->delete();
 
         return redirect()->back()->with('success', 'Đã xoá các mục đã chọn.');

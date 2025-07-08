@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -29,8 +28,7 @@ class UserController extends Controller
     {
        
         $query = User::query()
-            ->select('users.*')
-            ->where('users.is_master', '!=', true);
+            ->select('users.*');
 
         if ($request->filled('name')) {
             $query->where('users.user_name', 'like', '%' . $request->name . '%');
@@ -42,10 +40,9 @@ class UserController extends Controller
 
     }
 
-
     public function store(Request $request)
     {
-        $user = auth()->user();
+        
         $validated = $request->validate([
             'name' => 'required',
             'user_name' => 'required|unique:users',
@@ -56,7 +53,8 @@ class UserController extends Controller
             'full_name' => $validated['name'],
             'user_name' => $validated['user_name'],
             'password' => Hash::make($validated['password']),
-            'email'=>$validated['email'],
+            'email' => $validated['email'] ?? null,
+            'is_master' => $request->has('is_master') ? 1 : 0, 
         ]);
         return redirect('/list-user');
     }
@@ -81,7 +79,6 @@ class UserController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-
         $updated = $user->update([
             'full_name' => $request->name,
             'user_name' => $request->user_name,
@@ -98,9 +95,9 @@ class UserController extends Controller
         $file = $request->file('fileImport');
 
         try {
-            $rows = Excel::toArray([], $file)[0]; // sheet đầu tiên
+            $rows = Excel::toArray([], $file)[0]; 
 
-            $header = array_map('trim', $rows[0]); // Dòng tiêu đề
+            $header = array_map('trim', $rows[0]); 
             $count = 0;
             $skipped = 0;
 

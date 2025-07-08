@@ -9,13 +9,13 @@
         {!! $icons['aperture'] !!}
         Cập Nhật Trường Học
     </h2>
-    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> {{-- Chỉnh thành grid-cols-1 để tối ưu mobile --}}
+    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> 
         <div class="intro-y">
             <form enctype="multipart/form-data" class="validate-form" action="{{ route('update-school') }}" method="post">
                 <input type="hidden" name="id" value="{{ $data->id }}">
                 @csrf
                 <input type="hidden" name="type" value="school">
-                <!-- BEGIN: Flooding Information -->
+                
                 <div class="intro-y box mt-5 p-5">
                     <div class="rounded-md border border-slate-200/60 p-5">
                         <div
@@ -152,7 +152,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- END: Flooding Information -->
+                
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-school') }}">
                         <button type="button"

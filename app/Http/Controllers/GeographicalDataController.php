@@ -41,9 +41,10 @@ class GeographicalDataController extends Controller
 
     public function store(Request $request)
     {
+        $user = auth()->user();
         $validated = $this->validateRequest($request);
         $validated['last_updated'] = $this->formatDate($request->last_updated);
-
+        $validated['created_by_user_id'] = $user->id;
         foreach (['map', 'video', 'image'] as $fileType) {
             $validated[$fileType] = $this->saveFile($request, $fileType, $validated['type']);
         }
@@ -62,10 +63,11 @@ class GeographicalDataController extends Controller
 
     public function update(Request $request)
     {
+        $user = auth()->user();
         $geographicalData = GeographicalData::findOrFail($request->id);
         $validated = $this->validateRequest($request, $geographicalData->id);
         $validated['last_updated'] = $this->formatDate($request->last_updated);
-        $validated['updated_by_user_id'] = auth()->id();
+        $validated['updated_by_user_id'] = $user->id();
 
         foreach (['map', 'video', 'image'] as $fileType) {
             $validated[$fileType] = $this->saveFile($request, $fileType, $validated['type'], $geographicalData->$fileType);
@@ -77,13 +79,12 @@ class GeographicalDataController extends Controller
 
     public function destroy($id, Request $request)
     {
-        $type = $request->query('type'); // Lấy type từ query string (nếu có)
+        $type = $request->query('type'); 
 
         GeographicalData::destroy($id);
 
         return redirect()->route("view-$type")->with('success', 'Xóa thành công!');
     }
-
 
     private function validateRequest($request, $id = null)
     {  
@@ -119,7 +120,6 @@ class GeographicalDataController extends Controller
             'population'=>'nullable|numeric',
         ]);
     }
-        
 
     private function formatDate($date)
     {
@@ -137,21 +137,16 @@ class GeographicalDataController extends Controller
         $timestamp = now()->format('YmdHis');
         $newFileName = "{$slugName}-{$timestamp}.{$file->getClientOriginalExtension()}";
 
-        // Thư mục lưu trữ file trong public/uploads/
         $folderPath = public_path("uploads/geographical/{$type}/{$field}s");
 
-        // Tạo thư mục nếu chưa tồn tại
         if (!file_exists($folderPath)) {
             mkdir($folderPath, 0777, true);
         }
 
-        // Đường dẫn file mới
         $filePath = "uploads/geographical/{$type}/{$field}s/{$newFileName}";
 
-        // Lưu file vào thư mục public/uploads/
         $file->move($folderPath, $newFileName);
 
-        // Xóa file cũ nếu tồn tại
         if ($oldFile && file_exists(public_path($oldFile))) {
             unlink(public_path($oldFile));
         }

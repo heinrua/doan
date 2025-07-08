@@ -9,12 +9,12 @@
         {!! $icons['home'] !!}
         Cập Nhật Phương Án Ứng Phó
     </h2>
-    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> {{-- Chỉnh thành grid-cols-1 để tối ưu mobile --}}
+    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> 
         <div class="intro-y">
             <form enctype="multipart/form-data" class="validate-form" action="{{ route('update-scenarios') }}" method="post">
                 <input type="hidden" name="id" value="{{ $data->id }}">
                 @csrf
-                <!-- BEGIN: Risk Level Information -->
+                
                 <div class="intro-y box mt-5 p-5">
                     <div class="rounded-md border border-slate-200/60 p-5">
                         <div
@@ -22,7 +22,7 @@
                             {!! $icons['chevron-down'] !!} Thông Tin Phương Án Ứng Phó
                         </div>
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Cột 1 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -40,7 +40,7 @@
                                         @error('name')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                         @enderror
-                                        <x-base.form-help class="text-right"> Tối thiểu 5 ký tự </x-base.form-help>
+                                        
                                     </div>
                                 </div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
@@ -90,18 +90,18 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <x-base.form-textarea name="document_text" id="document_text"
-                                            placeholder="Mô Tả Văn Bản" rows="5" cols="40">
-                                            {{ $data->short_description }}
-                                        </x-base.form-textarea>
+                                        
+                                        <textarea name="document_text" id="document_text" rows="5" cols="40"
+                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 " 
+                                        placeholder="Mô tả văn bản...">{{ $data->short_description }}</textarea>
                                         @error('document_text')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                         @enderror
-                                        <x-base.form-help class="text-right"> Tối thiểu 5 ký tự </x-base.form-help>
+                                        
                                     </div>
                                 </div>
                             </div>
-                            <!-- Cột 2 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -118,7 +118,7 @@
                                         @error('short_description')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                         @enderror
-                                        <x-base.form-help class="text-right"> Tối thiểu 5 ký tự </x-base.form-help>
+                                        
                                     </div>
                                 </div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
@@ -193,8 +193,8 @@
                                                             {{ basename($document) }}
                                                         </a>
                                                         <button type="button" onclick="hideDocument(this)"
-                                                            class="text-red-600 hover:text-red-800">
-                                                            ✕
+                                                            class="bg-transparent text-black">
+                                                            {!!$icons['x']!!}
                                                         </button>
                                                         <input type="hidden" name="existing_documents[]"
                                                             value="{{ $document }}">
@@ -202,13 +202,12 @@
                                                 @endforeach
                                             </div>
                                         @endif
-                                        <!-- Nút hoàn tác (ẩn mặc định) -->
+                                        
                                         <button type="button" id="restoreDocument" onclick="showDocument()"
-                                            class="hidden mt-2 text-blue-600 hover:underline">
+                                            class="hidden mt-2 hover:underline">
                                             Hoàn tác
                                         </button>
-                                   
-                                        <!-- Input để chọn file mới -->
+
                                         <input type="file" name="documents[]" id="documents" multiple
                                              class="block w-full text-sm text-gray-900
                                             file:mr-2 file:py-1 file:px-3
@@ -216,7 +215,7 @@
                                             file:text-sm file:font-medium
                                             file:bg-blue-100 file:text-blue-700
                                             hover:file:bg-blue-200 border border-gray-300 rounded-md">
-                                        <!-- Input ẩn chứa danh sách file bị xoá -->
+                                        
                                         <input type="hidden" name="deleted_documents" id="deletedDocuments"
                                             value="[]">
                                     </div>
@@ -225,26 +224,38 @@
                         </div>
                     </div>
                 </div>
-                <!-- END: Product Information -->
-                <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
-                    <a href="{{ route('view-scenarios') }}">
-                        <button type="button"
-                            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
-                            Huỷ Bỏ</button>
-                    </a>
-                   <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
-                        Lưu
-                    </button>
-                    
+                
+                <div class="mt-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+                    <div class="w-full md:w-auto text-left">
+                        <p class="italic">
+                            Tạo bởi: {{ optional($data->created_by_user)->full_name ?? 'Không rõ' }}.
+                        </p>
+                        <p class="italic">
+                            Cập nhật lần cuối: {{ optional($data->updated_by_user)->full_name ?? 'Không rõ' }}.
+                        </p>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <a href="{{ route('view-scenarios') }}">
+                            <button type="button"
+                                class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                                Huỷ Bỏ</button>
+                        </a>
+                        <button type="submit"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+                            Lưu
+                        </button>
+                    </div>
                 </div>
 
             </form>
+
         </div>
     </div>
 @endsection
 @push('scripts')
     <script>
-        //file document
+        
         let deletedDocuments = [];
 
         function hideDocument(button) {

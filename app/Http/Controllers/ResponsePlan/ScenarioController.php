@@ -11,7 +11,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-// PHƯƠNG ÁN ỨNG PHÓ
 class ScenarioController extends Controller
 {
     public function __construct()
@@ -58,7 +57,7 @@ class ScenarioController extends Controller
             'short_description' => 'nullable',
             'document_text' => 'nullable',
             'status' => 'nullable',
-            'documents.*' => 'mimes:pdf,doc,docx', // 10MB mỗi file
+            'documents.*' => 'mimes:pdf,doc,docx', 
         ]);
         $calamity = TypeOfCalamities::findOrFail($validated['type_of_calamity_id']);
         if (!$calamity) {
@@ -72,16 +71,16 @@ class ScenarioController extends Controller
         $data = [];
 
         if ($request->hasFile('documents')) {
-            $filePaths = []; // Mảng lưu đường dẫn file
+            $filePaths = []; 
             foreach ($request->file('documents') as $mapFile) {
-                // Tạo tên file mới
+                
                 $slugName = Str::slug(pathinfo($mapFile->getClientOriginalName(), PATHINFO_FILENAME));
                 $timestamp = now()->format('YmdHis');
                 $newFileName = "{$slugName}-{$timestamp}.{$mapFile->getClientOriginalExtension()}";
-                // Lưu vào thư mục public/uploads/response-plan/documents
+                
                 $destinationPath = public_path('uploads/response-plan/documents');
                 $mapFile->move($destinationPath, $newFileName);
-                // Thêm đường dẫn vào danh sách
+                
                 $filePaths[] = "uploads/response-plan/documents/$newFileName";
             }
             $data['document_path'] = json_encode($filePaths);
@@ -93,7 +92,7 @@ class ScenarioController extends Controller
         $data['document_text'] = $validated['document_text'];
         $data['status'] = $validated['status'];
         $data['updated_time'] = Carbon::createFromFormat('d \T\h\á\n\g m, Y', $request->updated_time)->format('Y-m-d');
-          
+        $data['created_by_user_id'] = $user->id;
         Scenario::create($data);
         return redirect('/list-scenarios');
     }
@@ -117,7 +116,7 @@ class ScenarioController extends Controller
             'short_description' => 'nullable',
             'document_text' => 'nullable',
             'status' => 'nullable',
-            'documents.*' => 'mimes:pdf,doc,docx', // 10MB mỗi file
+            'documents.*' => 'mimes:pdf,doc,docx', 
         ]);
         $calamity = TypeOfCalamities::findOrFail($validated['type_of_calamity_id']);
         if (!$calamity) {
@@ -129,20 +128,20 @@ class ScenarioController extends Controller
         }
         $data = [];
         if ($request->input('delete_document') == "1") {
-            @unlink(public_path($scenario->document_path)); // Xóa file khỏi server
-            $data['document_path'] = null; // Cập nhật DB
+            @unlink(public_path($scenario->document_path)); 
+            $data['document_path'] = null; 
         }
         if ($request->has('deleted_documents')) {
             $deletedDocuments = json_decode($request->input('deleted_documents'), true);
             if (!empty($deletedDocuments)) {
                 foreach ($deletedDocuments as $deletedFile) {
-                    @unlink(public_path($deletedFile)); // Xóa từng file khỏi server
+                    @unlink(public_path($deletedFile)); 
                 }
             }
         }
-        // Lấy danh sách file cũ (trừ những file đã bị xóa)
+        
         $existingDocuments = !empty($scenario->document_path) ? json_decode($scenario->document_path, true) : [];
-        $existingDocuments = array_diff($existingDocuments, $deletedDocuments ?? []); // Loại bỏ file bị xóa
+        $existingDocuments = array_diff($existingDocuments, $deletedDocuments ?? []); 
         if ($request->hasFile('documents')) {
             $documentFiles = $request->file('documents');
             $filePaths = [];
@@ -154,10 +153,10 @@ class ScenarioController extends Controller
                 $mapFile->move($destinationPath, $newFileName);
                 $filePaths[] = "uploads/response-plan/documents/$newFileName";
             }
-            // Gộp danh sách file mới với danh sách file còn lại
+            
             $data['document_path'] = json_encode(array_merge($existingDocuments, $filePaths));
         } else {
-            $data['document_path'] = json_encode($existingDocuments); // Nếu không có file mới, chỉ lưu lại file còn lại
+            $data['document_path'] = json_encode($existingDocuments); 
         }
         $data['name'] = $validated['name'];
         $data['district_id'] = $validated['district_id'];
@@ -169,7 +168,6 @@ class ScenarioController extends Controller
         $scenario->update($data);
         return redirect('/list-scenarios')->with('success', 200);
     }
-
 
     public function destroy($id)
     {
@@ -185,7 +183,6 @@ class ScenarioController extends Controller
             return redirect()->back()->with('error', 'Không có mục nào được chọn.');
         }
 
-        // Ví dụ model là City
         Scenario::whereIn('id', $ids)->delete();
 
         return redirect()->back()->with('success', 'Đã xoá các mục đã chọn.');

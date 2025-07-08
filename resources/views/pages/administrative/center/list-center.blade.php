@@ -62,15 +62,21 @@
             Tổng vị trí hành chính: <span class="font-semibold">{{ $data->total() }}</span>
         </div>
 
-        
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <form action="{{ route('destroy-multiple-user') }}" method="POST">
+        <form action="{{ route('destroy-multiple-user') }}" class=" col-span-2" method="POST">
             @csrf
-            @method('DELETE')<table class="mt-2 border-separate border-spacing-y-[10px] table-fixed">
+            @method('DELETE')
+             @auth
+            <button type="submit" class="bg-red-700 z-1 sticky left-0" id="delete-multiple-btn" disabled>
+                {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
+            </button>
+            @endauth
+</form>
+        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
+            <table class="mt-2 border-separate border-spacing-y-[10px] ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
-                        <th scope="col" class="sticky left-0 z-1 bg-blue-100 pl-4 py-4 min-w-[40px]">#</th>
-                        <th scope="col" class="sticky whitespace-nowrap left-[40px] z-1 bg-blue-100 px-4 py-4 ">Tên TT hành chính</th>
+                        <th class="sticky left-0 z-1 bg-blue-100 w-[40px] min-w-[40px] max-w-[40px] px-1 text-center"><input type="checkbox" id="selectAll" class="block mx-auto"></th>
+                        <th class="sticky left-[40px] z-1 bg-blue-100 px-4 py-4 ">Tên TT hành chính</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Địa chỉ</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Xã</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px]">Huyện</th>
@@ -95,7 +101,9 @@
                     @else
                         @foreach ($data as $key => $value)
                             <tr class="bg-white ">
-                                <td class="sticky left-0 z-1 pl-4 bg-white py-4 min-w-[40px]">{{ $data->firstItem() + $key }}</td>
+                                <td class="sticky left-0 z-1 bg-white w-[40px] min-w-[40px] max-w-[40px]  text-center">
+                                    <input type="checkbox" class="item-checkbox" name="ids[]" value="{{ $value->id }}">
+                                </td>
                                 <td class="sticky whitespace-nowrap bg-white left-[40px] z-1 px-4 py-4">
                                     <a class="whitespace-nowrap font-medium"
                                         href="/administrative/edit-center/{{ $value->id }}" >
@@ -130,10 +138,7 @@
                     @endif
                 </tbody>
             </table>
-            <button type="submit" class="bg-red-700" id="delete-multiple-btn" disabled>
-    {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
-</button>
-
+           
             </form>
         </div>
 
@@ -142,7 +147,6 @@
         </div>
     </div>
 
-    <!-- Modal xác nhận xoá -->
     <div class="fixed inset-0 z-50 hidden" id="delete-confirmation-modal" aria-modal="true">
         <div class="fixed inset-0 bg-black/50"></div>
         <div class="flex min-h-screen items-center justify-center">
@@ -182,6 +186,27 @@
     function setDeleteUrl(url) {
         document.getElementById('confirm-delete').setAttribute('href', url);
     }
+    document.addEventListener("DOMContentLoaded", function() {
 
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        const countSpan = document.getElementById('selected-count');
+        const deleteBtn = document.getElementById('delete-multiple-btn');
+
+        function updateCount() {
+            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
+            countSpan.textContent = selectedCount;
+            deleteBtn.disabled = selectedCount === 0;
+        }
+
+        selectAllCheckbox.addEventListener('change', function () {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateCount();
+        });
+
+        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
+
+        updateCount();
+    });
     
 </script>

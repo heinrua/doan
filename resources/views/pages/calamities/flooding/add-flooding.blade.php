@@ -9,22 +9,22 @@
         {!! $icons['arlett-triangle'] !!}
         Tạo Mới Ngập Lụt
     </h2>
-    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> {{-- Chỉnh thành grid-cols-1 để tối ưu mobile --}}
+    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> 
         <div class="intro-y">
             <form enctype="multipart/form-data" class="validate-form" action="/calamity/create-flooding" method="post">
                 @csrf
-                <!-- BEGIN: Flooding Information -->
+                
                 <div class="intro-y box mt-5 p-5">
                     <div class="rounded-md border border-slate-200/60 p-5">
                         <div
                             class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Ngập Lụt
                         </div>
-                        {{-- Thông tin chính --}}
+                        
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <!-- Cột 1 -->
+                            
                             <div>
-                                <!-- Vị trí sạt lở -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -43,7 +43,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <!-- Loại hình thiên tai -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -86,9 +86,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Cột 2 -->
+                            
                             <div>
-                                <!-- Loại sạt lở -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -114,7 +114,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <!-- Cấp độ thiên tai -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -163,9 +163,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Cột 3 -->
+                            
                             <div>
-                                <!-- Địa điểm -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -187,7 +187,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <!-- Phường/Xã -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -215,11 +215,11 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- VẠCH KẺ NGANG --}}
+                       
                         <div class="w-full border-t-2 border-gray-300 my-4"></div>
-                         {{-- Thông tin phụ --}}
+                        
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <!-- Cột 1 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -278,7 +278,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Cột 2 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -337,7 +337,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Cột 3 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -393,9 +393,9 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- map,image,video --}}
+                        
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <!-- Cột 1 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -412,7 +412,7 @@
                                 </div>
 
                             </div>
-                            <!-- Cột 2 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -428,7 +428,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Cột 3 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -447,7 +447,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- END: Flooding Information -->
+                
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-calamity-flooding') }}">
                         <button type="button"

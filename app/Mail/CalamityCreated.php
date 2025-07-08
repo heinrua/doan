@@ -13,9 +13,7 @@ class CalamityCreated extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
+    
     public $calamity;
     public function __construct(Calamities $calamity)
     {
@@ -32,11 +30,9 @@ class CalamityCreated extends Mailable
               . "Vui lòng truy cập hệ thống để xem chi tiết.";
 
         return $this->subject('Cảnh báo thiên tai mới')
-                    ->html(nl2br(e($text))); // Dùng HTML nhưng vẫn hiển thị text
+                    ->html(nl2br(e($text)));
     }
-    /**
-     * Get the message envelope.
-     */
+    
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -44,9 +40,7 @@ class CalamityCreated extends Mailable
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
+    
     public function content(): Content
     {
         return new Content(
@@ -54,11 +48,7 @@ class CalamityCreated extends Mailable
         );
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
+    
     public function attachments(): array
     {
         return [];

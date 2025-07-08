@@ -12,8 +12,7 @@ class DistrictController extends Controller
 
     public function __construct()
     {
-      
-        
+
     }
 
     public function viewFormDistrict()
@@ -38,7 +37,6 @@ class DistrictController extends Controller
         return view('pages.district.list-district', compact('data', 'type', 'search'));
     }
 
-
     public function store(Request $request)
     {
         
@@ -60,25 +58,25 @@ class DistrictController extends Controller
         if ($request->hasFile('map')) {
             $mapFiles = $request->file('map');
             $allowedMimeTypes = [
-                'application/vnd.google-earth.kmz', // KMZ
-                'application/vnd.google-earth.kml+xml', // KML
-                'application/octet-stream', // Một số server nhận KML/KMZ là kiểu này
-                'application/zip', // Một số server nhận diện KMZ là ZIP
-                'text/xml'  // Một số server nhận diện KML là XML
+                'application/vnd.google-earth.kmz', 
+                'application/vnd.google-earth.kml+xml', 
+                'application/octet-stream', 
+                'application/zip', 
+                'text/xml'  
             ];
-            $filePaths = []; // Mảng lưu đường dẫn file
+            $filePaths = []; 
             foreach ($mapFiles as $mapFile) {
                 if (!in_array($mapFile->getMimeType(), $allowedMimeTypes)) {
                     return back()->withErrors(['map' => 'Định dạng file không hợp lệ. Chỉ chấp nhận KML hoặc KMZ.']);
                 }
-                $slugName = Str::slug(pathinfo($mapFile->getClientOriginalName(), PATHINFO_FILENAME)); // Tạo tên file mới
+                $slugName = Str::slug(pathinfo($mapFile->getClientOriginalName(), PATHINFO_FILENAME)); 
                 $timestamp = now()->format('YmdHis');
                 $newFileName = "{$slugName}-{$timestamp}.{$mapFile->getClientOriginalExtension()}";
-                $destinationPath = public_path('uploads/districts/maps'); // Lưu vào thư mục public/uploads/districts/map
+                $destinationPath = public_path('uploads/districts/maps'); 
                 $mapFile->move($destinationPath, $newFileName);
-                $filePaths[] = "uploads/districts/maps/$newFileName"; // Thêm đường dẫn vào danh sách
+                $filePaths[] = "uploads/districts/maps/$newFileName"; 
             }
-            $validated['map'] = json_encode($filePaths); // Lưu vào DB dưới dạng JSON
+            $validated['map'] = json_encode($filePaths); 
         }
         District::create($validated);
         return redirect('/list-district');
@@ -121,18 +119,18 @@ class DistrictController extends Controller
             $deletedMaps = json_decode($request->input('deleted_maps'), true);
             if (!empty($deletedMaps)) {
                 foreach ($deletedMaps as $deletedFile) {
-                    @unlink(public_path($deletedFile)); // Xóa từng file khỏi server
+                    @unlink(public_path($deletedFile)); 
                 }
             }
         }
-        // Lấy danh sách file cũ (trừ những file đã bị xóa)
+        
         $existingMaps = !empty($district->map) ? json_decode($district->map, true) : [];
-        $existingMaps = array_diff($existingMaps, $deletedMaps ?? []); // Loại bỏ file bị xóa
+        $existingMaps = array_diff($existingMaps, $deletedMaps ?? []); 
         if ($request->hasFile('map')) {
             $mapFiles = $request->file('map');
             $allowedMimeTypes = [
-                'application/vnd.google-earth.kmz', // KMZ
-                'application/vnd.google-earth.kml+xml', // KML
+                'application/vnd.google-earth.kmz', 
+                'application/vnd.google-earth.kml+xml', 
                 'application/octet-stream',
                 'application/zip',
                 'text/xml'
@@ -149,10 +147,10 @@ class DistrictController extends Controller
                 $mapFile->move($destinationPath, $newFileName);
                 $filePaths[] = "uploads/districts/maps/$newFileName";
             }
-            // Gộp danh sách file mới với danh sách file còn lại
+            
             $validated['map'] = json_encode(array_merge($existingMaps, $filePaths));
         } else {
-            $validated['map'] = json_encode($existingMaps); // Nếu không có file mới, chỉ lưu lại file còn lại
+            $validated['map'] = json_encode($existingMaps); 
         }
         $district->update([
             'name' => $validated['name'],
@@ -168,7 +166,6 @@ class DistrictController extends Controller
         return redirect('/list-district')->with('success', 'District updated successfully.');
     }
 
-
     public function destroy($id)
     {
         $district = District::findOrFail($id);
@@ -183,7 +180,6 @@ class DistrictController extends Controller
             return redirect()->back()->with('error', 'Không có mục nào được chọn.');
         }
 
-        // Ví dụ model là City
         District::whereIn('id', $ids)->delete();
 
         return redirect()->back()->with('success', 'Đã xoá các mục đã chọn.');

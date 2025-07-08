@@ -4,8 +4,6 @@
     <title>Danh Sách Trường Học - PCTT Cà Mau Dashboard</title>
 @endsection
 
-
-
 @section('subcontent')
 <div class="intro-y mt-5 flex items-center justify-between">
     <div class="flex items-center text-lg font-medium uppercase">
@@ -61,16 +59,16 @@
     <div class="intro-y col-span-3 text-base text-gray-800 bg-gray-300 rounded-md px-4 py-2 shadow-sm text-center">
         Tổng vị trí trường học: <span class="font-semibold">{{ $data->total() }}</span>
     </div>
-
-    <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <form action="{{ route('destroy-multiple-user') }}" method="POST">
+    <form action="{{ route('destroy-multiple-user') }}" class=" col-span-2" method="POST">
             @csrf
             @method('DELETE')
              @auth
-            <button type="submit" class="bg-red-700" id="delete-multiple-btn" disabled>
+            <button type="submit" class="bg-red-700 z-1 sticky left-0" id="delete-multiple-btn" disabled>
                 {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
             </button>
             @endauth
+</form>
+    <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
             <table class="mt-2 border-separate border-spacing-y-[10px] ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
@@ -146,7 +144,6 @@
     </div>
 </div>
 
-<!-- Modal xác nhận xoá -->
 <div class="fixed inset-0 z-50 hidden" id="delete-confirmation-modal" aria-modal="true">
     <div class="fixed inset-0 bg-black/50"></div>
     <div class="flex min-h-screen items-center justify-center">
@@ -187,7 +184,6 @@
         document.getElementById('confirm-delete').setAttribute('href', url);
     }
     document.addEventListener("DOMContentLoaded", function() {
-       
 
         const selectAllCheckbox = document.getElementById('selectAll');
         const checkboxes = document.querySelectorAll('.item-checkbox');
@@ -200,18 +196,14 @@
             deleteBtn.disabled = selectedCount === 0;
         }
 
-        // Khi checkbox "Chọn tất cả" được click
         selectAllCheckbox.addEventListener('change', function () {
             checkboxes.forEach(cb => cb.checked = this.checked);
             updateCount();
         });
 
-        // Khi checkbox từng dòng được click
         checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
 
-        // Khởi tạo giá trị ban đầu (trường hợp reload giữ lại checkbox đã chọn)
         updateCount();
     });
-       
-    
+
 </script>

@@ -61,11 +61,17 @@
     <div class="intro-y col-span-3 text-base text-gray-800 bg-gray-300 rounded-md px-4 py-2 shadow-sm text-center">
         Tổng địa điểm y tế: <span class="font-semibold">{{ $data->total() }}</span>
     </div>
-
-    <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <form action="{{ route('destroy-multiple-user') }}" method="POST">
+    <form action="{{ route('destroy-multiple-user') }}"  class=" col-span-2" method="POST">
             @csrf
-            @method('DELETE')<table class="mt-2 border-separate border-spacing-y-[10px] table-fixed">
+            @method('DELETE')
+             @auth
+            <button type="submit" class="bg-red-700 z-1 sticky left-0" id="delete-multiple-btn" disabled>
+                {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
+            </button>
+            @endauth
+</form>
+    <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
+            <table class="mt-2 border-separate border-spacing-y-[10px] ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
                         <th class="sticky left-0 z-1 bg-blue-100 w-[40px] min-w-[40px] max-w-[40px] px-1 text-center"><input type="checkbox" id="selectAll" class="block mx-auto"></th>
@@ -74,7 +80,6 @@
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Xã</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Huyện</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Loại hình</th>
-                        <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Phân loại</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Mô tả</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Tọa độ</th>
                         <th scope="col"class="px-6 py-4 whitespace-nowrap min-w-[160px] ">Sức chứa</th>
@@ -95,47 +100,45 @@
                         </tr>
                         @else
                         @foreach ($data as $key => $value)
-                            <tr class="bg-white ">
-                                <td class="sticky left-0 z-1 bg-white  w-[40px]" >
-                            <input type="checkbox" class="item-checkbox" name="ids[]" value="{{ $value->id }}">
-
-                        </td>
-                                <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
-                                    <a class="whitespace-nowrap font-medium"
+                        <tr class="bg-white ">
+                            <td class="sticky left-0 z-1 bg-white w-[40px] min-w-[40px] max-w-[40px]  text-center">
+                                <input type="checkbox" class="item-checkbox" name="ids[]" value="{{ $value->id }}">
+                            </td>
+                            <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
+                                <a class="whitespace-nowrap font-medium"
+                                    href="/administrative/edit-medical/{{ $value->id }}">
+                                    {{ $value->name }}
+                                </a>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->address ?? '' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->communes->name ?? '' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->communes->district->name ?? '' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->classify }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->description }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->coordinates }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px] text-center">
+                                {{ number_format($value->population, 0, ',', '.') }}
+                            </td>
+                            @auth
+                            <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
+                                <div class="flex gap-3 text-center">
+                                    <a class="flex items-center text-blue-700"
                                         href="/administrative/edit-medical/{{ $value->id }}">
-                                        {{ $value->name }}
+                                        {!! $icons['edit-2'] !!} Sửa
                                     </a>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->address ?? '' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->communes->name ?? '' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->communes->district->name ?? '' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->classify }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->option }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->description }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">{{ $value->coordinates }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] text-center">
-                                    {{ number_format($value->population, 0, ',', '.') }}
-                                </td>
-                                @auth
-                                <td class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
-                                    <div class="flex gap-3 text-center">
-                                        <a class="flex items-center text-blue-700"
-                                          href="/administrative/edit-medical/{{ $value->id }}">
-                                            {!! $icons['edit-2'] !!} Sửa
-                                        </a>
-                                        
-                                        <a class="flex items-center text-red-600"
-                                        onclick="openDeleteModal('{{ route('delete-medical', ['id' => $value->id, 'type' => 'medical']) }}')"
-                                        href="javascript:void(0);">
-                                            {!! $icons['trash-2'] !!} Xoá
-                                        </a>
                                     
-                                    </div>
-                                </td>
-                                @endauth
-                            </tr>
-                        @endforeach
-                    @endif
+                                    <a class="flex items-center text-red-600"
+                                    onclick="openDeleteModal('{{ route('delete-medical', ['id' => $value->id, 'type' => 'medical']) }}')"
+                                    href="javascript:void(0);">
+                                        {!! $icons['trash-2'] !!} Xoá
+                                    </a>
+                                
+                                </div>
+                            </td>
+                            @endauth
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
     </div>
@@ -145,7 +148,6 @@
     </div>
 </div>
 
-<!-- Modal xác nhận xoá -->
 <div class="fixed inset-0 z-50 hidden" id="delete-confirmation-modal" aria-modal="true">
     <div class="fixed inset-0 bg-black/50"></div>
     <div class="flex min-h-screen items-center justify-center">
@@ -185,6 +187,27 @@
     function setDeleteUrl(url) {
         document.getElementById('confirm-delete').setAttribute('href', url);
     }
+    document.addEventListener("DOMContentLoaded", function() {
 
-    
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        const countSpan = document.getElementById('selected-count');
+        const deleteBtn = document.getElementById('delete-multiple-btn');
+
+        function updateCount() {
+            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
+            countSpan.textContent = selectedCount;
+            deleteBtn.disabled = selectedCount === 0;
+        }
+
+        selectAllCheckbox.addEventListener('change', function () {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateCount();
+        });
+
+        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
+
+        updateCount();
+    });
+
 </script>

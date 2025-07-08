@@ -113,7 +113,6 @@ class SubTypeOfCalamityController extends Controller
             return redirect()->back()->with('error', 'Không có mục nào được chọn.');
         }
 
-      
         SubTypeOfCalamities::whereIn('id', $ids)->delete();
 
         return redirect()->back()->with('success', 'Đã xoá các mục đã chọn.');

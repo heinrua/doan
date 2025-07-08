@@ -9,11 +9,11 @@
         {!! $icons['cloud-lightning'] !!}
         Tạo Mới Bão Và Áp Thấp Nhiệt Đới
     </h2>
-    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> {{-- Chỉnh thành grid-cols-1 để tối ưu mobile --}}
+    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> 
         <div class="intro-y">
             <form enctype="multipart/form-data" class="validate-form" action="/calamity/create-storm" method="post">
                 @csrf
-                <!-- BEGIN: Storm Information -->
+                
                 <div class="intro-y box mt-5 p-5">
                     <div class="rounded-md border border-slate-200/60 p-5">
                         <div
@@ -21,9 +21,9 @@
                             {!! $icons['chevron-down'] !!} Thông Tin Bão Và Áp Thấp Nhiệt Đới
                         </div>
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <!-- Cột 1 -->
+                            
                             <div>
-                                <!-- Tên Bão -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -42,7 +42,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <!-- Loại Hình Thiên Tai -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -66,7 +66,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <!-- Thời gian bắt đầu -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -78,24 +78,21 @@
                                         </div>
                                     </label>
                                     <div class="relative">
-                                        <!-- Icon lịch -->
+                                        
                                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             {!!$icons['calendar']!!}
                                         </div>
 
-                                        <!-- Litepicker input -->
                                         <x-base.litepicker  id="time_start" name="time_start" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                             data-single-mode="true"  data-lang="vi-VN"/>
                                     </div>
 
                                 </div>
-                                
-
 
                             </div>
-                            <!-- Cột 2 -->
+                            
                             <div>
-                                <!-- Địa phương ảnh hưởng -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     
@@ -114,9 +111,8 @@
                                     @enderror
                                 </div>
 
-
                                 </div>
-                                <!-- Loại Hình -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                    
@@ -134,12 +130,11 @@
                                             @enderror
                                     </div>
 
-                                   
                                 </div>
                             </div>
-                            <!-- Cột 3 -->
+                            
                             <div>
-                                <!-- Toạ độ -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -155,7 +150,7 @@
                                             placeholder="Toạ Độ" />
                                     </div>
                                 </div>
-                                <!-- Cấp độ rủi ro -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -177,17 +172,17 @@
                                         @enderror
                                     </div>
                                 </div>
-                                {{-- Thêm form khác nếu cần ở đây --}}
+                                
                             </div>
                         </div>
 
-                        {{-- VẠCH KẺ NGANG --}}
+                       
                         <div class="w-full border-t-2 border-gray-300 my-4"></div>
 
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <!-- Cột 1 -->
+                            
                             <div>
-                                <!-- Thời gian kết thúc -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -198,17 +193,16 @@
                                         </div>
                                     </label>
                                      <div class="relative">
-                                        <!-- Icon lịch -->
+                                        
                                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             {!!$icons['calendar']!!}
                                         </div>
 
-                                        <!-- Litepicker input -->
                                         <x-base.litepicker  id="time_end" name="time_end" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                             data-single-mode="true"  data-lang="vi-VN"/>
                                     </div>
                                 </div>
-                                <!-- Cấp độ -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -224,9 +218,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Cột 2 -->
+                            
                             <div>
-                                <!-- Thiệt hại về người -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -241,7 +235,7 @@
                                             placeholder="Thiệt hại về người" />
                                     </div>
                                 </div>
-                                <!-- Thiệt hại về tài sản -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -257,9 +251,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Cột 3 -->
+                            
                             <div>
-                                <!-- Biện pháp ứng phó -->
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -276,9 +270,9 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- map,image,video --}}
+                        
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <!-- Cột 1 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -296,7 +290,7 @@
                                 </div>
 
                             </div>
-                            <!-- Cột 2 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -313,7 +307,7 @@
                                 </div>
                                 
                             </div>
-                            <!-- Cột 3 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -333,7 +327,7 @@
                     </div>
                 </div>
         </div>
-        <!-- END: Storm Information -->
+        
         <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
               <a href="{{ route('view-calamity-storm') }}">
                 <button type="button"

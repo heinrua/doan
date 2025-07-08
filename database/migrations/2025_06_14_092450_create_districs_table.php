@@ -21,8 +21,7 @@ return new class extends Migration
             $table->bigInteger('population');
             $table->unsignedBigInteger('city_id');
             $table->timestamps();
-            $table->foreignId('created_by_user_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreignId('updated_by_user_id')->nullable()->constrained('users')->onDelete('set null');
+
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
         });
     }

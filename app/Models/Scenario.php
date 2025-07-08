@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Scenario extends Model
 {
-    //PHƯƠNG ÁN ỨNG PHÓ
+   
     use HasFactory;
 
     protected $table = 'scenarios';
@@ -37,4 +37,14 @@ class Scenario extends Model
     {
         return $this->belongsTo(District::class, 'district_id');
     }
+    public function created_by_user()
+    {
+        return $this->belongsTo(User::class, 'created_by_user_id');
+    }
+
+    public function updated_by_user()
+    {
+        return $this->belongsTo(User::class, 'updated_by_user_id');
+    }
+
 }

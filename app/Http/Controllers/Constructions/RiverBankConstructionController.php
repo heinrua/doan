@@ -41,7 +41,7 @@ class RiverBankConstructionController extends Controller
                     $q->where('id', $commune_id);
                 });
             } else {
-                $query->whereRaw('1 = 0'); // Tạo điều kiện luôn sai để không có dữ liệu nào
+                $query->whereRaw('1 = 0'); 
             }
         } elseif (!empty($commune_id)) {
             $query->whereHas('commune', function ($q) use ($commune_id) {
@@ -122,7 +122,8 @@ class RiverBankConstructionController extends Controller
         $data['coordinates'] = $request['coordinates'];
         $data['total_investment'] = $request['total_investment'];
         $data['capital_source'] = $request['capital_source'];
-          
+        $data['created_by_user_id'] = $user->id;
+
         $slug = Str::slug($request->name);
         $count = Construction::where('slug', 'like', "{$slug}%")->count();
         if ($count > 0) {
@@ -145,15 +146,13 @@ class RiverBankConstructionController extends Controller
         $typeOfConstructions = TypeOfConstruction::where('type_of_calamity_id', $construction->risk_level->type_of_calamity_id)->get();
         $communes = Commune::all();
         $risk_levels = RiskLevel::whereRelation('type_of_calamities', 'slug', 'sat-lo-bo-song-bo-bien')->get();
-      
-
 
         return view('pages/constructions/river-bank/edit-river-bank', compact('calamities', 'construction', 'typeOfConstructions', 'communes', 'risk_levels'));
     }
 
     public function update(Request $request)
     {
-        // dd($request->all());
+        
         $user = auth()->user();
         $construction = Construction::findOrFail($request->id);
 
@@ -201,6 +200,7 @@ class RiverBankConstructionController extends Controller
         $data['coordinates'] = $request['coordinates'];
         $data['total_investment'] = $request['total_investment'];
         $data['capital_source'] = $request['capital_source'];
+        $data['updated_by_user_id'] = $user->id;
 
         $slug = Str::slug($request->name);
         $count = Construction::where('slug', 'like', "{$slug}%")->where('id', '!=', $request->id)->count();
@@ -215,7 +215,6 @@ class RiverBankConstructionController extends Controller
         }
         return redirect('/construction/list-river-bank')->with('success', 200);
     }
-
 
     public function destroy($id)
     {

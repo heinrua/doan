@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CityController extends Controller
 {
@@ -47,6 +48,40 @@ class CityController extends Controller
         City::create($validated);
         return redirect('/list-city');
     }
+    public function importCity(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv'
+        ]);
+        $file = $request->file('file');
+        $data = Excel::toArray([], $file)[0];
+        $header = array_map('trim', $data[0]);
+        unset($data[0]);
+                
+        $requiredHeaders = ['Tên', 'Mã', 'Tọa độ'];
+        foreach ($requiredHeaders as $col) {
+            if (!in_array($col, $header)) {
+                return back()->with('error', 'Thiếu cột bắt buộc: ' . $col);
+            }
+        }
+
+        foreach ($data as $row) {
+            $row = array_combine($header, $row);
+            if (empty($row['Tên']) || empty($row['Mã']) || empty($row['Tọa độ'])) {
+                continue;
+            }
+            $city = City::create([
+                'name' => $row['Tên'],
+                'code' => $row['Mã'],
+                'slug' => Str::slug($row['Tên']),
+                'coordinates' => $row['Tọa độ'],
+            ]);
+            
+            $city->save();
+        }
+        return back()->with('success', 'Import thành công!');
+        return back()->with('error', 'Import thất bại!');
+    }   
 
     public function show($id)
     {
@@ -84,12 +119,11 @@ class CityController extends Controller
         return redirect('/list-city')->with('success',200);
     }
 
-
     public function destroy($id)
     {
         $city = City::findOrFail($id);
         $city->delete();
-        return redirect('/list-city')->with('success', 'Role deleted successfully!');
+        return redirect('/list-city')->with('success', 'Xóa thành công!');
     }
     public function destroyMultiple(Request $request)
     {
@@ -99,7 +133,6 @@ class CityController extends Controller
             return redirect()->back()->with('error', 'Không có mục nào được chọn.');
         }
 
-      
         City::whereIn('id', $ids)->delete();
 
         return redirect()->back()->with('success', 'Đã xoá các mục đã chọn.');

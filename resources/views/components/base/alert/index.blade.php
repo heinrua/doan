@@ -5,94 +5,92 @@
 @endPushOnce
 
 @php
-    // Main Colors
+    
     $primary = [
-        'bg-primary border-primary text-white', // Default
-        'dark:border-primary', // Dark
+        'bg-primary border-primary text-white', 
+        'dark:border-primary', 
     ];
     $secondary = [
-        'bg-secondary/70 border-secondary/70 text-slate-500', // Default
-        'dark:border-darkmode-400', // Dark mode
+        'bg-secondary/70 border-secondary/70 text-slate-500', 
+        'dark:border-darkmode-400', 
     ];
     $success = [
-        'bg-success border-success text-slate-900', // Default
-        'dark:border-success', // Dark mode
+        'bg-success border-success text-slate-900', 
+        'dark:border-success', 
     ];
     $warning = [
-        'bg-warning border-warning text-slate-900', // Default
-        'dark:border-warning', // Dark mode
+        'bg-warning border-warning text-slate-900', 
+        'dark:border-warning', 
     ];
     $pending = [
-        'bg-pending border-pending text-white', // Default
-        'dark:border-pending', // Dark mode
+        'bg-pending border-pending text-white', 
+        'dark:border-pending', 
     ];
     $danger = [
-        'bg-danger border-danger text-white', // Default
-        'dark:border-danger', // Dark mode
+        'bg-danger border-danger text-white', 
+        'dark:border-danger', 
     ];
     $dark = [
-        'bg-dark border-dark text-white', // Default
-        'dark:bg-darkmode-800', // Dark mode
+        'bg-dark border-dark text-white', 
+        'dark:bg-darkmode-800', 
     ];
 
-    // Outline
     $outlinePrimary = [
-        'border-primary text-primary', // Default
-        'dark:border-primary', // Dark mode
+        'border-primary text-primary', 
+        'dark:border-primary', 
     ];
     $outlineSecondary = [
-        'border-secondary text-slate-500', // Default
-        'dark:border-darkmode-100/40', // Dark mode
+        'border-secondary text-slate-500', 
+        'dark:border-darkmode-100/40', 
     ];
     $outlineSuccess = [
-        'border-success text-success', // Default
-        'dark:border-success', // Dark mode
+        'border-success text-success', 
+        'dark:border-success', 
     ];
     $outlineWarning = [
-        'border-warning text-warning', // Default
-        'dark:border-warning', // Dark mode
+        'border-warning text-warning', 
+        'dark:border-warning', 
     ];
     $outlinePending = [
-        'border-pending text-pending', // Default
-        'dark:border-pending', // Dark mode
+        'border-pending text-pending', 
+        'dark:border-pending', 
     ];
     $outlineDanger = [
-        'border-danger text-red-700', // Default
-        'dark:border-danger', // Dark mode
+        'border-danger text-red-700', 
+        'dark:border-danger', 
     ];
     $outlineDark = [
-        'border-dark text-dark', // Default
-        'dark:border-darkmode-800', // Dark mode
+        'border-dark text-dark', 
+        'dark:border-darkmode-800', 
     ];
 
-    // Soft Color
     $softPrimary = [
-        'bg-primary border-primary bg-opacity-20 border-opacity-5 text-primary', // Default
-        'dark:border-opacity-100', // Dark mode
+        'bg-primary border-primary bg-opacity-20 border-opacity-5 text-primary', 
+        'dark:border-opacity-100', 
     ];
     $softSecondary = [
-        'bg-slate-300 border-secondary bg-opacity-10 text-slate-500', // Default
-        'dark:bg-darkmode-100/20', // Dark mode
+        'bg-slate-300 border-secondary bg-opacity-10 text-slate-500', 
+        'dark:bg-darkmode-100/20', 
     ];
     $softSuccess = [
-        'bg-success border-success bg-opacity-20 border-opacity-5 text-success', // Default
-        'dark:border-success', // Dark mode
+        'bg-success border-success bg-opacity-20 border-opacity-5 text-success', 
+        'dark:border-success', 
     ];
     $softWarning = [
-        'bg-warning border-warning bg-opacity-20 border-opacity-5 text-warning', // Default
-        'dark:border-warning', // Dark mode
+        'bg-warning border-warning bg-opacity-20 border-opacity-5 text-warning', 
+        'dark:border-warning', 
     ];
     $softPending = [
-        'bg-pending border-pending bg-opacity-20 border-opacity-5 text-pending', // Default
-        'dark:border-pending', // Dark mode
+        'bg-pending border-pending bg-opacity-20 border-opacity-5 text-pending', 
+        'dark:border-pending', 
     ];
     $softDanger = [
-        'bg-danger border-danger bg-opacity-20 border-opacity-5 text-red-700', // Default
-        'dark:border-danger', // Dark mode
+        'bg-danger border-danger bg-opacity-20 border-opacity-5 text-red-700', 
+        'dark:border-danger', 
     ];
     $softDark = [
-        'bg-dark border-dark bg-opacity-20 border-opacity-5 text-dark', // Default
-        'dark:bg-darkmode-800/30', // Dark mode
+        'bg-dark border-dark bg-opacity-20 border-opacity-5 text-dark', 
+        'dark:bg-darkmode-800/30', 
     ];
 @endphp
 

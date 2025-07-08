@@ -9,11 +9,11 @@
         {!! $icons['chevron-right'] !!}
         Tạo Loại Hình Thiên Tai
     </h2>
-    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> {{-- Chỉnh thành grid-cols-1 để tối ưu mobile --}}
+    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> 
         <div class="intro-y">
             <form enctype="multipart/form-data" class="validate-form" action="/create-type-of-calamity" method="post">
                 @csrf
-                <!-- BEGIN: Thông Tin Loại Hình Thiên Tai -->
+                
                 <div class="intro-y box mt-5 p-5">
                     <div class="rounded-md border border-slate-200/60 p-5">
                         <div
@@ -38,7 +38,7 @@
                                     @error('name')
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                     @enderror
-                                    <x-base.form-help class="text-right"> Tối thiểu 5 ký tự </x-base.form-help>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -55,13 +55,13 @@
                                 <div class="w-full">
                                     <input name="description" id="description" type="text"
                                         placeholder="Mô Tả" />
-                                    <x-base.form-help class="text-right"> Tối thiểu 5 ký tự </x-base.form-help>
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- END: Product Information -->
+                
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-type-of-calamity') }}">
                         <button type="button"

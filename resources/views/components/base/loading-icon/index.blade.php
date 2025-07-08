@@ -1,7 +1,7 @@
 @props(['icon' => null, 'color' => '#2d3748'])
 
 @php
-    // $iconColor = !$darkMode ? $color : '#ffffff';
+    
     $iconColor = $color;
 @endphp
 
@@ -11,7 +11,7 @@
             class="h-full w-full"
             width="15"
             viewBox="0 0 55 80"
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="http:
             fill="{{ $iconColor }}"
         >
             <g transform="matrix(1 0 0 -1 0 80)">
@@ -81,7 +81,7 @@
             class="h-full w-full"
             width="20"
             viewBox="0 0 57 57"
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="http:
         >
             <g
                 fill="none"
@@ -171,7 +171,7 @@
             class="h-full w-full"
             width="20"
             viewBox="0 0 135 140"
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="http:
             fill="{{ $iconColor }}"
         >
             <rect
@@ -298,7 +298,7 @@
             class="h-full w-full"
             width="20"
             viewBox="0 0 135 135"
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="http:
             fill="{{ $iconColor }}"
         >
             <path
@@ -331,7 +331,7 @@
             class="h-full w-full"
             width="20"
             viewBox="0 0 105 105"
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="http:
             fill="{{ $iconColor }}"
         >
             <circle
@@ -467,7 +467,7 @@
             class="h-full w-full"
             width="30"
             viewBox="0 0 140 64"
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="http:
             fill="{{ $iconColor }}"
         >
             <path
@@ -505,7 +505,7 @@
             class="h-full w-full"
             width="25"
             viewBox="-2 -2 42 42"
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="http:
             stroke="{{ $iconColor }}"
         >
             <g
@@ -540,7 +540,7 @@
             class="h-full w-full"
             width="25"
             viewBox="0 0 44 44"
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="http:
             stroke="{{ $iconColor }}"
         >
             <g
@@ -607,7 +607,7 @@
             class="h-full w-full"
             width="30"
             viewBox="0 0 45 45"
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="http:
             stroke="{{ $iconColor }}"
         >
             <g
@@ -699,7 +699,7 @@
             class="h-full w-full"
             width="20"
             viewBox="0 0 58 58"
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="http:
         >
             <g
                 fill="none"
@@ -846,7 +846,7 @@
             class="h-full w-full"
             width="20"
             viewBox="0 0 38 38"
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="http:
         >
             <defs>
                 <linearGradient
@@ -915,7 +915,7 @@
             class="h-full w-full"
             width="25"
             viewBox="0 0 120 30"
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="http:
             fill="{{ $iconColor }}"
         >
             <circle

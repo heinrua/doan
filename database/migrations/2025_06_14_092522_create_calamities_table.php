@@ -45,9 +45,8 @@ return new class extends Migration
             $table->text('data_source')->nullable();
 
             $table->timestamps();
-            $table->foreignId('created_by_user_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreignId('updated_by_user_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreign('type_of_calamity_id')->references('id')->on('type_of_calamities')->onDelete('cascade');
+
+           
             $table->foreign('risk_level_id')->references('id')->on('risk_levels')->onDelete('cascade');
         });
     }

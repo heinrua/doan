@@ -9,18 +9,18 @@
         {!! $icons['home'] !!}
         Tạo Xã Phường
     </h2>
-    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> {{-- Chỉnh thành grid-cols-1 để tối ưu mobile --}}
+    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> 
         <div class="intro-y">
             <form enctype="multipart/form-data" class="validate-form" action="/create-commune" method="post">
                 @csrf
-                <!-- BEGIN: Tạo Xã Phường -->
+                
                 <div class="intro-y box mt-5 p-5">
                     <div class="rounded-md border border-slate-200/60 p-5">
                         <div
                             class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Xã Phường
                         </div>
-                        {{-- Tên Xã Phường --}}
+                        
                         <div class="mt-5">
                             <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                 formInline>
@@ -62,7 +62,7 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- Toạ Độ --}}
+                        
                         <div class="mt-5">
                             <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                 formInline>
@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- Quận Huyện --}}
+                        
                         <div class="mt-5">
                             <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                 formInline>
@@ -113,7 +113,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- END: Tạo Xã Phường -->
+                
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-commune') }}">
                         <button type="button"

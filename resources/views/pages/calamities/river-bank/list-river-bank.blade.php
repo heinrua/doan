@@ -16,10 +16,10 @@
     </div>
     <div class="mt-5 grid grid-cols-12 gap-6 ">
         <div class="intro-y col-span-12 flex flex-wrap items-start gap-3">
-            <!-- Form tìm kiếm -->
+            
             <form action="{{ route('view-calamity-river-bank') }}" method="GET"
                 class="flex flex-wrap items-center gap-3 grow">
-                <!-- Dropdown chọn loại -->
+                
                 <select name="year_id"
                     class="h-10 w-40 min-w-[100px] border-gray-500 rounded-md shadow-sm focus:ring-blue-500">
                     <option value="">-- Chọn năm --</option>
@@ -41,7 +41,7 @@
                     class="h-10 w-40 min-w-[100px] border-gray-500 rounded-md shadow-sm focus:ring-blue-500">
                     <option value="">-- Chọn xã --</option>
                 </select>
-                {{-- Chọn cấp độ thiên tai --}}
+                
                 <select name="risk_level_id"
                     class="h-10 w-40 min-w-[150px] border-gray-500 rounded-md shadow-sm focus:ring-blue-500">
                     <option value="">Cấp độ thiên tai</option>
@@ -52,7 +52,7 @@
                         </option>
                     @endforeach
                 </select>
-                <!-- Ô tìm kiếm -->
+                
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 flex items-center ps-3 pointer-events-none">
                         {!! $icons['search'] !!}
@@ -60,41 +60,45 @@
                     <input type="text" name="search" placeholder="Tìm kiếm..." value="{{ request('search') }}"
                         class="block w-full p-4 ps-10 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
                 </div>
-                
-                <!-- Nút tìm kiếm -->
+
                 <button type="submit"
                     class="h-10 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow-md transition-all">
                     Tìm kiếm
                 </button>
             </form>
-            <!-- Nút tạo mới -->
+            
             @auth
                 <a href="{{ route('create-calamity-river-bank') }}">
                     <button class="shadow-md h-10" variant="primary">
-                        {!! $icons['plus-circle'] !!}
+                        {!! $icons['plus-circle'] ?? '' !!}
                         Tạo Mới Sạt Lở
                     </button>
                 </a>
+                
+                <a href="{{ route('export-river-bank-calamity') }}">
+                    <button class="h-10 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow-md transition-all">
+                    {!! $icons['download'] !!}Tải dữ liệu
+                    </button>
+                </a> 
             @endauth
         </div>
-        <!-- BEGIN: Total Records -->
+        
         <div
             class="intro-y col-span-3 overflow-auto lg:overflow-visible text-base text-gray-800  bg-gray-300 rounded-md px-4 py-2 shadow-sm text-center">
             Tổng vị trí sạt lở: <span class="font-semibold">{{ $data->total() }}</span>
         </div>
-        <!-- END: Total Records -->
-        <!-- BEGIN: Data List -->
         
-
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <form action="{{ route('delete-multiple-calamity-river-bank') }}" method="POST">
+         <form action="{{ route('delete-multiple-calamity-river-bank') }}" class = "col-span-2" method="POST">
             @csrf
             @method('DELETE')
             @auth
-            <button type="submit" class="bg-red-700" id="delete-multiple-btn" disabled>
+            <button type="submit" class="bg-red-700 z-1 sticky left-0" id="delete-multiple-btn" disabled>
                 {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
             </button>
             @endauth
+</form>
+
+        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
             <table class="mt-2 border-separate border-spacing-y-[10px] ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
@@ -213,7 +217,8 @@
                                 </div>
                             @else
                                 <span class="text-gray-500 italic">Chưa có video</span>
-                            @endif </td>
+                            @endif 
+                        </td>
                         <td
                            class="px-6 py-4 whitespace-nowrap min-w-[160px] ">
                             {{ $value->updated_at ?? '' }} </td>
@@ -243,19 +248,17 @@
         
         </form>
     </div>
-    <!-- END: Data List -->
-    <!-- BEGIN: Pagination -->
+
     <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
         {{ $data->links() }}
     </div>
-    <!-- END: Pagination -->
+    
     </div>
-    <!-- BEGIN: Delete Confirmation Modal -->
+    
     <div class="fixed inset-0 z-50 hidden" id="delete-confirmation-modal" aria-modal="true">
-        <!-- Nền mờ -->
+        
         <div class="fixed inset-0 bg-black/50"></div>
 
-        <!-- Khung modal chính giữa màn hình -->
         <div class="flex min-h-screen items-center justify-center">
             <div class="bg-white rounded-lg shadow-xl w-full max-w-md z-50 p-6">
                 <div class="flex items-start space-x-3">
@@ -281,8 +284,7 @@
             </div>
         </div>
     </div>
-    <!-- END: Delete Confirmation Modal -->
-    <!-- Modal Video -->
+
     <div id="videoModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
         <div class="relative w-[80%] max-w-4xl">
             <video id="videoPlayer" class="w-full rounded-lg shadow-lg" controls>
@@ -290,7 +292,7 @@
             </video>
         </div>
     </div>
-    <!-- Modal Hình -->
+    
     <div id="imageModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
         <div class="relative w-[80%] max-w-3xl">
             <img id="imagePreview"
@@ -328,7 +330,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         const videoModal = document.getElementById("videoModal");
         const videoPlayer = document.getElementById("videoPlayer");
-       // Đóng modal khi bấm ra ngoài vùng video
+       
         videoModal.addEventListener("click", function(event) {
             if (event.target === videoModal) {
                 videoModal.classList.add("hidden");
@@ -346,7 +348,7 @@
     function closeImageModal() {
         const modal = document.getElementById('imageModal');
         modal.classList.add('hidden');
-        document.getElementById('imagePreview').src = ''; // clear ảnh
+        document.getElementById('imagePreview').src = ''; 
     }
     document.addEventListener('DOMContentLoaded', function () {
         const selectAllCheckbox = document.getElementById('selectAll');
@@ -360,16 +362,13 @@
             deleteBtn.disabled = selectedCount === 0;
         }
 
-        // Khi checkbox "Chọn tất cả" được click
         selectAllCheckbox.addEventListener('change', function () {
             checkboxes.forEach(cb => cb.checked = this.checked);
             updateCount();
         });
 
-        // Khi checkbox từng dòng được click
         checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
 
-        // Khởi tạo giá trị ban đầu (trường hợp reload giữ lại checkbox đã chọn)
         updateCount();
     });
     

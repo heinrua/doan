@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html class="opacity-0" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<!-- BEGIN: Head -->
 
 <head>
     <meta charset="utf-8">
@@ -9,18 +8,12 @@
     <meta name="author" content="LEFT4CODE">
     @yield('head')
 
-    <!-- BEGIN: CSS Assets-->
     @stack('styles')
-    <!-- END: CSS Assets-->
 
-    
-    <!-- BEGIN: Vendor JS Assets-->
     @vite('resources/js/vendors/dom.js')
     
     @stack('vendors')
-    <!-- END: Vendor JS Assets-->
 
-    <!-- BEGIN: Pages, layouts, components JS Assets-->
     @vite('resources/js/components/base/theme-color.js')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -28,15 +21,12 @@
     @vite('resources/js/themes/rubick.js')
     @stack('scripts')
 </head>
-<!-- END: Head -->
 
 <body style="background-color: #1E3A8A;">
 
     <div class=" px-5 sm:px-8 py-5 ">
-        <!-- BEGIN: Mobile Menu -->
         <x-mobile-menu/>
         <div class="mt-7 flex md:mt-0">
-            <!-- BEGIN: Side Menu -->
             <nav class=" hidden w-[80px] overflow-x-hidden pb-16 pr-5 md:block xl:w-[230px]">
                 <a class="intro-x flex items-center pl-5 pt-4" href="/">
                     <span class=" lg:text-2xl xl:text-3xl  font-bold uppercase text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-600">Quản lý thiên tai</span>
@@ -99,26 +89,20 @@
                 @endif
                 </ul>
             </nav>
-            <!-- END: Side Menu -->
-            <!-- BEGIN: Content -->
             <div class="md:max-w-auto overflow-x-hidden overflow-y-auto max-h-[100vh] min-w-0 max-w-full flex-1 rounded-[30px] bg-slate-100 px-4 pb-10 before:block before:h-px before:w-full before:content-[''] md:px-[22px]">
-                <!-- BEGIN: Top Bar -->
                 <div class="relative sticky top-0 z-2 flex items-center h-[68px] px-4 border-b border-slate-100 bg-slate-100">
   
                     <div class="mr-auto"> 
                        <div class="rounded-[8px] overflow-hidden w-[200px] md:w-[325px] h-[40px] bg-[#1E3A8A] border-[2px] border-[#133086] shadow-[0_2px_6px_rgba(0,0,0,0.1)] flex items-center justify-center">
-                    <!--Begin thoitiet.app widget -->
+                  
                     <iframe src="https://thoitiet247.vn/widget/embed/ca-mau?style=6&day=7&td=%232e0000&ntd=%231e3a8a&mvb=%23000205&mv=%231e3a8a&mdk=%23000000&htd=true" 
                         id="widgeturl" class = "w-[200px] md:w-[325px]" height="55px" scrolling="no" frameborder="0" allowtransparency="true" style="border:none;overflow:hidden;"></iframe><!-- End thoitiet.app widget -->
                     </div>
 
-
                     </div>
                     
-                    <!-- BEGIN: Account Menu -->
                     <div class="relative">
                         @auth
-                            <!-- Nếu đã đăng nhập -->
                             <button type="button" style="all: unset" id="user-menu-button" aria-expanded="false">
                                 {!! $icons['user-circle'] !!}
                             </button>
@@ -141,22 +125,18 @@
                         @endauth
 
                         @guest
-                            <!-- Nếu chưa đăng nhập -->
                             <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:underline">
                                 <button>Đăng nhập</button>
                             </a>
                         @endguest
                     </div>
-                    <!-- END: Account Menu -->
                 </div>
                 
                 @yield('subcontent')
             </div>
-            <!-- END: Content -->
         </div>
     </div>
 
-    
 </body>
 
 </html>
@@ -171,12 +151,10 @@
                 e.preventDefault();
                 const submenu = this.nextElementSibling;
 
-                // Đóng các submenu khác (tùy chọn)
                 document.querySelectorAll('.submenu').forEach(sm => {
                     if (sm !== submenu) sm.classList.add('hidden');
                 });
 
-                // Toggle submenu hiện tại
                 if (submenu && submenu.classList.contains('submenu')) {
                     submenu.classList.toggle('hidden');
                 }

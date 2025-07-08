@@ -41,7 +41,7 @@ class FloodingConstructionController extends Controller
                     $q->where('id', $commune_id);
                 });
             } else {
-                $query->whereRaw('1 = 0'); // Tạo điều kiện luôn sai để không có dữ liệu nào
+                $query->whereRaw('1 = 0'); 
             }
         } elseif (!empty($commune_id)) {
             $query->whereHas('commune', function ($q) use ($commune_id) {
@@ -79,6 +79,7 @@ class FloodingConstructionController extends Controller
 
     public function store(Request $request)
     {
+        $user = auth()->user();
         $validated = $request->validate([
             'name' => 'required|unique:constructions',
             'type_of_construction_id' => 'required',
@@ -110,7 +111,7 @@ class FloodingConstructionController extends Controller
             'culver_code' => $request['culver_code'],
             'management_unit' => $request['management_unit'],
             'update_time' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $request->update_time)->format('Y-m-d'),
-            
+            'created_by_user_id' => $user->id
         ];
         if ($request->hasFile('video')) {
             $videoFile = $request->file('video');
@@ -154,8 +155,7 @@ class FloodingConstructionController extends Controller
 
     public function update(Request $request)
     {
-        dd($request->update_time);
-
+        $user = auth()->user();
         $construction = Construction::findOrFail($request->id);
         $validated = $request->validate([
             'name' => 'required|unique:constructions,name,' . $request->id,
@@ -187,7 +187,7 @@ class FloodingConstructionController extends Controller
             'culver_code' => $request['culver_code'],
             'management_unit' => $request['management_unit'],
             'update_time' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $request->update_time)->format('Y-m-d'),
-            
+            'updated_by_user_id'=>$user->id
         ];
         if ($request->hasFile('video')) {
             if ($construction->video) {
@@ -224,7 +224,6 @@ class FloodingConstructionController extends Controller
 
         return redirect('/construction/list-flooding')->with('success', 200);
     }
-
 
     public function destroy($id)
     {

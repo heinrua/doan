@@ -5,7 +5,6 @@ use App\Models\Message;
 use Illuminate\Http\Request;
 use App\Events\NewMessageEvent;
 
-
 class ChatController extends Controller
 {
     public function index()
@@ -31,17 +30,13 @@ class ChatController extends Controller
         }
 
         $msg->save();
-        
 
-// Tạm ẩn broadcast để test:
-try {
-   event(new NewMessageEvent($msg));
+        try {
+        event(new NewMessageEvent($msg));
 
-} catch (\Throwable $e) {
-    \Log::error('❌ Broadcast lỗi:', [$e->getMessage()]);
-}
-
-
+        } catch (\Throwable $e) {
+            \Log::error('❌ Broadcast lỗi:', [$e->getMessage()]);
+        }
 
         return response()->json(['sent' => true]);
     }

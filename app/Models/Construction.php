@@ -56,6 +56,8 @@ class Construction extends Model
         'video',
         'created_at',
         'updated_at',
+        'created_by_user_id',
+        'updated_by_user_id'
     ];
 
 
@@ -73,5 +75,14 @@ class Construction extends Model
     public function risk_level()
     {
         return $this->belongsTo(RiskLevel::class, 'risk_level_id');
+    }
+     public function created_by_user()
+    {
+        return $this->belongsTo(User::class, 'created_by_user_id');
+    }
+
+    public function updated_by_user()
+    {
+        return $this->belongsTo(User::class, 'updated_by_user_id');
     }
 }

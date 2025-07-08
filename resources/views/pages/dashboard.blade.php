@@ -6,11 +6,10 @@
 
 @section('subcontent')
 
-    
     <div class="grid grid-cols-12 gap-6">
         <div class="col-span-12 2xl:col-span-12">
             <div class="grid grid-cols-12 gap-6">
-                <!-- BEGIN: General Report -->
+                
                 <div class="col-span-12 mt-5">
                     <div class="intro-y flex h-10 items-center">
                         <h2 class="flex items-center mr-5 uppercase text-lg font-medium">
@@ -28,12 +27,12 @@
                             <div>
                                 <div
                                     class="box p-5 bg-gradient-to-r from-rose-500 to-purple-500 text-white rounded-lg shadow-lg">
-                                    <!-- Dòng 1: Icon - Tên -->
+                                    
                                     <div class="flex items-center gap-6">
                                         {!! $icons['cloud-lightning'] !!}   
                                         <span class="text-2xl font-bold tracking-wide">BÃO, ÁP THẤP</span>
                                     </div>
-                                    <!-- Dòng 2 + 3: Dữ liệu có icon -->
+                                    
                                     <div class="mt-6 grid grid-cols-2 gap-4">
                                         <div class="flex items-center gap-2">
                                             {!! $icons['chevron-right'] !!}
@@ -51,7 +50,6 @@
                                                 Không có dữ liệu
                                             </div>
                                         @endif
-                                       
 
                                         <div class="flex items-center gap-2">
                                             {!! $icons['chevron-right'] !!}
@@ -77,12 +75,12 @@
                         <div class="intro-y col-span-12 sm:col-span-6 xl:col-span-4">
                                 <div
                                     class="box p-5 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg shadow-lg">
-                                    <!-- Dòng 1: Icon - Tên -->
+                                    
                                     <div class="flex items-center gap-6">
                                         {!! $icons['arlett-triangle'] !!}
                                         <span class="text-2xl font-bold tracking-wide">NGẬP LỤT</span>
                                     </div>
-                                    <!-- Dòng 2 + 3: Dữ liệu có icon -->
+                                    
                                     <div class="mt-6 grid grid-cols-2 gap-4">
                                         <div class="flex items-center gap-2">
                                             {!! $icons['chevron-right'] !!}
@@ -124,12 +122,12 @@
                             
                                 <div
                                     class="box p-5 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-lg">
-                                    <!-- Dòng 1: Icon - Tên -->
+                               
                                     <div class="flex items-center gap-6">
                                         {!! $icons['cloud-rain'] !!}
                                         <span class="text-2xl font-bold tracking-wide">SẠT LỞ</span>
                                     </div>
-                                    <!-- Dòng 2 + 3: Dữ liệu có icon -->
+                                   
                                     <div class="mt-6 grid grid-cols-2 gap-4">
                                         <div class="flex items-center gap-2">
                                             {!! $icons['chevron-right'] !!}
@@ -169,8 +167,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- END: General Report -->
-                <!-- BEGIN: New Post Calamity -->
+                
                 <div class="col-span-12 xl:col-span-5 flex flex-col mt-5">
                     <div class="intro-y flex h-10 items-center">
                         
@@ -185,11 +182,11 @@
 
                                 <a href="/" class="block">
                                     <div class="box zoom-in mb-3 flex items-center px-5 py-5">
-                                        <!-- Icon -->
+                                     
                                         <div class="h-10 w-10 flex items-center justify-center rounded-md bg-primary/20">
                                             {!! $icons['shield-alert'] !!}
                                         </div>
-                                        <!-- Nội dung chính -->
+                                      
                                         <div class="ml-4 flex-1 min-w-0">
                                             @if ($calamity->calamity_type == 'BÃO, ÁP THẤP NHIỆT ĐỚI')
                                                     <div class="font-medium truncate">
@@ -214,8 +211,7 @@
                                                 
                                             @endif
 </div>
-                                    
-                                        <!-- Thời gian -->
+
                                         <div
                                             class="rounded-full bg-success px-3 py-1 text-xs font-medium text-white whitespace-nowrap">
                                             {{ $calamity->created_at }}
@@ -226,10 +222,9 @@
                         @endforeach
                     </div>
                 </div>
-                <!-- END: New Post Calamity -->
-                <!-- BEGIN: Bieu do -->
+               
                 @php
-                    // Màu sắc đẹp hơn (xanh, cam, đỏ)
+                    
                     $colors = ['#2563eb', '#f59e0b', '#ef4444'];
                 @endphp
                <div class="col-span-12 p-4 xl:col-span-7 flex flex-col ">
@@ -241,13 +236,13 @@
                         </h2>
                     </div>
                     <div class="intro-y box mt-3 p-5 flex flex-1 items-center bg-white border border-gray-100 rounded-2xl justify-center">
-                        <!-- Biểu đồ -->
+                       
                         <div class="w-2/3 flex flex-col items-center justify-center h-full">
                             <div id="disaster-chart" class="h-[370px] w-full"></div>
                             <p class="mt-2 text-center text-sm text-gray-600">Biểu đồ thể hiện số lượng thiên tai theo loại
                                 hình thiên tai</p>
                         </div>
-                        <!-- Danh sách -->
+                       
                         <div class="w-1/3 pl-3 flex flex-col justify-center gap-2">
                             @if ($disasters->isEmpty())
                                 <p class="text-center text-gray-500">Không có dữ liệu thiên tai</p>
@@ -265,8 +260,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- END: Bieu do -->
-                <!-- BEGIN: Map Cảnh Báo Thiên Tai -->
+                
                 <div class="col-span-12 xl:col-span-12 flex flex-col mt-4">
                     <div class="intro-y flex h-10 items-center">
                         <h2 class="flex items-center mr-5 uppercase text-lg font-medium">
@@ -274,20 +268,16 @@
                             Bản Đồ Cảnh Báo Thiên Tai 7 Ngày Gần Nhất
                         </h2>
                     </div>
-                    <!-- Nút tạo -->
-                    <!-- Container chứa nút và danh sách checkbox trên cùng một hàng -->
                     <div class="intro-y flex items-center flex-wrap gap-x-4 mt-4">
-                        <!-- Nút tạo -->
-                      
+                        
+                        @guest
                         <button class="mb-2" data-tw-toggle="modal" data-tw-target="#large-modal-size-preview"
                             as="a" variant="primary">
                             {!! $icons['plus'] !!}
-                            @auth Tạo Mới Cảnh Báo Thiên Tai @endauth
-                            @guest Đăng ký nhận thông tin thiên tai mới @endguest
+                             Đăng ký nhận thông tin thiên tai mới 
                         </button>
+                       @endguest
                        
-                       
-                        <!-- Danh sách Checkbox -->
                         <div class="flex flex-wrap gap-x-4">
                             @foreach ($data7Days as $disaster)
                                 <label class="flex items-center space-x-2">
@@ -298,14 +288,12 @@
                             @endforeach
                         </div>
                     </div>
-                    <!-- Bản đồ -->
+                   
                     <div class="intro-y box mt-4 p-5 flex flex-col items-center justify-center space-y-4">
-                        <!-- Bản đồ -->
                         <div id="map" class="w-full h-[500px] md:h-[700px] rounded-lg border shadow-lg"></div>
                     </div>
                 </div>
-                <!-- END: Map Cảnh Báo Thiên Tai -->
-                <!-- BEGIN: Map Windy Ca Mau -->
+                
                 <div class="col-span-12 xl:col-span-12 flex flex-col mt-5">
                     <div class="intro-y flex h-10 items-center">
                         <h2 class="flex items-center mr-5 uppercase text-lg font-medium">
@@ -320,192 +308,46 @@
                     </div>
                    
                 </div>
-                <!-- END: Map Windy Ca Mau -->
+                <div class="col-span-12 xl:col-span-12 mt-5">
+                
+                <div class="flex flex-col xl:flex-row gap-5">
+                    
+                    <div class="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 w-full xl:w-1/2">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                            <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">{{ $citizenCount }}</span>
+                            <h3 class="text-base font-normal text-gray-500">Người dân quan tâm thiên tai</h3>
+                            </div>
+                            <div class="ml-5 w-0 flex items-center justify-end flex-1 text-green-500 text-base font-bold">
+                            14.6%
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 w-full xl:w-1/2">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">{{ $visitorCount }}</span>
+                                <h3 class="text-base font-normal text-gray-500">Khách truy cập hệ thống</h3>
+                            </div>
+                            <div class="ml-5 w-0 flex items-center justify-end flex-1 text-green-500 text-base font-bold">
+                            32.9%
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+   </div>
+</div>
 
             </div>
         </div>
-        <!-- BEGIN: Large Modal Content -->
-        <!-- Modal chứa Form -->
         <x-base.dialog id="large-modal-size-preview" size="xl">
             <x-base.dialog.panel class="p-5">
-                
-                @auth
-                <form enctype="multipart/form-data" class="validate-form" action="/create-disaster" method="post">
-                    @csrf
-                    <!-- BEGIN: Tạo Tỉnh Thành -->
-                    <div class="intro-y box">
-                        <div class="rounded-md border border-slate-200/60 p-5">
-                            <div
-                                class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
-                                {!! $icons['chevron-down'] !!} 
-                                Thông Tin Cảnh Báo Thiên Tai
-                            </div>
-                            <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Cột 1 -->
-                                <div>
-                                    {{-- Loại thiên tai --}}
-                                    <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
-                                        formInline>
-                                        <label class="md:w-80">
-                                            <div class="text-left">
-                                                <div class="flex items-center">
-                                                    <div class="font-medium">Thiên Tai</div>
-                                                    <div class="ml-2 text-red-500 text-xl font-bold">*</div>
-                                                </div>
-                                            </div>
-                                        </label>
-                                        <div class="w-full">
-                                            <select class="w-full" id="crud-form-2"
-                                                name="type_of_calamity_id">
-                                                <option>
-                                                    --Chọn thiên tai--</option>
-                                                @foreach ($typeOfCalamities as $key => $value)
-                                                    <option value="{{ $value->id }}">
-                                                        {{ $value->name }}</option>
-                                                @endforeach
-                                            <select>
-                                            @error('type_of_calamity_id')
-                                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    {{-- Tác nhân --}}
-                                    <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
-                                        formInline>
-                                        <label class="md:w-80">
-                                            <div class="text-left">
-                                                <div class="flex items-center">
-                                                    <div class="font-medium">Loại thiên tai phụ</div>
-                                                    <div class="ml-2 text-red-500 text-xl font-bold">*</div>
-                                                </div>
-                                            </div>
-                                        </label>
-                                        <div class="w-full">
-                                            <select class="w-full" id="sub-type-of-calamity-select"
-                                                name="sub_type_of_calamity_id">
-                                                <option value="">--Chọn thiên tai phụ--</option>
-                                            </select>
-                                            @error('sub_type_of_calamity_id')
-                                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    {{-- Cấp độ --}}
-                                    <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
-                                        formInline>
-                                        <label class="md:w-80">
-                                            <div class="text-left">
-                                                <div class="flex items-center">
-                                                    <div class="font-medium">Cấp Độ</div>
-                                                    <div class="ml-2 text-red-500 text-xl font-bold">*</div>
-                                                </div>
-                                            </div>
-                                        </label>
-                                        <div class="w-full">
-                                            <select class="w-full" id="risk-level-select"
-                                                name="risk_level_id">
-                                                <option value="">Cấp độ thiên tai</option>
-                                            </select>
-                                            @error('risk_level_id')
-                                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
-                                        formInline>
-                                        <label class="md:w-80">
-                                            <div class="text-left">
-                                                <div class="flex items-center">
-                                                    <div class="font-medium">Bản đồ</div>
-                                                    <div class="ml-2 text-red-500 text-xl font-bold">*</div>
-
-                                                </div>
-                                            </div>
-                                        </label>
-                                        <div class="w-full">
-                                            <input type="text" id="coordinates" name="coordinates"
-                                                placeholder="Nhập tọa độ (VD: 10.7769, 106.7009)"
-                                                onblur="updateMapFromInput()" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Cột 2 -->
-                                <div>
-                                    {{-- Tên --}}
-                                    <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
-                                        formInline>
-                                        <label class="md:w-80">
-                                            <div class="text-left">
-                                                <div class="flex items-center">
-                                                    <div class="font-medium">Tên</div>
-                                                    <div class="ml-2 text-red-500 text-xl font-bold">*</div>
-                                                </div>
-                                            </div>
-                                        </label>
-                                        <div class="w-full">
-                                            <input name="name" id="name" type="text"
-                                                placeholder="Tên" />
-                                            @error('name')
-                                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    {{-- Địa chỉ --}}
-                                    <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
-                                        formInline>
-                                        <label class="md:w-80">
-                                            <div class="text-left">
-                                                <div class="flex items-center">
-                                                    <div class="font-medium">Địa chỉ</div>
-                                                    <div class="ml-2 text-red-500 text-xl font-bold">*</div>
-                                                </div>
-                                            </div>
-                                        </label>
-                                        <div class="w-full">
-                                            <input name="address" id="address" type="text"
-                                                placeholder="Địa chỉ" />
-                                            @error('address')
-                                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
-                                        formInline>
-                                        <label class="md:w-80">
-                                            <div class="text-left">
-                                                <div class="flex items-center">
-                                                    <div class="font-medium">Xã</div>
-                                                    <div class="ml-2 text-red-500 text-xl font-bold">*</div>
-
-                                                </div>
-                                            </div>
-                                        </label>
-                                        <div class="w-full">
-                                            <select class="w-full" id="crud-form-2" name="commune_id">
-                                                <option value="">--Chọn Xã--</option>
-                                                @foreach ($communes as $value)
-                                                    <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="map1" class="rounded-lg border shadow-lg"
-                                style="width: 100%; height: 400px; margin-top: 30px;"></div>
-                        </div>
-                    </div>
-                    <!-- END: Tạo Tỉnh Thành -->
-
-                    <!-- Nút Lưu -->
-                    <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
-                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
-                        Lưu
-                        </button>
-                    </div>
-                </form>
-                @endauth
-                @guest
                 <form action="{{ route('guest.disaster.subscribe') }}" method="POST">
 
                     @csrf
@@ -531,64 +373,21 @@
                         </button>
                     </div>
             </form>
-            @endguest
             </x-base.dialog.panel>
         </x-base.dialog>
-        
-        
+
     </div>
 @endsection
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        // load sub-type-of-calamity - risk-level follow type-of-calamity
-        document.addEventListener("DOMContentLoaded", function() {
-            const calamitySelect = document.getElementById("crud-form-2"); // type_of_calamity_id
-            const riskLevelSelect = document.querySelector("#risk-level-select"); // risk_level_id
-            const subTypeOfCalamitySelect = document.querySelector("#sub-type-of-calamity-select"); // sub_type_of_calamity_id
-            
-            calamitySelect.addEventListener("change", function() {
-                const calamityId = calamitySelect.value;
-             
-                // Load cấp độ rủi ro
-                const riskLevelUrl = `{{ route('get-risk-levels') }}${calamityId ? '?calamity_id=' + calamityId : ''}`;
-                fetch(riskLevelUrl)
-                    .then(res => res.json())
-                    .then(data => {
-                        riskLevelSelect.innerHTML = `<option value="">-- Chọn cấp độ --</option>`;
-                        data.forEach(level => {
-                            const option = document.createElement("option");
-                            option.value = level.id;
-                            option.textContent = level.name;
-                            riskLevelSelect.appendChild(option);
-                        });
-                    })
-                .catch(error => console.error("Lỗi khi tải cấp độ rủi ro:", error));
 
-                // Load tác nhân (loại hình thiên tai phụ)
-                const subTypeUrl = `{{ route('get-sub-type-of-calamities') }}${calamityId ? '?calamity_id=' + calamityId : ''}`;
-                fetch(subTypeUrl)
-                    .then(res => res.json())
-                    .then(data => {
-                        subTypeOfCalamitySelect.innerHTML = `<option value="">-- Chọn tác nhân --</option>`;
-                        data.forEach(item => {
-                            const option = document.createElement("option");
-                            option.value = item.id;
-                            option.textContent = item.name;
-                            subTypeOfCalamitySelect.appendChild(option);
-                        });
-                    })
-                    .catch(error => console.error("Lỗi khi tải loại hình thiên tai:", error));
-                    });
-                });
-
-        // load màu cho biểu đồ tròn
         document.addEventListener("DOMContentLoaded", function() {
             var disasterData = @json($disasters);
             var labels = disasterData.map(item => item.type);
             var series = disasterData.map(item => item.count);
-            // Màu sắc đồng nhất với danh sách
+            
             var colors = ['#2563eb', '#f59e0b', '#ef4444'];
             if (series.reduce((a, b) => a + b, 0) === 0) {
                 document.getElementById("disaster-chart").innerHTML =
@@ -633,10 +432,9 @@
         });
         let calamitiesData = @json($data7Days)
 
-        
         let map;
-        let markers = {}; // Lưu marker theo loại thiên tai
-        let kmlLayers = {}; // Lưu KML Layer theo loại thiên tai
+        let markers = {}; 
+        let kmlLayers = {}; 
         let map1, marker;
 
         function initializeApp() {
@@ -646,7 +444,7 @@
         }
 
         function initMap() {
-            // Khởi tạo bản đồ chính
+            
             map = new google.maps.Map(document.getElementById('map'), {
                 center: {
                     lat: 9.176,
@@ -656,93 +454,8 @@
             });
             addDistrictLabels();
 
-            // Khởi tạo bản đồ nhập tọa độ
-            map1 = new google.maps.Map(document.getElementById('map1'), {
-                center: {
-                    lat: 9.176,
-                    lng: 105.15
-                },
-                zoom: 10
-            });
-
-            marker = new google.maps.Marker({
-                position: {
-                    lat: 9.176,
-                    lng: 105.15
-                },
-                map: map1,
-                draggable: true
-            });
-
-            // Khi kéo marker, cập nhật tọa độ trong ô input
-            marker.addListener("dragend", function(event) {
-                document.getElementById("coordinates").value =
-                    event.latLng.lat().toFixed(6) + ", " + event.latLng.lng().toFixed(6);
-            });
-
-            // Click vào bản đồ để đặt marker mới
-            map1.addListener("click", function(event) {
-                let lat = event.latLng.lat().toFixed(6);
-                let lng = event.latLng.lng().toFixed(6);
-
-                document.getElementById("coordinates").value = lat + ", " + lng;
-                marker.setPosition(event.latLng);
-                getAddressFromCoordinates(lat, lng);
-            });
-            // Khi nhập tọa độ, cập nhật bản đồ
-            document.getElementById("coordinates").addEventListener("input", updateMapFromInput);
         }
 
-        // tự động điền địa chỉ khi click marker trên bản đồ.
-        function getAddressFromCoordinates(lat, lng) {
-            const geocoder = new google.maps.Geocoder();
-            const latlng = {
-                lat: parseFloat(lat),
-                lng: parseFloat(lng)
-            };
-            geocoder.geocode({
-                location: latlng
-            }, function(results, status) {
-                if (status === "OK") {
-                    if (results[0]) {
-                        const address = results[0].formatted_address;
-                        document.getElementById("address").value = address;
-                    } else {
-                        console.warn("Không tìm thấy địa chỉ");
-                    }
-                } else {
-                    console.error("Lỗi geocoder: " + status);
-                }
-            });
-        }
-
-          // Cập nhật bản đồ khi rời khỏi ô nhập tọa độ hoặc nhấn Enter
-          function updateMapFromInput() {
-            let inputVal = document.getElementById("coordinates").value.trim();
-            let coords = inputVal.split(",");
-
-            if (coords.length === 2) {
-                let lat = parseFloat(coords[0]);
-                let lng = parseFloat(coords[1]);
-
-                if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
-                    let newLocation = {
-                        lat: lat,
-                        lng: lng
-                    };
-                    map1.setCenter(newLocation);
-                    map1.setZoom(15);
-                    marker.setPosition(newLocation);
-                    getAddressFromCoordinates(lat, lng);
-                } else {
-                    showToast("⚠️ Tọa độ không hợp lệ! Vui lòng nhập lại.");
-                }
-            } else {
-                showToast("⚠️ Định dạng tọa độ không đúng! Vui lòng nhập theo dạng: lat, lng");
-            }
-        }
-
-        //hiển thị quận/huyện lên map khi vào trang
         function addDistrictLabels() {
             const districts = [{
                     name: "TP.Cà Mau",
@@ -810,16 +523,14 @@
             });
         }
 
-        // slug
         function removeVietnameseTones(str) {
             return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Loại bỏ dấu
                 .replace(/đ/g, "d").replace(/Đ/g, "D") // Chuyển đ -> d
                 .replace(/\s+/g, '-').toLowerCase(); // Thay khoảng trắng bằng dấu '-'
         }
 
-        // hiển thị marker sạt lở - kml ngập lụt & bão
         function addMarkersAndKML() {
-            markers = {}; // Reset markers
+            markers = {}; 
             let sharedInfoWindow = new google.maps.InfoWindow();
             calamitiesData.forEach(disaster => {
                 disaster.data.forEach(item => {
@@ -827,9 +538,9 @@
                 });
 
                 let type = disaster.type;
-                let slug = removeVietnameseTones(type); // Ví dụ: "sat-lo", "ngap-lut", "bao"
+                let slug = removeVietnameseTones(type); 
                 markers[slug] = [];
-                // Chọn icon theo loại thiên tai
+                
                 let iconUrl = "";
                 switch (type.toLowerCase()) {
                     case "sạt lở":
@@ -842,9 +553,9 @@
                         iconUrl = "/uploads/map/caution.png";
                         break;
                     default:
-                        iconUrl = "https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png"; // icon mặc định
+                        iconUrl = "https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png"; 
                 }
-                // Vẽ marker
+                
                 if (Array.isArray(disaster.data)) {
                     disaster.data.forEach(item => {
                         if (item.coordinates) {
@@ -915,7 +626,6 @@
             return content;
         }
 
-        // bật tắt option sạt lở - ngập lụt - bão
         function setupCheckboxListeners() {
             document.querySelectorAll("input[type='checkbox']").forEach(checkbox => {
                 checkbox.addEventListener("change", function() {
@@ -939,7 +649,6 @@
             });
         }
 
-        // Hiển thị thông báo lỗi
         function showToast(message) {
             let toast = document.createElement("div");
             toast.innerText = message;

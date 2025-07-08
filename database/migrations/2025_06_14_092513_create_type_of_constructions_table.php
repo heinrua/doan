@@ -18,8 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->unsignedBigInteger('type_of_calamity_id');
             $table->timestamps();
-            $table->foreignId('created_by_user_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreignId('updated_by_user_id')->nullable()->constrained('users')->onDelete('set null');
+
 
             $table->foreign('type_of_calamity_id')->references('id')->on('type_of_calamities')->onDelete('cascade');
 

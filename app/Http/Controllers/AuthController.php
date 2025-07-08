@@ -8,10 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
-
 class AuthController extends Controller
 {
-   
 
     public function viewLogin(): View
     {
@@ -19,13 +17,13 @@ class AuthController extends Controller
     }
     public function viewEditProfile()
     {
-        $user = Auth::user(); // lấy thông tin người dùng đang đăng nhập
+        $user = Auth::user(); 
         return view('pages/edit_profile', compact('user'));
     }
 
     public function updateProfile(Request $request)
     {   
-    $userId = Auth::user()->id; // hoặc Auth::id(), hoặc Auth::user()->getKey()
+    $userId = Auth::user()->id; 
 
        $request->validate([
             'full_name' => 'required|string|max:255',
@@ -33,7 +31,6 @@ class AuthController extends Controller
             'email' => "nullable|email|max:255|unique:users,email,{$userId},id",
             'password' => 'nullable|string|min:6|confirmed',
         ]);
-
 
         $user = Auth::user();
         $user->full_name = $request->full_name;
@@ -46,7 +43,6 @@ class AuthController extends Controller
 
         return redirect()->route('edit-profile')->with('success', 'Cập nhật thông tin thành công!');
     }
-
 
     public function login(Request $request)
     {

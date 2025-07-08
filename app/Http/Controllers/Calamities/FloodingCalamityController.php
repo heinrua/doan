@@ -52,7 +52,7 @@ class FloodingCalamityController extends Controller
                     $q->where('id', $commune_id);
                 });
             } else {
-                $query->whereRaw('1 = 0'); // Tạo điều kiện luôn sai để không có dữ liệu nào
+                $query->whereRaw('1 = 0'); 
             }
         } elseif (!empty($commune_id)) {
             $query->whereHas('communes', function ($q) use ($commune_id) {
@@ -92,6 +92,7 @@ class FloodingCalamityController extends Controller
 
     public function store(Request $request)
     {
+        $user = auth()->user();
         $validated = $request->validate([
             'name' => 'required|unique:calamities',
             'type_of_calamity_id' => 'required',
@@ -105,28 +106,28 @@ class FloodingCalamityController extends Controller
         if ($request->hasFile('map')) {
             $mapFiles = $request->file('map');
             $allowedMimeTypes = [
-                'application/vnd.google-earth.kmz', // KMZ
-                'application/vnd.google-earth.kml+xml', // KML
-                'application/octet-stream', // Một số server nhận KML/KMZ là kiểu này
-                'application/zip', // Một số server nhận diện KMZ là ZIP
-                'text/xml'  // Một số server nhận diện KML là XML
+                'application/vnd.google-earth.kmz', 
+                'application/vnd.google-earth.kml+xml', 
+                'application/octet-stream', 
+                'application/zip', 
+                'text/xml'  
             ];
-            $filePaths = []; // Mảng lưu đường dẫn file
+            $filePaths = []; 
             foreach ($mapFiles as $mapFile) {
                 if (!in_array($mapFile->getMimeType(), $allowedMimeTypes)) {
                     return back()->withErrors(['map' => 'Định dạng file không hợp lệ. Chỉ chấp nhận KML hoặc KMZ.']);
                 }
-                // Tạo tên file mới
+                
                 $slugName = Str::slug(pathinfo($mapFile->getClientOriginalName(), PATHINFO_FILENAME));
                 $timestamp = now()->format('YmdHis');
                 $newFileName = "{$slugName}-{$timestamp}.{$mapFile->getClientOriginalExtension()}";
-                // Lưu vào thư mục public/uploads/calamities/flooding/maps
+                
                 $destinationPath = public_path('uploads/calamities/flooding/maps');
                 $mapFile->move($destinationPath, $newFileName);
-                // Thêm đường dẫn vào danh sách
+                
                 $filePaths[] = "uploads/calamities/flooding/maps/$newFileName";
             }
-            // Lưu vào DB dưới dạng JSON
+            
             $data['map'] = json_encode($filePaths);
         }
         if ($request->hasFile('video')) {
@@ -165,8 +166,8 @@ class FloodingCalamityController extends Controller
         $data['damaged_infrastructure'] = $request['damaged_infrastructure'];
         $data['mitigation_measures'] = $request['mitigation_measures'];
         $data['data_source'] = $request['data_source'];
-          
-
+        $data['created_by_user_id'] = $user->id;
+        
         $slug = Str::slug($request->name);
         $count = Calamities::where('slug', 'like', "{$slug}%")->count();
         if ($count > 0) {
@@ -181,7 +182,7 @@ class FloodingCalamityController extends Controller
         if (isset($validated['sub_type_of_calamity_ids'])) {
             $calamities->sub_type_of_calamities()->sync($validated['sub_type_of_calamity_ids']);
         }
-        //Gửi mail toàn bộ người dùng
+        
         $subscribers = DisasterSubscription::all();
         foreach ($subscribers as $subscriber) {
             Mail::to($subscriber->email)->send(
@@ -201,16 +202,12 @@ class FloodingCalamityController extends Controller
         'risk_level.type_of_calamities'
         ])->findOrFail($id);
 
-        // Lấy type id thông qua risk_level
         $typeId = $calamity->risk_level?->type_of_calamities?->id;
 
         $subTypeOfCalamities = $typeId
             ? SubTypeOfCalamities::where('type_of_calamity_id', $typeId)->get()
             : collect();
 
-
-
-        // Dữ liệu bổ sung
         $typeOfCalamities = TypeOfCalamities::all();
         $communes = Commune::all();
         $risk_levels = RiskLevel::whereRelation('type_of_calamities', 'slug', 'ngap-lut')->get();
@@ -230,25 +227,25 @@ class FloodingCalamityController extends Controller
             'image' => 'nullable|file|mimes:jpg,jpeg,png',
             'sub_type_of_calamity_ids' => 'required',
             'commune_ids' => 'required',
-            'map' => 'nullable|max:51200', // 50MB = 50 * 1024 KB
+            'map' => 'nullable|max:51200', 
         ]);
         $data = [];
         if ($request->has('deleted_maps')) {
             $deletedMaps = json_decode($request->input('deleted_maps'), true);
             if (!empty($deletedMaps)) {
                 foreach ($deletedMaps as $deletedFile) {
-                    @unlink(public_path($deletedFile)); // Xóa từng file khỏi server
+                    @unlink(public_path($deletedFile)); 
                 }
             }
         }
-        // Lấy danh sách file cũ (trừ những file đã bị xóa)
+        
         $existingMaps = !empty($calamity->map) ? json_decode($calamity->map, true) : [];
-        $existingMaps = array_diff($existingMaps, $deletedMaps ?? []); // Loại bỏ file bị xóa
+        $existingMaps = array_diff($existingMaps, $deletedMaps ?? []); 
         if ($request->hasFile('map')) {
             $mapFiles = $request->file('map');
             $allowedMimeTypes = [
-                'application/vnd.google-earth.kmz', // KMZ
-                'application/vnd.google-earth.kml+xml', // KML
+                'application/vnd.google-earth.kmz', 
+                'application/vnd.google-earth.kml+xml', 
                 'application/octet-stream',
                 'application/zip',
                 'text/xml'
@@ -265,10 +262,10 @@ class FloodingCalamityController extends Controller
                 $mapFile->move($destinationPath, $newFileName);
                 $filePaths[] = "uploads/calamities/flooding/maps/$newFileName";
             }
-            // Gộp danh sách file mới với danh sách file còn lại
+            
             $data['map'] = json_encode(array_merge($existingMaps, $filePaths));
         } else {
-            $data['map'] = json_encode($existingMaps); // Nếu không có file mới, chỉ lưu lại file còn lại
+            $data['map'] = json_encode($existingMaps); 
         }
 
         if ($request->input('delete_video') == "1") {
@@ -348,7 +345,6 @@ class FloodingCalamityController extends Controller
 
         return redirect('/calamity/list-flooding')->with('success', 200);
     }
-
 
     public function destroy($id)
     {

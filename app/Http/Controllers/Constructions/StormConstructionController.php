@@ -40,7 +40,7 @@ class StormConstructionController extends Controller
                     $q->where('id', $commune_id);
                 });
             } else {
-                $query->whereRaw('1 = 0'); // Tạo điều kiện luôn sai để không có dữ liệu nào
+                $query->whereRaw('1 = 0'); 
             }
         } elseif (!empty($commune_id)) {
             $query->whereHas('commune', function ($q) use ($commune_id) {
@@ -78,7 +78,7 @@ class StormConstructionController extends Controller
 
     public function store(Request $request)
     {
-    
+        $user = auth()->user();
         $validated = $request->validate([
             'name' => 'required|unique:calamities',
             'type_of_calamity_id' => 'required',
@@ -103,7 +103,7 @@ class StormConstructionController extends Controller
         $data['contractor'] = $request['contractor'];
         $data['efficiency_level'] = $request['efficiency_level'];
         $data['total_investment'] = $request['total_investment'];
-          
+        $data['created_by_user_id'] = $user->id;
         $slug = Str::slug($request->name);
         $count = Construction::where('slug', 'like', "{$slug}%")->count();
         if ($count > 0) {
@@ -144,7 +144,6 @@ class StormConstructionController extends Controller
         $data['address'] = $request->address;
         $data['size'] = $request->size;
 
-        // Kiểm tra nếu ngày tháng không rỗng mới chuyển đổi định dạng
         if (!empty($request->construction_date)) {
             $data['construction_date'] = Carbon::createFromFormat('d \T\h\á\n\g m, Y', $request->construction_date)->format('Y-m-d');
         }
@@ -158,9 +157,8 @@ class StormConstructionController extends Controller
         $data['contractor'] = $request->contractor;
         $data['efficiency_level'] = $request->efficiency_level;
         $data['total_investment'] = $request->total_investment;
-        
+        $data['updated_by_user_id'] = $user->id;
 
-        // Xử lý slug (nếu thay đổi name thì cập nhật slug)
         if ($construction->name !== $request->name) {
             $slug = Str::slug($request->name);
             $count = Construction::where('slug', 'like', "{$slug}%")->where('id', '!=', $request->id)->count();
@@ -178,8 +176,6 @@ class StormConstructionController extends Controller
 
         return redirect('/construction/list-storm')->with('success', 200);
     }
-
-
 
     public function destroy($id)
     {

@@ -19,8 +19,6 @@ return new class extends Migration
             $table->string('coordinates');
             $table->unsignedBigInteger('district_id');
             $table->timestamps();
-            $table->foreignId('created_by_user_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreignId('updated_by_user_id')->nullable()->constrained('users')->onDelete('set null');
 
             $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade');
         });

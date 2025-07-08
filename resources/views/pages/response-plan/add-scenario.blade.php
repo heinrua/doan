@@ -9,11 +9,11 @@
         {!! $icons['home'] !!}
         Tạo Phương Án Ứng Phó
     </h2>
-    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> {{-- Chỉnh thành grid-cols-1 để tối ưu mobile --}}
+    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> 
         <div class="intro-y">
             <form enctype="multipart/form-data" class="validate-form" action="/create-scenarios" method="post">
                 @csrf
-                <!-- BEGIN: Tạo Phương Án Ứng Phó -->
+                
                 <div class="intro-y box mt-5 p-5">
                     <div class="rounded-md border border-slate-200/60 p-5">
                         <div
@@ -21,7 +21,7 @@
                             {!! $icons['chevron-down'] !!} Thông Tin Phương Án Ứng Phó
                         </div>
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Cột 1 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -39,7 +39,7 @@
                                         @error('name')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                         @enderror
-                                        <x-base.form-help class="text-right"> Tối thiểu 5 ký tự </x-base.form-help>
+                                        
                                     </div>
                                 </div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
@@ -105,11 +105,11 @@
                                         @error('document_text')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                         @enderror
-                                        <x-base.form-help class="text-right"> Tối thiểu 5 ký tự </x-base.form-help>
+                                        
                                     </div>
                                 </div>
                             </div>
-                            <!-- Cột 2 -->
+                            
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
@@ -126,7 +126,7 @@
                                         @error('short_description')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                         @enderror
-                                        <x-base.form-help class="text-right"> Tối thiểu 5 ký tự </x-base.form-help>
+                                        
                                     </div>
                                 </div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
@@ -186,7 +186,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- END: Tạo Tỉnh Thành -->
+                
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-scenarios') }}">
                         <button type="button"

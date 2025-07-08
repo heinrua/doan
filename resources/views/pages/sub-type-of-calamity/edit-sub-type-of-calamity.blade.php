@@ -9,13 +9,13 @@
         {!! $icons['chevron-right'] !!}
         Cập Nhật Loại Hình Thiên Tai Phụ
     </h2>
-    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> {{-- Chỉnh thành grid-cols-1 để tối ưu mobile --}}
+    <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> 
         <div class="intro-y">
             <form enctype="multipart/form-data" class="validate-form" action="{{ route('update-sub-type-of-calamity') }}"
                 method="post">
                 <input type="hidden" name="id" value="{{ $risk_level->id }}">
                 @csrf
-                <!-- BEGIN: Risk Level Information -->
+                
                 <div class="intro-y box mt-5 p-5">
                     <div class="rounded-md border border-slate-200/60 p-5">
                         <div
@@ -37,7 +37,7 @@
                                 <div class="w-full">
                                     <input name="name" id="name" type="text"
                                         placeholder="Tên Loại Hình Thiên Tai Phụ" value="{{ $risk_level->name }}" />
-                                    <x-base.form-help class="text-right"> Tối thiểu 5 ký tự </x-base.form-help>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                                 <div class="w-full">
                                     <input name="description" id="description" type="text"
                                         placeholder="Mô Tả" value="{{ $risk_level->description }}" />
-                                    <x-base.form-help class="text-right"> Tối thiểu 5 ký tự </x-base.form-help>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -85,7 +85,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- END: Product Information -->
+                
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                     <a href="{{ route('view-sub-type-of-calamity') }}">
                         <button type="button"

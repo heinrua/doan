@@ -14,6 +14,7 @@ use App\Models\DisasterSubscription;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RiverBankCalamityController extends Controller
 {
@@ -51,7 +52,7 @@ class RiverBankCalamityController extends Controller
                     $q->where('id', $commune_id);
                 });
             } else {
-                $query->whereRaw('1 = 0'); // Tạo điều kiện luôn sai để không có dữ liệu nào
+                $query->whereRaw('1 = 0'); 
             }
         } elseif (!empty($commune_id)) {
             $query->whereHas('communes', function ($q) use ($commune_id) {
@@ -104,28 +105,28 @@ class RiverBankCalamityController extends Controller
         if ($request->hasFile('map')) {
             $mapFiles = $request->file('map');
             $allowedMimeTypes = [
-                'application/vnd.google-earth.kmz', // KMZ
-                'application/vnd.google-earth.kml+xml', // KML
-                'application/octet-stream', // Một số server nhận KML/KMZ là kiểu này
-                'application/zip', // Một số server nhận diện KMZ là ZIP
-                'text/xml'  // Một số server nhận diện KML là XML
+                'application/vnd.google-earth.kmz', 
+                'application/vnd.google-earth.kml+xml', 
+                'application/octet-stream', 
+                'application/zip', 
+                'text/xml'  
             ];
-            $filePaths = []; // Mảng lưu đường dẫn file
+            $filePaths = []; 
             foreach ($mapFiles as $mapFile) {
                 if (!in_array($mapFile->getMimeType(), $allowedMimeTypes)) {
                     return back()->withErrors(['map' => 'Định dạng file không hợp lệ. Chỉ chấp nhận KML hoặc KMZ.']);
                 }
-                // Tạo tên file mới
+                
                 $slugName = Str::slug(pathinfo($mapFile->getClientOriginalName(), PATHINFO_FILENAME));
                 $timestamp = now()->format('YmdHis');
                 $newFileName = "{$slugName}-{$timestamp}.{$mapFile->getClientOriginalExtension()}";
-                // Lưu vào thư mục public/uploads/calamities/river-bank/maps
+                
                 $destinationPath = public_path('uploads/calamities/river-bank/maps');
                 $mapFile->move($destinationPath, $newFileName);
-                // Thêm đường dẫn vào danh sách
+                
                 $filePaths[] = "uploads/calamities/river-bank/maps/$newFileName";
             }
-            // Lưu vào DB dưới dạng JSON
+            
             $data['map'] = json_encode($filePaths);
         }
         if ($request->hasFile('video')) {
@@ -164,7 +165,7 @@ class RiverBankCalamityController extends Controller
         $data['investment_level'] = $request['investment_level'];
         $data['mitigation_measures'] = $request['mitigation_measures'];
         $data['support_policy'] = $request['support_policy'];
-          
+        $data['created_by_user_id'] = $user->id;
 
         $slug = Str::slug($request->name);
         $count = Calamities::where('slug', 'like', "{$slug}%")->count();
@@ -181,7 +182,7 @@ class RiverBankCalamityController extends Controller
         if ($request->has('sub_type_of_calamity_id')) {
             $calamities->sub_type_of_calamities()->sync($request->sub_type_of_calamity_id);
         }
-        //Gửi mail toàn bộ người dùng
+        
         $subscribers = DisasterSubscription::all();
         foreach ($subscribers as $subscriber) {
             Mail::to($subscriber->email)->send(
@@ -191,6 +192,46 @@ class RiverBankCalamityController extends Controller
         
         return redirect('/calamity/list-river-bank')->with('success', 200);
     }
+    public function importRiverbank(Request $request)
+    {
+        $user = auth()->user();
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv'
+        ]);
+        $file = $request->file('file');
+        $data = Excel::toArray([], $file)[0];
+        $header = array_map('trim', $data[0]);
+        unset($data[0]);
+        foreach ($data as $row) {
+            $row = array_combine($header, $row);
+            $calamity = Calamities::create([
+                'name' => $row['Tên thiên tai'],
+                'type_of_calamity_id' => TypeOfCalamities::where('name', $row['Loại thiên tai'])->first()->id,
+                'risk_level_id' => RiskLevel::where('name', $row['Mức độ nguy hiểm'])->first()->id,
+                'time' => $row['Thời gian'],
+                'address' => $row['Địa chỉ'],
+                'length' => $row['Chiều dài'],
+                'width' => $row['Chiều rộng'],
+                'acreage' => $row['Diện tích'],
+                'coordinates' => $row['Toạ độ'],
+                'reason' => $row['Lý do'],
+                'geology' => $row['Địa chất'],
+                'watermark_points' => $row['Điểm đánh dấu'],
+                'human_damage' => $row['Thiệt hại con người'],
+                'property_damage' => $row['Thiệt hại tài sản'],
+                'investment_level' => $row['Mức đầu tư'],
+                'mitigation_measures' => $row['Biện pháp khắc phục'],
+                'support_policy' => $row['Chính sách hỗ trợ'],
+                'created_by_user_id' => $user->id,
+            ]); 
+            $calamity->communes()->sync(Commune::where('name', $row['Xã'])->first()->id);
+            $calamity->sub_type_of_calamities()->sync(SubTypeOfCalamities::where('name', $row['Loại thiên tai'])->first()->id);
+            $calamity->save();
+            
+        }   
+        return back()->with('success', 'Import thành công!');
+        return back()->with('error', 'Import thất bại!');
+    }   
 
     public function show($id)
     {
@@ -201,22 +242,17 @@ class RiverBankCalamityController extends Controller
         'risk_level.type_of_calamities'
         ])->findOrFail($id);
 
-        // Lấy type id thông qua risk_level
         $typeId = $calamity->risk_level?->type_of_calamities?->id;
 
         $subTypeOfCalamities = $typeId
             ? SubTypeOfCalamities::where('type_of_calamity_id', $typeId)->get()
             : collect();
 
-
-
-        // Dữ liệu bổ sung
         $typeOfCalamities = TypeOfCalamities::all();
         $communes = Commune::all();
         $risk_levels = RiskLevel::whereRelation('type_of_calamities', 'slug', 'sat-lo-bo-song-bo-bien')->get();
         $calamities = TypeOfCalamities::where('slug', 'sat-lo-bo-song-bo-bien')->get();
 
-       
         return view('pages/calamities/river-bank/edit-river-bank', compact('calamities', 'calamity', 'typeOfCalamities', 'subTypeOfCalamities', 'communes', 'risk_levels'));
     }
 
@@ -234,25 +270,25 @@ class RiverBankCalamityController extends Controller
         ]);
         $data = $validated;
         if ($request->input('delete_map') == "1") {
-            @unlink(public_path($calamity->map)); // Xóa file khỏi server
-            $data['map'] = null; // Cập nhật DB
+            @unlink(public_path($calamity->map)); 
+            $data['map'] = null; 
         }
         if ($request->has('deleted_maps')) {
             $deletedMaps = json_decode($request->input('deleted_maps'), true);
             if (!empty($deletedMaps)) {
                 foreach ($deletedMaps as $deletedFile) {
-                    @unlink(public_path($deletedFile)); // Xóa từng file khỏi server
+                    @unlink(public_path($deletedFile)); 
                 }
             }
         }
-        // Lấy danh sách file cũ (trừ những file đã bị xóa)
+        
         $existingMaps = !empty($calamity->map) ? json_decode($calamity->map, true) : [];
-        $existingMaps = array_diff($existingMaps, $deletedMaps ?? []); // Loại bỏ file bị xóa
+        $existingMaps = array_diff($existingMaps, $deletedMaps ?? []); 
         if ($request->hasFile('map')) {
             $mapFiles = $request->file('map');
             $allowedMimeTypes = [
-                'application/vnd.google-earth.kmz', // KMZ
-                'application/vnd.google-earth.kml+xml', // KML
+                'application/vnd.google-earth.kmz', 
+                'application/vnd.google-earth.kml+xml', 
                 'application/octet-stream',
                 'application/zip',
                 'text/xml'
@@ -269,10 +305,10 @@ class RiverBankCalamityController extends Controller
                 $mapFile->move($destinationPath, $newFileName);
                 $filePaths[] = "uploads/calamities/river-bank/maps/$newFileName";
             }
-            // Gộp danh sách file mới với danh sách file còn lại
+            
             $data['map'] = json_encode(array_merge($existingMaps, $filePaths));
         } else {
-            $data['map'] = json_encode($existingMaps); // Nếu không có file mới, chỉ lưu lại file còn lại
+            $data['map'] = json_encode($existingMaps); 
         }
         if ($request->input('delete_video') == "1") {
             if ($calamity->video) {
@@ -360,7 +396,6 @@ class RiverBankCalamityController extends Controller
             return redirect()->back()->with('error', 'Không có mục nào được chọn.');
         }
 
-     
         Calamities::whereIn('id', $ids)->delete();
 
         return redirect()->back()->with('success', 'Đã xoá các mục đã chọn.');

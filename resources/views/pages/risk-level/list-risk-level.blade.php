@@ -4,8 +4,6 @@
     <title>Danh Sách Cấp Độ Thiên Tai - PCTT Cà Mau Dashboard</title>
 @endsection
 
-
-
 @section('subcontent')
     <div class="intro-y mt-5 flex items-center justify-between">
         <div class="flex items-center text-lg font-medium uppercase">
@@ -57,17 +55,17 @@
         <div class="intro-y col-span-3 overflow-auto lg:overflow-visible text-base text-gray-800 bg-gray-300 rounded-md px-4 py-2 shadow-sm text-center">
             Tổng số cấp độ thiên tai: <span class="font-semibold">{{ $data->total() }}</span>
         </div>
-
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <form action="{{ route('destroy-multiple-user') }}" method="POST">
+        <form action="{{ route('delete-multiple-risk-level') }}" class=" col-span-2" method="POST">
             @csrf
             @method('DELETE')
             @auth
-            <button type="submit" class="bg-red-700" id="delete-multiple-btn" disabled>
+            <button type="submit" class="bg-red-700 z-1 sticky left-0" id="delete-multiple-btn" disabled>
                 {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
             </button>
             @endauth
-            <table class="mt-2 border-separate border-spacing-y-[10px] table-fixed">
+</form>
+        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
+            <table class="mt-2 border-separate border-spacing-y-[10px]">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
                         <th class="sticky left-0 z-1 bg-blue-100 w-[40px] min-w-[40px] max-w-[40px] px-1 "><input type="checkbox" id="selectAll" class="block mx-auto"></th>
@@ -90,10 +88,9 @@
                     @else
                     @foreach ($data as $key => $value)
                         <tr class="bg-white ">
-                            <td class="sticky left-0 z-1 bg-white  w-[40px]" >
-                            <input type="checkbox" class="item-checkbox" name="ids[]" value="{{ $value->id }}">
-
-                        </td>
+                            <td class="sticky left-0 z-1 bg-white w-[40px] min-w-[40px] max-w-[40px]  text-center">
+                                <input type="checkbox" class="item-checkbox" name="ids[]" value="{{ $value->id }}">
+                            </td>
                             <td class="sticky left-[40px] z-1 bg-white px-4 py-4 font-bold">
                                 <a class="whitespace-nowrap font-medium" href="/edit-risk-level/{{ $value->id }}">
                                     {{ $value->name }}
@@ -126,7 +123,6 @@
                 @endif
                 </tbody>
             </table>
-            
 
             </form>
         </div>
@@ -136,7 +132,6 @@
         </div>
     </div>
 
-    <!-- Modal xác nhận xoá -->
     <div class="fixed inset-0 z-50 hidden" id="delete-confirmation-modal" aria-modal="true">
         <div class="fixed inset-0 bg-black/50"></div>
         <div class="flex min-h-screen items-center justify-center">
@@ -194,16 +189,13 @@
             deleteBtn.disabled = selectedCount === 0;
         }
 
-        // Khi checkbox "Chọn tất cả" được click
         selectAllCheckbox.addEventListener('change', function () {
             checkboxes.forEach(cb => cb.checked = this.checked);
             updateCount();
         });
 
-        // Khi checkbox từng dòng được click
         checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
 
-        // Khởi tạo giá trị ban đầu (trường hợp reload giữ lại checkbox đã chọn)
         updateCount();
     });
 </script>
