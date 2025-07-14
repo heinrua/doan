@@ -13,7 +13,7 @@ export default defineConfig({
     },
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js','resources/js/vendors.js'],
+            input: ['resources/css/app.css', 'resources/js/app.js','resources/js/vendors.js','resources/js/vendors/dom.js','resources/js/components/base/theme-color.js'],
             refresh: true,
         }),
         tailwindcss(),
