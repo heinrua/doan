@@ -51,9 +51,9 @@ class CityController extends Controller
     public function importCity(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:xlsx,csv'
+            'excelFile' => 'required|file|mimes:xlsx,csv'
         ]);
-        $file = $request->file('file');
+        $file = $request->file('excelFile');
         $data = Excel::toArray([], $file)[0];
         $header = array_map('trim', $data[0]);
         unset($data[0]);

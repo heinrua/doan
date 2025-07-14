@@ -43,8 +43,8 @@ class MapController extends Controller
                                         'calamities' => $commune->calamities->map(function ($calamity) {
                                             return [
                                                 'name' => $calamity->name,
-                                                'latitude' => explode(',', $calamity->coordinates)[0],
-                                                'longitude' => explode(',', $calamity->coordinates)[1],
+                                                'latitude' => explode(',', $calamity->coordinates)[0] ?? ' ',
+                                                'longitude' => explode(',', $calamity->coordinates)[1] ?? ' ',
                                                 'length' => $calamity->length,
                                                 'width' => $calamity->width,
                                                 'acreage' => ($calamity->acreage)

@@ -54,14 +54,17 @@
                 </div>
                 <div class="max-h-[200px] overflow-y-auto">
                     <ul id="listConstructionTypes" class="w-full hidden text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                        @foreach($constructionTypes as $data)
+                    @foreach($constructionTypes as $data)
                         <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
                             <div class="flex items-center ps-3">
-                                <input type="checkbox"  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                            <input type="checkbox" value="{{ $data->id }}"
+                                onchange="toggleMarkers(constructions[{{ $data->id }}] || [], this.checked,'{{ $data->slug }}')"
+
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                 <label class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{$data->name}}</label>
                             </div>
                         </li>
-                        @endforeach
+                    @endforeach
                     </ul>
                 </div>
                 <h3 class="mt-3 text-lg font-semibold mb-3">Địa phận:</h3>
@@ -77,7 +80,7 @@
                                                 $lat = trim($coords[0]);
                         $lng = trim($coords[1]);
                         $urls = $data['map'];
-                        // Đảm bảo urls là array
+                       
                         if (is_string($urls)) {
                             $urls = json_decode($urls, true) ?: [$urls];
                         }                        
@@ -165,7 +168,7 @@
             item.type === 'center' && item.classify === 'Cấp xã'
             );
 
-            const centerDistrictData = administratives.filter(item =>
+        const centerDistrictData = administratives.filter(item =>
             item.type === 'center' && item.classify === 'Cấp huyện'
             );
         const icons = {
@@ -178,6 +181,7 @@
             river_bank: "/uploads/map/falling_rocks.png",
             default: "https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png"
         };
+        
 
         let map, kmlLayers = new Map(),
             currentKmlLayer = null;
@@ -185,13 +189,34 @@
         let kmlLayer = new Map(); 
         let infoWindowRiver;
         let sharedInfoWindow; 
-        let sharedConstructionInfoWindow; 
 
         function initializeApp() {
             initMap(); 
             setupDistrictRadios();
             setupDistrictToggle();
             setupConstructionToggle();
+            console.log("River Bank:", locations_river_bank);
+            console.log("Flood by Range:", floodByRange);
+            console.log("Storms by Year:", stormsByYear);
+
+            document.getElementById("riverBankSelect").addEventListener("change", function () {
+                const year = this.value;
+                if (year && locations_river_bank[year]) {
+                    toggleMarkers(locations_river_bank[year], true, 'river_bank');
+                }
+            });
+            document.getElementById("floodingSelect").addEventListener("change", function () {
+                const level = this.value;
+                if (level && floodByRange[level]) {
+                    toggleMarkers(floodByRange[level], true, 'flooding');
+                }
+            });
+            document.getElementById("stormSelect").addEventListener("change", function () {
+                const year = this.value;
+                if (year && stormsByYear[year]) {
+                    toggleMarkers(stormsByYear[year], true, 'storm');
+                }
+            });
         }
 
         function initMap() {
@@ -204,7 +229,6 @@
             });
             infoWindowRiver = new google.maps.InfoWindow();
             sharedInfoWindow = new google.maps.InfoWindow();
-            sharedConstructionInfoWindow = new google.maps.InfoWindow();
 
         }
         
@@ -253,15 +277,9 @@
         }
 
         function toggleMarkers(data, show, type) {
+           
             if (!data || data.length === 0) return;
             
-            const icons = {
-                school: "/uploads/map/school.png",
-                medical: "/uploads/map/medical.png",
-                center_commune: "/uploads/map/commune_center.png",
-                center_district: "/uploads/map/district_center.png",
-                default: "https://maps.google.com/mapfiles/kml/shapes/placemark_circle.png"
-            };
             let iconUrl = icons[type] || icons.default;
             data.forEach(value => {
                 let markerKey = `${type}-${value.id}`;
@@ -298,32 +316,29 @@
         function getContent(value, type) {
             let iconUrl = icons[type] || icons.default;
             return `
-                    <div style="max-width: 340px; font-family: 'Segoe UI', sans-serif; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.15); background: #fff; transition: all 0.3s ease-in-out;">
-                        
-                        <div style="background: linear-gradient(to right, #e74c3c, #c0392b); color: white; padding: 14px 20px; text-align: center;">
-                            <div style="font-size: 17px; font-weight: bold; letter-spacing: 0.5px;">
-                                ${value.name}
-                            </div>
-                        </div>
-                        
-                        <div style="padding: 16px 20px; font-size: 14.5px; color: #333; line-height: 1.8;">
-                            <div style="display: flex; margin-bottom: 8px;">
-                                <div style="width: 25px; text-align: center;">📍</div>
-                                <div><strong>Địa chỉ:</strong> ${value.address || "Không có"}</div>
-                            </div>
-                            <div style="display: flex; margin-bottom: 8px;">
-                            <div style="display: flex;">
-                                <div style="width: 25px; text-align: center;">🏞️</div>
-                                <div><strong>Huyện:</strong> ${value.district || "Không có"}</div>
-                            </div>
-                            <div style="display: flex;">
-                                <div style="width: 25px; text-align: center;">🏞️</div>
-                                <div><strong>Sức chứa:</strong> ${value.population || "0"}</div>
-                            </div>
+                <div style="max-width: 360px; font-family: 'Segoe UI', sans-serif; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.15); background: #fff;">
+                    <div style="background: linear-gradient(to right, #2c3e50, #4ca1af); color: white; padding: 14px 20px; text-align: center;">
+                        <div style="font-size: 17px; font-weight: bold;">${value.name || "Không có tên"}</div>
+                    </div>
+                    <div style="padding: 16px 20px; font-size: 14px; color: #333; line-height: 1.8;">
+                        ${value.address ? `<div><strong>📍 Địa chỉ:</strong> ${value.address}</div>` : ''}
+                        ${value.commune ? `<div><strong>📍 Xã:</strong> ${value.commune}</div>` : ''}
+                        ${value.district ? `<div><strong>🏞️ Huyện:</strong> ${value.district}</div>` : ''}
+                        ${value.population ? `<div><strong>👥 Sức chứa:</strong> ${value.population}</div>` : ''}
+                        ${value.width ? `<div><strong>📏 Chiều rộng:</strong> ${value.width} m</div>` : ''}
+                        ${value.length ? `<div><strong>📐 Chiều dài:</strong> ${value.length} m</div>` : ''}
+                        ${value.acreage ? `<div><strong>🗺️ Diện tích:</strong> ${value.acreage} m²</div>` : ''}
+                        ${value.reason ? `<div><strong>💥 Nguyên nhân:</strong> ${value.reason}</div>` : ''}
+                        ${value.time ? `<div><strong>🕒 Thời gian:</strong> ${value.time}</div>` : ''}
+                        ${value.latitude && value.longitude ? `<div><strong>🌐 Tọa độ:</strong> (${value.latitude}, ${value.longitude})</div>` : ''}
+                        <div style="margin-top: 10px; text-align: center;">
+                            <img src="${iconUrl}" alt="icon" style="width: 30px; height: 30px;">
                         </div>
                     </div>
-                    `;
-                }
+                </div>
+            `;
+        }
+
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 var userLat = position.coords.latitude;
@@ -354,8 +369,10 @@
         }
 
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMhd9dHKpWfJ57Ndv2alnxEcSvP_-_uN8&callback=initializeApp" async
-        defer loading="async"></script>
-    
+   <script 
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMhd9dHKpWfJ57Ndv2alnxEcSvP_-_uN8&callback=initializeApp&loading=async"
+    defer>
+</script>
+
 
 @endpush

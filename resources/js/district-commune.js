@@ -25,12 +25,11 @@
                 });
         }
 
-        // Load xã khi chọn huyện
         districtSelect.addEventListener("change", function () {
             loadCommunes(this.value);
         });
 
-        // Load sẵn nếu đã chọn huyện từ trước (ví dụ khi reload lại trang)
+    
         if (districtSelect.value) {
             loadCommunes(districtSelect.value, selectedCommuneId);
         }

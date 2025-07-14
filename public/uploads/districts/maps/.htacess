@@ -1,0 +1,6 @@
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Content-Type "application/vnd.google-earth.kml+xml"
+</IfModule>
+
+AddType application/vnd.google-earth.kml+xml .kml

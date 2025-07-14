@@ -8,6 +8,8 @@ use App\Models\TypeOfCalamities;
 use App\Models\SubTypeOfCalamities;
 use App\Models\Commune;
 use Illuminate\Support\Str;
+use App\Notifications\IncidentReportCreated;
+use App\Models\User;
 
 class IncidentReportController extends Controller
 {
@@ -67,29 +69,31 @@ class IncidentReportController extends Controller
         $validated['attachment'] = !empty($attachments) ? json_encode($attachments) : null;
 
         $report = IncidentReport::create($validated);
-
+        // Gửi thông báo cho tất cả người dùng
+        $allUsers = User::all();
+        foreach ($allUsers as $user) {
+            $user->notify(new IncidentReportCreated($report));
+        }
         return redirect()->back()->with('success', 'Báo cáo sự cố đã được gửi thành công!');
     }
     public function destroy($id)
     {
         $report = IncidentReport::findOrFail($id);
 
-        if ($report->attachment) {
-            $attachments = json_decode($report->attachment, true);
-            if (is_array($attachments)) {
-                foreach ($attachments as $attachment) {
-                    \Storage::disk('public')->delete($attachment);
-                }
-            } else {
-                
-                \Storage::disk('public')->delete($report->attachment);
-            }
-        }
+        
 
         $report->delete();
 
-        return response()->json([
-            'message' => 'Đã xoá báo cáo sự cố.',
-        ]);
+        return redirect()->back()->with('success', 'Đã xoá báo cáo sự cố.');
+
+
+
     }
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->ids;
+        IncidentReport::whereIn('id', $ids)->delete();
+          return redirect()->back()->with('success', 'Đã xoá báo cáo sự cố.');
+        
+    }   
 }

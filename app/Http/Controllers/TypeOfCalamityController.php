@@ -33,7 +33,7 @@ class TypeOfCalamityController extends Controller
         $user = auth()->user();
 
         $validated = $request->validate([
-            'name' => 'required|unique:roles',
+            'name' => 'required',
             'description' => 'nullable',
         ]);
         $slug = Str::slug($request->name);

@@ -12,6 +12,7 @@ use App\Models\District;
 use App\Models\TypeOfConstruction;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class StormConstructionController extends Controller
 {
@@ -88,8 +89,8 @@ class StormConstructionController extends Controller
 
         $data = [];
         $data['risk_level_id'] = $validated['risk_level_id'];
-        $data['type_of_calamity_id'] = $validated['type_of_calamity_id'];
         $data['type_of_construction_id'] = $validated['type_of_construction_id'];
+        $data['commune_id'] = $request['commune_id'];
         $data['construction_code'] = $request['construction_code'];
         $data['name'] = $validated['name'];
         $data['address'] = $request['address'];
@@ -110,12 +111,48 @@ class StormConstructionController extends Controller
             $slug = "{$slug}-{$count}";
         }
         $data['slug'] = $slug;
-        $data['commune_id'] = $request['commune_id'] ?? null;
         $construction = Construction::create($data);
 
-        return redirect('/construction/list-storm')->with('success', 200);
+        return redirect('/construction/list-storm')->with('success', "Thêm công trình phòng chống thiên tai thành công");
     }
 
+    public function importStormConstruction(Request $request)
+    {
+        $user = auth()->user();
+        $validated = $request->validate([
+            'excelFile' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
+        $file = $request->file('excelFile');
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $slugName = Str::slug($originalName);
+        $timestamp = now()->format('YmdHis');
+        $newFileName = "{$slugName}-{$timestamp}.{$file->getClientOriginalExtension()}";
+        $file->move(public_path('uploads/constructions/storm/imports'), $newFileName);
+        $filePath = public_path('uploads/constructions/storm/imports/' . $newFileName);
+        $spreadsheet = IOFactory::load($filePath);
+        $sheet = $spreadsheet->getActiveSheet();
+        $rows = $sheet->toArray();
+        foreach ($rows as $row) {
+            $data = [
+                'name' => $row["Tên công trình"],
+                'risk_level_id' => RiskLevel::where('name', $row["Cấp độ"])->first()->id,
+                'type_of_construction_id' => TypeOfConstruction::where('name', $row["Loại công trình"])->first()->id,
+                'commune_id' => Commune::where('name', $row["Xã"])->first()->id,
+                'year_of_construction' => $row["Năm xây dựng"],
+                'year_of_completion' => $row["Năm hoàn thành"],
+                'scale' => $row["Quy mô"],
+                'geology' => $row["Địa chất"],
+                'influence_level' => $row["Mức độ ảnh hưởng"],
+                'coordinates' => $row["Toạ độ"],
+                'total_investment' => $row["Tổng mức đầu tư"],
+                'capital_source' => $row["Nguồn vốn"],
+                'created_by_user_id' => $user->id,
+                'update_time' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $row["Thời gian cập nhật"])->format('Y-m-d'),
+            ];
+            $construction = Construction::create($data);
+        }
+        return redirect('/construction/list-storm')->with('success', "Nhập thành công");
+    }
     public function show($id)
     {
         $calamities = TypeOfCalamities::where('slug', 'bao-ap-thap-nhiet-doi')->get();
@@ -139,6 +176,7 @@ class StormConstructionController extends Controller
         $data = [];
         $data['type_of_construction_id'] = $validated['type_of_construction_id'];
         $data['risk_level_id'] = $validated['risk_level_id'];
+        $data['commune_id'] = $request['commune_id'];
         $data['construction_code'] = $request->construction_code;
         $data['name'] = $validated['name'];
         $data['address'] = $request->address;
@@ -170,17 +208,19 @@ class StormConstructionController extends Controller
 
         $construction->update($data);
 
-        if (isset($request['commune_id'])) {
-            $construction->commune()->sync($request['commune_id']);
-        }
-
-        return redirect('/construction/list-storm')->with('success', 200);
+        return redirect('/construction/list-storm')->with('success', "Cập nhật công trình phòng chống thiên tai thành công");
     }
 
     public function destroy($id)
     {
         $calamity = Construction::findOrFail($id);
         $calamity->delete();
-        return redirect('/construction/list-storm')->with('success', 200);
+        return redirect('/construction/list-storm')->with('success', "Xóa công trình phòng chống thiên tai thành công");
+    }   
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->ids;
+        Construction::whereIn('id', $ids)->delete();
+        return redirect('/construction/list-storm')->with('success', "Xóa thành công");
     }
 }

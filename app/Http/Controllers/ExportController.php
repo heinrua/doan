@@ -26,14 +26,11 @@ class ExportController extends Controller
                     'Thiệt hại về người' => $item->human_damage,
                     'Thiệt hại về tài sản' => $item->property_damage,
                     'Biện pháp ứng phó' => $item->mitigation_measures,
-                    'Bản đồ' => $item->map,
-                    'Hình ảnh' => $item->image,
-                    'Video' => $item->video,
                     'Thời gian cập nhật' => $item->updated_at,
                 ];
             })->toArray();
         $headers = array_keys($data[0] ?? [
-            'Tên bão' => '', 'Loại hình' => '', 'Địa phương ảnh hưởng' => '', 'Toạ độ' => '', 'Mức đầu tư' => '', 'Cấp độ rủi ro thiên tai' => '', 'Thời gian bắt đầu' => '', 'Thời gian kết thúc' => '', 'Thiệt hại về người' => '', 'Thiệt hại về tài sản' => '', 'Biện pháp ứng phó' => '', 'Bản đồ' => '', 'Hình ảnh' => '', 'Video' => '', 'Thời gian cập nhật' => ''
+            'Tên bão' => '', 'Loại hình' => '', 'Địa phương ảnh hưởng' => '', 'Toạ độ' => '', 'Mức đầu tư' => '', 'Cấp độ rủi ro thiên tai' => '', 'Thời gian bắt đầu' => '', 'Thời gian kết thúc' => '', 'Thiệt hại về người' => '', 'Thiệt hại về tài sản' => '', 'Biện pháp ứng phó' => '', 'Thời gian cập nhật' => ''
         ]);
         return Excel::download(new GenericExport($data, $headers), 'du-lieu-bao.xlsx');
     }
@@ -64,7 +61,6 @@ class ExportController extends Controller
                     'Mức độ đầu tư' => $item->investment_level,
                     'Biện pháp giảm thiểu' => $item->mitigation_measures,
                     'Chính sách hỗ trợ' => $item->support_policy,
-                   
                     'Thời gian cập nhật' => $item->updated_at,
                 ];
             })->toArray();
@@ -83,7 +79,7 @@ class ExportController extends Controller
                 return [
                     'Tên khu vực ngập' => $item->name,
                     'Loại hình ngập' => $item->sub_type_of_calamities->pluck('name')->implode(', '),
-                    'Địa phương' => $item->communes->pluck('name')->implode(', '),
+                    'Địa phương ảnh hưởng' => $item->communes->pluck('name')->implode(', '),
                     'Cấp độ rủi ro' => optional($item->risk_level)->name,
                     'Toạ độ' => $item->coordinates,
                     'Khoảng ngập' => $item->flood_range,
@@ -169,13 +165,11 @@ class ExportController extends Controller
                     'Loại cống' => $item->culver_type,
                     'Mã cống' => $item->culver_code,
                     'Đơn vị quản lý' => $item->management_unit,
-                    'Hình ảnh' => $item->image,
-                    'Video' => $item->video,
                     'Thời gian cập nhật' => $item->updated_at,
                 ];
             })->toArray();
         $headers = array_keys($data[0] ?? [
-            'Tên công trình' => '', 'Loại công trình' => '', 'Cấp độ' => '', 'Vị trí công trình' => '', 'Xã' => '', 'Huyện' => '', 'Năm xây dựng' => '', 'Năm hoàn thành' => '', 'Thời gian cập nhật' => '', 'Toạ độ' => '', 'Quy mô' => '', 'Đặc điểm nhận dạng' => '', 'Bề rộng 1 cửa' => '', 'Cao trình đáy' => '', 'Cao trình đỉnh trụ pin' => '', 'Ghi chú' => '', 'Hình thức vận hành' => '', 'Hệ thống thuỷ lợi' => '', 'Vùng thuỷ lợi' => '', 'Loại cống' => '', 'Mã cống' => '', 'Đơn vị quản lý' => '', 'Hình ảnh' => '', 'Video' => '', 'Thời gian cập nhật' => ''
+            'Tên công trình' => '', 'Loại công trình' => '', 'Cấp độ' => '', 'Vị trí công trình' => '', 'Xã' => '', 'Huyện' => '', 'Năm xây dựng' => '', 'Năm hoàn thành' => '', 'Thời gian cập nhật' => '', 'Toạ độ' => '', 'Quy mô' => '', 'Đặc điểm nhận dạng' => '', 'Bề rộng 1 cửa' => '', 'Cao trình đáy' => '', 'Cao trình đỉnh trụ pin' => '', 'Ghi chú' => '', 'Hình thức vận hành' => '', 'Hệ thống thuỷ lợi' => '', 'Vùng thuỷ lợi' => '', 'Loại cống' => '', 'Mã cống' => '', 'Đơn vị quản lý' => '', 'Thời gian cập nhật' => ''
         ]);
         return Excel::download(new GenericExport($data, $headers), 'du-lieu-cong-trinh-ngap-lut.xlsx');
     }
@@ -202,13 +196,11 @@ class ExportController extends Controller
                     'Toạ độ' => $item->coordinates,
                     'Tổng mức đầu tư' => $item->total_investment,
                     'Nguồn vốn' => $item->capital_source,
-                    'Hình ảnh' => $item->image,
-                    'Video' => $item->video,
                     'Thời gian cập nhật' => $item->updated_at,
                 ];
             })->toArray();
         $headers = array_keys($data[0] ?? [
-            'Tên công trình' => '', 'Loại công trình' => '', 'Cấp độ rủi ro thiên tai' => '', 'Phường/Xã' => '', 'Quận/Huyện' => '', 'Tiến độ thực hiện' => '', 'Năm xây dựng' => '', 'Năm hoàn thành' => '', 'Chiều dài (km)' => '', 'Chiều rộng (m)' => '', 'Quy mô' => '', 'Mức độ ảnh hưởng' => '', 'Toạ độ' => '', 'Tổng mức đầu tư' => '', 'Nguồn vốn' => '', 'Hình ảnh' => '', 'Video' => '', 'Thời gian cập nhật' => ''
+            'Tên công trình' => '', 'Loại công trình' => '', 'Cấp độ rủi ro thiên tai' => '', 'Phường/Xã' => '', 'Quận/Huyện' => '', 'Tiến độ thực hiện' => '', 'Năm xây dựng' => '', 'Năm hoàn thành' => '', 'Chiều dài (km)' => '', 'Chiều rộng (m)' => '', 'Quy mô' => '', 'Mức độ ảnh hưởng' => '', 'Toạ độ' => '', 'Tổng mức đầu tư' => '', 'Nguồn vốn' => '', 'Thời gian cập nhật' => ''
         ]);
         return Excel::download(new GenericExport($data, $headers), 'du-lieu-cong-trinh-sat-lo.xlsx');
     }

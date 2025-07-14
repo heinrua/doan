@@ -7,7 +7,7 @@ use App\Exports\UsersExport;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 
-
+ 
 
     Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
         ->middleware('guest')->name('password.request');
@@ -24,10 +24,19 @@ use App\Http\Controllers\Auth\NewPasswordController;
 
     Route::get('/chat', [App\Http\Controllers\ChatController::class, 'index'])->name('chat');
     Route::post('/chat/send', [App\Http\Controllers\ChatController::class, 'send']);
+    
+    Route::post('/mark-notifications-as-read', [App\Http\Controllers\NotificationController::class, 'markAsRead'])
+        ->middleware('auth')->name('mark-notifications-as-read');
+    
+    Route::post('/mark-notification-as-read', [App\Http\Controllers\NotificationController::class, 'markSingleAsRead'])
+        ->middleware('auth')->name('mark-notification-as-read');
 
     Route::get('/incident-report', [App\Http\Controllers\IncidentReportController::class, 'index'])->name('incident-report');
     Route::get('/delete-incident-report/{id}', [App\Http\Controllers\IncidentReportController::class, 'destroy'])->name('delete-incident-report');
-
+    Route::prefix('incident-reports')->group(function () {
+        Route::delete('/delete-multiple-incident-report', [App\Http\Controllers\IncidentReportController::class, 'destroyMultiple'])->name('delete-multiple-incident-report');
+    });
+    
     Route::get('/create-incident-report', [App\Http\Controllers\IncidentReportController::class, 'create'])->name('incident-reports.create');
     Route::post('/create-incident-report', [App\Http\Controllers\IncidentReportController::class, 'store'])->name('incident-reports.store');
     Route::get('/get-sub-type-of-calamities', [App\Http\Controllers\IncidentReportController::class, 'getSubTypeOfCalamities'])->name('get-sub-type-of-calamities');
@@ -52,7 +61,6 @@ use App\Http\Controllers\Auth\NewPasswordController;
         Route::get('/edit-user/{id}', [App\Http\Controllers\UserController::class, 'show'])->name('edit-user');
         Route::post('/update-user', [App\Http\Controllers\UserController::class, 'update'])->name('update-user');
         Route::get('/delete-user/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('delete-user');
-        Route::get('/charts', [App\Http\Controllers\ChartController::class, 'index'])->name('charts');
         Route::get('/edit-profile', [App\Http\Controllers\AuthController::class, 'viewEditProfile'])->name('edit-profile');
 
         Route::post('/edit_profile', [App\Http\Controllers\AuthController::class, 'updateProfile'])->name('update-profile');
@@ -107,11 +115,15 @@ use App\Http\Controllers\Auth\NewPasswordController;
         }
     });
     Route::get('/map', [App\Http\Controllers\MapController::class, 'viewRiverBank'])->name('view-map');
-    Route::prefix('incident-reports')->group(function () {
-        Route::get('/', [App\Http\Controllers\IncidentReportController::class, 'index']);
-        Route::post('/', [App\Http\Controllers\IncidentReportController::class, 'store']);
-        Route::delete('/{id}', [App\Http\Controllers\IncidentReportController::class, 'destroy']);
-    });
+   
+    
+        Route::prefix('incident-reports')->group(function () {
+            Route::get('/', [App\Http\Controllers\IncidentReportController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\IncidentReportController::class, 'store']);
+            Route::delete('/{id}', [App\Http\Controllers\IncidentReportController::class, 'destroy']);
+            Route::delete('/delete-multiple-incident-report', [App\Http\Controllers\IncidentReportController::class, 'destroyMultiple'])->name('delete-multiple-incident-report');
+        }); 
+    
 
     Route::middleware(['auth'])->group(function () {
 
@@ -121,10 +133,17 @@ use App\Http\Controllers\Auth\NewPasswordController;
         Route::post('/update-city', [App\Http\Controllers\CityController::class, 'update'])->name('update-city');
         Route::get('/delete-city/{id}', [App\Http\Controllers\CityController::class, 'destroy'])->name('delete-city');
         Route::post('/import-cities', [App\Http\Controllers\CityController::class, 'importCity'])->name('import-cities');
+        Route::post('/import-districts', [App\Http\Controllers\DistrictController::class, 'importDistricts'])->name('import-districts');
+        Route::post('/import-communes', [App\Http\Controllers\CommuneController::class, 'importCommunes'])->name('import-communes');
+        Route::post('/import-school', [App\Http\Controllers\AdministrativeController::class, 'importAdministrative'])->name('import-school');
+        Route::post('/import-medical', [App\Http\Controllers\AdministrativeController::class, 'importAdministrative'])->name('import-medical');
+        Route::post('/import-center', [App\Http\Controllers\AdministrativeController::class, 'importAdministrative'])->name('import-center');
+
         Route::delete('/delete-multiple-city', [App\Http\Controllers\CityController::class, 'destroyMultiple'])->name('delete-multiple-city');
 
 
         Route::get('/create-district', [App\Http\Controllers\DistrictController::class, 'viewFormDistrict'])->name('create-district');
+        Route::post('/create-district', [App\Http\Controllers\DistrictController::class, 'store'])->name('store-district');
         Route::get('/edit-district/{id}', [App\Http\Controllers\DistrictController::class, 'show'])->name('edit-district');
         Route::post('/update-district', [App\Http\Controllers\DistrictController::class, 'update'])->name('update-district');
         Route::get('/delete-district/{id}', [App\Http\Controllers\DistrictController::class, 'destroy'])->name('delete-district');
@@ -185,6 +204,9 @@ use App\Http\Controllers\Auth\NewPasswordController;
             Route::post('/update-river-bank', [App\Http\Controllers\Calamities\RiverBankCalamityController::class, 'update'])->name('update-calamity-river-bank');
             Route::get('/delete-river-bank/{id}', [App\Http\Controllers\Calamities\RiverBankCalamityController::class, 'destroy'])->name('delete-calamity-river-bank');
             Route::delete('/delete-multiple-river-bank', [App\Http\Controllers\Calamities\RiverBankCalamityController::class, 'destroyMultiple'])->name('delete-multiple-calamity-river-bank');
+            Route::post('/import-river-bank', [App\Http\Controllers\Calamities\RiverBankCalamityController::class, 'importRiverbank'])->name('import-river-bank-calamity');
+            Route::post('/import-flooding', [App\Http\Controllers\Calamities\FloodingCalamityController::class, 'importFlooding'])->name('import-flooding-calamity');
+            Route::post('/import-storm', [App\Http\Controllers\Calamities\StormCalamityController::class, 'importStorm'])->name('import-storm-calamity');
 
             Route::get('/create-flooding', [App\Http\Controllers\Calamities\FloodingCalamityController::class, 'viewFormFlooding'])->name('create-calamity-flooding');
             Route::post('/create-flooding', [App\Http\Controllers\Calamities\FloodingCalamityController::class, 'store'])->name('store-calamity-flooding');
@@ -192,7 +214,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
             Route::post('/update-flooding', [App\Http\Controllers\Calamities\FloodingCalamityController::class, 'update'])->name('update-calamity-flooding');
             Route::get('/delete-flooding/{id}', [App\Http\Controllers\Calamities\FloodingCalamityController::class, 'destroy'])->name('delete-calamity-flooding');
             Route::delete('/delete-multiple-flooding', [App\Http\Controllers\Calamities\FloodingCalamityController::class, 'destroyMultiple'])->name('delete-multiple-calamity-flooding');
-
+            Route::post('/import-flooding', [App\Http\Controllers\Calamities\FloodingCalamityController::class, 'importFlooding'])->name('import-flooding-calamity');
             
             Route::get('/create-storm', [App\Http\Controllers\Calamities\StormCalamityController::class, 'viewFormStorm'])->name('create-calamity-storm');
             Route::post('/create-storm', [App\Http\Controllers\Calamities\StormCalamityController::class, 'store'])->name('store-calamity-storm');
@@ -200,6 +222,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
             Route::post('/update-storm', [App\Http\Controllers\Calamities\StormCalamityController::class, 'update'])->name('update-calamity-storm');
             Route::get('/delete-storm/{id}', [App\Http\Controllers\Calamities\StormCalamityController::class, 'destroy'])->name('delete-calamity-storm');
             Route::delete('/delete-multiple-storm', [App\Http\Controllers\Calamities\StormCalamityController::class, 'destroyMultiple'])->name('delete-multiple-calamity-storm');
+            Route::post('/import-storm', [App\Http\Controllers\Calamities\StormCalamityController::class, 'importStorm'])->name('import-storm-calamity');
        
         });
         
@@ -212,6 +235,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
             Route::post('/update-river-bank', [App\Http\Controllers\Constructions\RiverBankConstructionController::class, 'update'])->name('update-construction-river-bank');
             Route::get('/delete-river-bank/{id}', [App\Http\Controllers\Constructions\RiverBankConstructionController::class, 'destroy'])->name('delete-construction-river-bank');
             Route::delete('/delete-multiple-river-bank', [App\Http\Controllers\Constructions\RiverBankConstructionController::class, 'destroyMultiple'])->name('delete-multiple-construction-river-bank');
+            Route::post('/import-river-bank-construction', [App\Http\Controllers\Constructions\RiverBankConstructionController::class, 'importRiverBankConstruction'])->name('import-river-bank-construction');
 
            
             Route::get('/create-flooding', [App\Http\Controllers\Constructions\FloodingConstructionController::class, 'viewFormFlooding'])->name('create-construction-flooding');
@@ -220,6 +244,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
             Route::post('/update-flooding', [App\Http\Controllers\Constructions\FloodingConstructionController::class, 'update'])->name('update-construction-flooding');
             Route::get('/delete-flooding/{id}', [App\Http\Controllers\Constructions\FloodingConstructionController::class, 'destroy'])->name('delete-construction-flooding');
             Route::delete('/delete-multiple-flooding', [App\Http\Controllers\Constructions\FloodingConstructionController::class, 'destroyMultiple'])->name('delete-multiple-construction-flooding');
+            Route::post('/import-flooding-construction', [App\Http\Controllers\Constructions\FloodingConstructionController::class, 'importFloodingConstruction'])->name('import-flooding-construction');
 
             Route::get('/create-storm', [App\Http\Controllers\Constructions\StormConstructionController::class, 'viewFormStorm'])->name('create-construction-storm');
             Route::post('/create-storm', [App\Http\Controllers\Constructions\StormConstructionController::class, 'store'])->name('store-construction-storm');
@@ -227,6 +252,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
             Route::post('/update-storm', [App\Http\Controllers\Constructions\StormConstructionController::class, 'update'])->name('update-construction-storm');
             Route::get('/delete-storm/{id}', [App\Http\Controllers\Constructions\StormConstructionController::class, 'destroy'])->name('delete-construction-storm');
             Route::delete('/delete-multiple-storm', [App\Http\Controllers\Constructions\StormConstructionController::class, 'destroyMultiple'])->name('delete-multiple-construction-storm');
+            Route::post('/import-storm-construction', [App\Http\Controllers\Constructions\StormConstructionController::class, 'importStormConstruction'])->name('import-storm-construction');
 
         });
         Route::prefix('geographical')->group(function () {
@@ -246,6 +272,9 @@ use App\Http\Controllers\Auth\NewPasswordController;
 
             Route::get("/delete-{$type}/{id}", [App\Http\Controllers\GeographicalDataController::class, 'destroy'])
                 ->name("delete-{$type}");
+                
+            Route::delete("/delete-multiple-{$type}", [App\Http\Controllers\GeographicalDataController::class, 'destroyMultiple'])
+                ->name("delete-multiple-{$type}")->defaults('type', $type);
         }
         });
         Route::prefix('administrative')->group(function () {
@@ -264,6 +293,9 @@ use App\Http\Controllers\Auth\NewPasswordController;
 
                 Route::get("/delete-{$type}/{id}", [App\Http\Controllers\AdministrativeController::class, 'destroy'])
                     ->name("delete-{$type}");
+                    
+                Route::delete("/delete-multiple-{$type}", [App\Http\Controllers\AdministrativeController::class, 'destroyMultiple'])
+                    ->name("delete-multiple-{$type}")->defaults('type', $type);
             }
         });
     

@@ -376,17 +376,27 @@
                     </div>
                 </div>
                 
-                <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
-                    <a href="{{ route('view-construction-river-bank') }}">
-                        <button type="button"
-                            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
-                            Huỷ Bỏ</button>
-                    </a>
-                    
-                       <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
-                        Lưu
-                    </button>
-                    
+                <div class="mt-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+                    <div class="w-full md:w-auto text-left">
+                        <p class="italic">
+                            Tạo bởi: {{ optional($construction->created_by_user)->full_name ?? 'Không rõ' }}.
+                        </p>
+                        <p class="italic">
+                            Cập nhật lần cuối: {{ optional($construction->updated_by_user)->full_name ?? 'Không rõ' }}.
+                        </p>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <a href="{{ route('view-construction-river-bank') }}">
+                            <button type="button"
+                                class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                                Huỷ Bỏ</button>
+                        </a>
+                        <button type="submit"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+                            Lưu
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>

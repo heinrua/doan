@@ -12,6 +12,7 @@ use App\Models\Calamities;
 use App\Models\District;
 use App\Models\DisasterSubscription;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\CalamityCreated;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -95,7 +96,6 @@ class RiverBankCalamityController extends Controller
         $user = auth()->user();
         $validated = $request->validate([
             'name' => 'required|unique:calamities',
-            'type_of_calamity_id' => 'required',
             'risk_level_id' => 'required',
             'map' => 'nullable|max:51200',
             'video' => 'nullable|file|mimes:mp4',
@@ -147,7 +147,6 @@ class RiverBankCalamityController extends Controller
             $imageFile->move(public_path('uploads/calamities/river-bank/images'), $newFileName);
             $data['image'] = "uploads/calamities/river-bank/images/$newFileName";
         }
-        $data['type_of_calamity_id'] = $validated['type_of_calamity_id'];
         $data['risk_level_id'] = $validated['risk_level_id'];
         $data['name'] = $validated['name'];
 
@@ -186,51 +185,59 @@ class RiverBankCalamityController extends Controller
         $subscribers = DisasterSubscription::all();
         foreach ($subscribers as $subscriber) {
             Mail::to($subscriber->email)->send(
-                new CalamityCreated($calamity, $subscriber->name)
+                new CalamityCreated($calamities, $subscriber->name)
             );
         }
         
-        return redirect('/calamity/list-river-bank')->with('success', 200);
+            return redirect('/calamity/list-river-bank')->with('success', 'Thêm thành công!');
     }
     public function importRiverbank(Request $request)
     {
         $user = auth()->user();
         $request->validate([
-            'file' => 'required|file|mimes:xlsx,csv'
+            'excelFile' => 'required|file|mimes:xlsx,csv'
         ]);
-        $file = $request->file('file');
+        $file = $request->file('excelFile');
         $data = Excel::toArray([], $file)[0];
-        $header = array_map('trim', $data[0]);
+        $header = array_map('trim', $data[0]);  
+        $requiredHeaders = ['Tên vị trí sạt lở'];
+        foreach ($requiredHeaders as $col) {
+            if (!in_array($col, $header)) {
+                return back()->with('error', 'Thiếu cột bắt buộc: ' . $col);
+            }
+        }
         unset($data[0]);
         foreach ($data as $row) {
             $row = array_combine($header, $row);
+           
             $calamity = Calamities::create([
-                'name' => $row['Tên thiên tai'],
-                'type_of_calamity_id' => TypeOfCalamities::where('name', $row['Loại thiên tai'])->first()->id,
-                'risk_level_id' => RiskLevel::where('name', $row['Mức độ nguy hiểm'])->first()->id,
-                'time' => $row['Thời gian'],
-                'address' => $row['Địa chỉ'],
-                'length' => $row['Chiều dài'],
-                'width' => $row['Chiều rộng'],
-                'acreage' => $row['Diện tích'],
-                'coordinates' => $row['Toạ độ'],
-                'reason' => $row['Lý do'],
-                'geology' => $row['Địa chất'],
-                'watermark_points' => $row['Điểm đánh dấu'],
-                'human_damage' => $row['Thiệt hại con người'],
-                'property_damage' => $row['Thiệt hại tài sản'],
-                'investment_level' => $row['Mức đầu tư'],
-                'mitigation_measures' => $row['Biện pháp khắc phục'],
-                'support_policy' => $row['Chính sách hỗ trợ'],
+                'name' => $row['Tên vị trí sạt lở'],
+                'slug' => Str::slug($row['Tên vị trí sạt lở']),
+                'sub_type_of_calamity_ids' => SubTypeOfCalamities::where('name', $row['Loại sạt lở'])->first()->id ?? null,
+                'risk_level_id' => RiskLevel::where('name', $row['Cấp độ rủi ro'])->first()->id ?? null,
+                
+                'time' => Carbon::createFromFormat('d-m-Y', $row['Thời gian'])->format('Y-m-d') ?? null,
+                'address' => $row['Địa điểm'] ?? null,
+                'length' => is_numeric($row['Chiều dài']) ? (int) $row['Chiều dài'] : null,
+                'width' => is_numeric($row['Chiều rộng']) ? (int) $row['Chiều rộng'] : null,
+                'acreage' => is_numeric($row['Diện tích']) ? (int) $row['Diện tích'] : null,
+                'coordinates' => $row['Tọa độ vị trí'] ?? null,
+                'reason' => $row['Nguyên nhân'] ?? null,
+                'geology' => $row['Địa chất'] ?? null,
+                'watermark_points' => $row['Đặc điểm thuỷ văn'] ?? null,
+                'human_damage' => $row['Thiệt hại về người'] ?? null,
+                'property_damage' => $row['Thiệt hại về tài sản'] ?? null,
+                'investment_level' => $row['Mức độ'] ?? null,
+                'mitigation_measures' => $row['Các biện pháp giảm thiểu'] ?? null,
+                'support_policy' => $row['Chính sách hỗ trợ'] ?? null,
                 'created_by_user_id' => $user->id,
             ]); 
-            $calamity->communes()->sync(Commune::where('name', $row['Xã'])->first()->id);
-            $calamity->sub_type_of_calamities()->sync(SubTypeOfCalamities::where('name', $row['Loại thiên tai'])->first()->id);
+            $calamity->communes()->sync(Commune::where('name', $row['Phường/Xã'])->first()->id ?? null);
+            $calamity->sub_type_of_calamities()->sync($row['Loại sạt lở'] ?? null);
             $calamity->save();
             
         }   
         return back()->with('success', 'Import thành công!');
-        return back()->with('error', 'Import thất bại!');
     }   
 
     public function show($id)

@@ -4,6 +4,9 @@
     </IfModule>
 
     RewriteEngine On
+    <FilesMatch "\.(kml|kmz)$">
+        Header set Access-Control-Allow-Origin "*"
+    </FilesMatch>
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

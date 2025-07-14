@@ -5,6 +5,17 @@
 @endsection
 
 @section('subcontent')
+    <x-alert />
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+        </ul>
+    </div>
+@endif
+
     <h2 class="intro-y mt-5 text-lg font-medium uppercase flex items-center">
         {!! $icons['aperture'] !!}
         Tạo Mới Trường Học
@@ -35,9 +46,9 @@
                                 <div class="w-full">
                                     <input name="name" id="name" type="text"
                                         placeholder="Tên Trường Học" />
-                                    @error('name')
-                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                    @enderror
+                                        @error('name')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                 </div>
                             </div>
                         </div>
@@ -50,11 +61,14 @@
                                             <div class="font-medium">Mã</div>
                                            <div class="ml-2 text-red-500 text-xl font-bold">*</div>
                                         </div>
-
+                                        
                                     </div>
                                 </label>
                                 <div class="w-full">
                                     <input name="code" id="code" type="text" placeholder="Mã" />
+                                    @error('code')
+                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -71,8 +85,10 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <input name="address" id="address" type="text"
-                                        placeholder="Địa Điểm" />
+                                    <input name="address" id="address" type="text"placeholder="Địa Điểm" />
+                                        @error('address')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                 </div>
                             </div>
                         </div>
@@ -113,8 +129,10 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <input name="coordinates" id="coordinates" type="text"
-                                        placeholder="Toạ độ" />
+                                    <input name="coordinates" id="coordinates" type="text" placeholder="Toạ độ" />
+                                        @error('coordinates')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                 </div>
                             </div>
                         </div>
@@ -131,11 +149,11 @@
                                     </div>
                                 </label>
                                 <div class="w-full">
-                                    <input name="population" id="population" type="number"
-                                        placeholder="Sức chứa" />
-                                    @error('population')
-                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                    @enderror
+                                    <input name="population" id="population" type="number" placeholder="Sức chứa" />
+                                        @error('population')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
+                                   
                                 </div>
                             </div>
                         </div>
@@ -146,13 +164,16 @@
                                     <div class="text-left">
                                         <div class="flex items-center">
                                             <div class="font-medium">Mô tả</div>
-                                           <div class="ml-2 text-red-500 text-xl font-bold">*</div>
+                                          
                                         </div>
                                     </div>
                                 </label>
                                 <div class="w-full">
                                     <input name="description" id="description" type="text"
                                         placeholder="Mô tả" />
+                                        @error('description')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                 </div>
                             </div>
                         </div>

@@ -76,7 +76,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <select class="w-full" id="crud-form-2" name="sub_type_of_calamity_id">
+                                        <select class="w-full" id="sub_type_of_calamity_ids" name="sub_type_of_calamity_ids[]" multiple>
                                             @foreach ($sub_calamities as $value)
                                                 <option value="{{ $value->id }}">{{ $value->name }}</option>
                                             @endforeach
@@ -174,7 +174,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <select class="w-full" id="crud-form-2" name="commune_id">
+                                        <select class="w-full" id="commune_ids" name="commune_ids[]" multiple>
                                             @foreach ($communes as $value)
                                                 <option value="{{ $value->id }}">{{ $value->name }}</option>
                                             @endforeach
@@ -414,3 +414,39 @@
         </div>
     </div>
 @endsection
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new TomSelect("#sub_type_of_calamity_ids", {
+            plugins: ['remove_button'],
+            placeholder: "Chọn các loại hình...",
+            maxItems: null,
+            render: {
+                item: function(data, escape) {
+                    return `<div class="bg-green-100 text-green-800 text-sm rounded-full px-3 py-1 mr-2 mb-1 inline-flex items-center">
+                        ${escape(data.text)}
+                    </div>`;
+                },
+                option: function(data, escape) {
+                    return `<div class="py-2 px-3 text-sm hover:bg-green-50 cursor-pointer">${escape(data.text)}</div>`;
+                }
+            }
+        });
+        new TomSelect("#commune_ids", {
+            plugins: ['remove_button'],
+            placeholder: "Chọn các xã...",
+            maxItems: null,
+            render: {
+                item: function(data, escape) {
+                    return `<div class="bg-blue-100 text-blue-800 text-sm rounded-full px-3 py-1 mr-2 mb-1 inline-flex items-center">
+                        ${escape(data.text)}
+                    </div>`;
+                },
+                option: function(data, escape) {
+                    return `<div class="py-2 px-3 text-sm hover:bg-blue-50 cursor-pointer">${escape(data.text)}</div>`;
+                }
+            }
+        });
+    }); 
+</script>       

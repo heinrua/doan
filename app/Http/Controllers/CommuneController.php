@@ -6,6 +6,7 @@ use App\Models\District;
 use App\Models\Commune;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CommuneController extends Controller
 {
@@ -61,7 +62,42 @@ class CommuneController extends Controller
         Commune::create($validated);
         return redirect('/list-commune');
     }
-
+    public function importCommunes(Request $request)
+    {
+        $request->validate([
+            'excelFile' => 'required|file|mimes:xlsx,csv'
+        ]);
+        $file = $request->file('excelFile');
+        $data = Excel::toArray([], $file)[0];
+        $header = array_map('trim', $data[0]);
+        unset($data[0]);
+        $requiredHeaders = ['Tên', 'Mã', 'Tọa độ', 'Huyện'];
+        foreach ($requiredHeaders as $col) {
+            if (!in_array($col, $header)) {
+                return back()->with('error', 'Thiếu cột bắt buộc: ' . $col);
+            }
+        }
+        foreach ($data as $row) {
+            $row = array_combine($header, $row);
+            if (empty($row['Tên']) || empty($row['Mã']) || empty($row['Tọa độ']) || empty($row['Huyện'])) {
+                continue;
+            }
+            $district = District::where('name', $row['Huyện'])->first();
+            if (!$district) {
+                return back()->with('error', 'Huyện không tồn tại: ' . $row['Huyện']);
+            }
+            $commune = Commune::create([
+                'name' => $row['Tên'],
+                'code' => $row['Mã'],
+                'slug' => Str::slug($row['Tên']),
+                'coordinates' => $row['Tọa độ'],
+                'district_id' => $district->id,
+                'population' => $row['Dân số'] ?? 0
+            ]);
+            $commune->save();
+        }
+        return back()->with('success', 'Import thành công!');
+    }
     public function show($id)
     {
         $commune = Commune::findOrFail($id);

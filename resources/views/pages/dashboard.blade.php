@@ -318,31 +318,13 @@
                             <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">{{ $citizenCount }}</span>
                             <h3 class="text-base font-normal text-gray-500">Người dân quan tâm thiên tai</h3>
                             </div>
-                            <div class="ml-5 w-0 flex items-center justify-end flex-1 text-green-500 text-base font-bold">
-                            14.6%
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                            </svg>
+                            
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 w-full xl:w-1/2">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">{{ $visitorCount }}</span>
-                                <h3 class="text-base font-normal text-gray-500">Khách truy cập hệ thống</h3>
-                            </div>
-                            <div class="ml-5 w-0 flex items-center justify-end flex-1 text-green-500 text-base font-bold">
-                            32.9%
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                            </svg>
                         </div>
                     </div>
                 </div>
-   </div>
-</div>
+            </div>
+            </div>
 
             </div>
         </div>
@@ -524,9 +506,9 @@
         }
 
         function removeVietnameseTones(str) {
-            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Loại bỏ dấu
-                .replace(/đ/g, "d").replace(/Đ/g, "D") // Chuyển đ -> d
-                .replace(/\s+/g, '-').toLowerCase(); // Thay khoảng trắng bằng dấu '-'
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "") 
+                .replace(/đ/g, "d").replace(/Đ/g, "D") 
+                .replace(/\s+/g, '-').toLowerCase(); 
         }
 
         function addMarkersAndKML() {

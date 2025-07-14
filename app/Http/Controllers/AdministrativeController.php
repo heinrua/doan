@@ -69,38 +69,71 @@ class AdministrativeController extends Controller
     public function store(Request $request)
     {
         $validated = $this->validateRequest($request);
-        Administrative::create($validated);
+        $administrative = Administrative::create($validated);
+        
         return redirect()->route($this->redirectRoutes[$validated['type']])->with('success', 'Dữ liệu đã được lưu thành công!');
     }
     public function importAdministrative(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:xlsx,csv'
+            'excelFile' => 'required|file|mimes:xlsx,csv'
         ]);
-        $file = $request->file('file');
+        
+        $file = $request->file('excelFile');
         $data = Excel::toArray([], $file)[0];
         $header = array_map('trim', $data[0]);
         unset($data[0]);
+        
+        $type = '';
+        if (str_contains($request->route()->getName(), 'school')) {
+            $type = 'school';
+        } elseif (str_contains($request->route()->getName(), 'medical')) {
+            $type = 'medical';
+        } elseif (str_contains($request->route()->getName(), 'center')) {
+            $type = 'center';
+        }
+        
+        $requiredHeaders = ['Tên', 'Mã', 'Tọa độ', 'Huyện', 'Xã', 'Địa chỉ', 'Phân loại', 'Sức chứa'];
+        foreach ($requiredHeaders as $col) {
+            if (!in_array($col, $header)) {
+                return back()->with('error', 'Thiếu cột bắt buộc: ' . $col);
+            }
+        }
+        
         foreach ($data as $row) {
             $row = array_combine($header, $row);
+            if (empty($row['Tên']) || empty($row['Mã']) || empty($row['Tọa độ']) || empty($row['Huyện']) || empty($row['Xã'])) {
+                continue;
+            }
+            
+            $district = District::where('name', $row['Huyện'])->first();
+            if (!$district) {
+                return back()->with('error', 'Huyện không tồn tại: ' . $row['Huyện']);
+            }
+            
+            $commune = Commune::where('name', $row['Xã'])->where('district_id', $district->id)->first();
+            if (!$commune) {
+                return back()->with('error', 'Xã không tồn tại: ' . $row['Xã']);
+            }
+            
             $administrative = Administrative::create([
                 'name' => $row['Tên'],
-                'type' => $row['Loại'],
-                'commune_id' => Commune::where('name', $row['Xã'])->first()->id,
-                'coordinates' => $row['Toạ độ'],
-                'address' => $row['Địa chỉ'],
-                'description' => $row['Mô tả'],
+                'slug' => Str::slug($row['Tên']),
+                'type' => $type,
+                'district_id' => $district->id,
+                'commune_id' => $commune->id,
+                'coordinates' => $row['Tọa độ'],
+                'address' => $row['Địa chỉ'] ?? '',
+                'description' => $row['Mô tả'] ?? '',
                 'code' => $row['Mã'],
-                'classify' => $row['Phân loại'],
-                'population' => $row['Sức chứa']
+                'classify' => $row['Phân loại'] ?? '',
+                'population' => $row['Sức chứa'] ?? 0
             ]);
-            $validated = $this->validateRequest($request, $administrative->id);
-            $administrative->update($validated);
-            $administrative->communes()->sync(Commune::where('name', $row['Xã'])->first()->id);
+          
             $administrative->save();
         }
+        
         return back()->with('success', 'Import thành công!');
-        return back()->with('error', 'Import thất bại!');
     }
 
     public function show($id)
@@ -129,19 +162,30 @@ class AdministrativeController extends Controller
         return redirect()->route("view-$type")->with('success', 'Xóa thành công!');
     }
 
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->input('ids', []); 
+        if (count($ids) === 0) {
+            return back()->with('error', 'Không có trường nào được chọn để xóa.');
+        }
+
+        Administrative::whereIn('id', $ids)->delete();
+
+        return back()->with('success', 'Đã xoá dữ liệu được chọn');
+    }
+
     private function validateRequest($request, $id = null)
     {
         return $request->validate([
             'name' => "required|string|unique:administratives,name,$id,id",
             'type' => 'required|string|in:school,medical,center',
-            'commune_id' => 'nullable|integer',
-            'district_id' => 'nullable|integer',
-            'coordinates' => 'nullable|string',
+            'commune_id' => 'required|integer',
+            'coordinates' => 'required|string',
             'address' => 'nullable|string',
             'description' => 'nullable|string',
             'code' => 'nullable|string',
             'classify' => 'nullable|string',
-            'population' => 'nullable',
+            'population' => 'nullable|integer',
         ]);
     }
 }

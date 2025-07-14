@@ -12,7 +12,8 @@ use App\Models\Construction;
 use App\Models\District;
 use App\Models\SubTypeOfCalamities;
 use Illuminate\Support\Str;
-
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Carbon\Carbon;
 class RiverBankConstructionController extends Controller
 {
     public function __construct()
@@ -110,6 +111,7 @@ class RiverBankConstructionController extends Controller
        
         $data['type_of_construction_id'] = $validated['type_of_construction_id'];
         $data['risk_level_id'] = $validated['risk_level_id'];
+        $data['commune_id'] = $request['commune_id'];
         $data['name'] = $validated['name'];
         $data['progress'] = $request['progress'];
         $data['year_of_construction'] = $request['year_of_construction'];
@@ -131,12 +133,48 @@ class RiverBankConstructionController extends Controller
         }
         $data['slug'] = $slug;
         $construction = Construction::create($data);
-        if (isset($request['commune_id'])) {
-            $construction->commune_id = $request['commune_id'];
-            $construction->save();
+        
+        return redirect('/construction/list-river-bank')->with('success', "Thêm thành công");
+    }
+    public function importRiverBankConstruction(Request $request)
+    {
+        $user = auth()->user();
+        $validated = $request->validate([
+            'excelFile' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
+        $file = $request->file('excelFile');
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $slugName = Str::slug($originalName);
+        $timestamp = now()->format('YmdHis');
+        $newFileName = "{$slugName}-{$timestamp}.{$file->getClientOriginalExtension()}";
+        $file->move(public_path('uploads/constructions/river-bank/imports'), $newFileName);
+        $filePath = public_path('uploads/constructions/river-bank/imports/' . $newFileName);
+        $spreadsheet = IOFactory::load($filePath);
+        $sheet = $spreadsheet->getActiveSheet();
+        $rows = $sheet->toArray();
+        foreach ($rows as $row) {
+            $data = [
+                'name' => $row["Tên công trình"],
+                'risk_level_id' => RiskLevel::where('name', $row["Cấp độ"])->first()->id,
+                'type_of_construction_id' => TypeOfConstruction::where('name', $row["Loại công trình"])->first()->id,
+                'commune_id' => Commune::where('name', $row["Phường/Xã"])->first()->id,
+                'year_of_construction' => $row["Năm xây dựng"],
+                'year_of_completion' => $row["Năm hoàn thành"],
+                'length' => $row["Chiều dài (km)"],
+                'width' => $row["Chiều rộng (m)"],
+                'scale' => $row["Quy mô"],
+                'geology' => $row["Địa chất"],
+                'influence_level' => $row["Mức độ ảnh hưởng"],
+                'coordinates' => $row["Toạ độ"],
+                'total_investment' => $row["Tổng mức đầu tư"],
+                'capital_source' => $row["Nguồn vốn"],
+                'created_by_user_id' => $user->id,
+                'update_time' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $row["Thời gian cập nhật"])->format('Y-m-d'),
+            ];
+            $construction = Construction::create($data);
+           
         }
-
-        return redirect('/construction/list-river-bank')->with('success', 200);
+        return redirect('/construction/list-river-bank')->with('success', "Nhập thành công");
     }
 
     public function show($id)
@@ -189,6 +227,7 @@ class RiverBankConstructionController extends Controller
         }
         $data['type_of_construction_id'] = $validated['type_of_construction_id'];
         $data['risk_level_id'] = $validated['risk_level_id'];
+        $data['commune_id'] = $request['commune_id'];
         $data['progress'] = $request['progress'];
         $data['year_of_construction'] = $request['year_of_construction'];
         $data['year_of_completion'] = $request['year_of_completion'];
@@ -210,10 +249,8 @@ class RiverBankConstructionController extends Controller
         $data['slug'] = $slug;
 
         $construction->update($data);
-        if (isset($request['commune_id'])) {
-            $construction->commune()->sync($request['commune_id']);
-        }
-        return redirect('/construction/list-river-bank')->with('success', 200);
+        
+        return redirect('/construction/list-river-bank')->with('success', "Cập nhật thành công");
     }
 
     public function destroy($id)
@@ -221,6 +258,12 @@ class RiverBankConstructionController extends Controller
         $calamity = Construction::findOrFail($id);
         $calamity->communes()->detach();
         $calamity->delete();
-        return redirect('/construction/list-river-bank')->with('success', 200);
+        return redirect('/construction/list-river-bank')->with('success', "Xóa thành công");
+    }
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->ids;
+        Construction::whereIn('id', $ids)->delete();
+        return redirect('/construction/list-river-bank')->with('success', "Xóa thành công");
     }
 }

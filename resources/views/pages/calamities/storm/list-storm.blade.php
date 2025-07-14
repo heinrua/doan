@@ -14,6 +14,7 @@
             {!! $icons['refresh-ccw'] !!} Tải lại dữ liệu
         </a>
     </div>
+    <x-alert/>
     <div class="mt-5 grid grid-cols-12 gap-6">
         <div class="intro-y col-span-12 flex flex-wrap items-start gap-3">
             <form action="{{ route('view-calamity-storm') }}" method="GET" class="flex flex-wrap items-center gap-3 grow">
@@ -77,7 +78,9 @@
                         Tải file mẫu thêm dữ liệu bão
                     </a>
 
-                <button onclick="openUploadModal()">Đẩy dữ liệu lên</button>
+                <button type="button" onclick="openUploadModal('{{ route('import-storm-calamity') }}')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2">
+                    {!! $icons['cloud-upload'] !!} Nhập file
+                </button>
                 
                 <a href="{{ route('export-storm-calamity') }}">
                     <button class="h-10 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow-md transition-all">
@@ -92,17 +95,17 @@
             Tổng số bão: <span class="font-semibold">{{ $data->total() }}</span>
         </div>
         
-         <form action="{{ route('delete-multiple-calamity-storm') }}" class = "col-span-2" method="POST">
-            @csrf
-            @method('DELETE')
-            @auth
-            <button type="submit" class="bg-red-700 sticky left-0" id="delete-multiple-btn" disabled>
-                {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
-            </button>
-            @endauth
-</form>
 
         <div class="intro-y col-span-12 overflow-visible lg:overflow-x-auto">
+            @auth
+            <form action="{{ route('delete-multiple-calamity-storm') }}" method="POST" id="delete-multiple-form">
+                @csrf
+                @method('DELETE')
+                <button type="button" onclick="openDeleteMultipleModal()" class="bg-red-700 sticky left-0" id="delete-multiple-btn" disabled>
+                    {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
+                </button>
+            </form>
+            @endauth
             <table class="mt-2 border-separate border-spacing-y-[10px] ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
@@ -278,35 +281,7 @@
     
     </div>
 
-    <div class="fixed inset-0 z-50 hidden" id="delete-confirmation-modal" aria-modal="true">
-        
-        <div class="fixed inset-0 bg-black/50"></div>
-
-        <div class="flex min-h-screen items-center justify-center">
-            <div class="bg-white rounded-lg shadow-xl w-full max-w-md z-50 p-6">
-                <div class="flex items-start space-x-3">
-                    <div class="text-red-500">
-                        {!! $icons['warning-circle'] !!}
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900">Xác nhận xoá</h3>
-                        <p class="mt-1 text-sm text-gray-600">Xác nhận xóa dữ liệu này?</p>
-                    </div>
-                </div>
-
-                <div class="mt-6 flex justify-end space-x-2">
-                    <button type="button" onclick="closeDeleteModal()"
-                            class="bg-white px-4 py-2 rounded border text-gray-700 hover:bg-gray-100">
-                        Hủy
-                    </button>
-                     <a href="#" id="confirm-delete"
-                    class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">
-                        Xoá
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <div id="videoModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
         <div class="relative w-[80%] max-w-4xl">
@@ -328,73 +303,14 @@
         </div>
     </div>
 
-    <div class="fixed inset-0 z-50 hidden" id="upload-file-modal" aria-modal="true">
-        
-        <div class="fixed inset-0 bg-black/50"></div>
-
-        <div class="flex min-h-screen items-center justify-center">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md z-50 p-6">
-                
-                <label for="dropzone-file"
-                    class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-700 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500">
-                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                        <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                            xmlns="http:
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5A5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                        </svg>
-                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                            <span class="font-semibold">Click để tải lên</span> hoặc kéo và thả
-                        </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Chỉ hỗ trợ file Excel (.xls, .xlsx)</p>
-                    </div>
-                    <input id="dropzone-file" name="excelFile" type="file" accept=".xls,.xlsx" class="hidden" />
-            </label>
-
-                </label>
-
-                <div class="mt-6 flex justify-end space-x-2">
-                    <button type="button" onclick="closeUploadModal()"
-                        class="bg-white px-4 py-2 rounded border text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-500">
-                        Hủy
-                    </button>
-                    <a href="#" id="confirm-upload"
-                        class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">
-                        OK
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
+<x-importExel/>
+<x-delete-modal/>
+<x-delete-multiple-modal/>
+@vite(['resources/js/confirm-delete.js','resources/js/district-commune.js','resources/js/import-exel.js'])
 @endsection
 
 <script>
-    function openDeleteModal(url) {
-        const modal = document.getElementById('delete-confirmation-modal');
-        modal.classList.remove('hidden');
-        setDeleteUrl(url);
-    }
-    function openUploadModal(url) {
-        const modal = document.getElementById('upload-file-modal');
-        modal.classList.remove('hidden');
-        
-    }
-
-    function closeDeleteModal() {
-        document.getElementById('delete-confirmation-modal').classList.add('hidden');
-    }
-    function closeUploadModal() {
-        document.getElementById('upload-file-modal').classList.add('hidden');
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
-
-    });
-    function setDeleteUrl(url) {
-        document.getElementById('confirm-delete').setAttribute('href', url);
-    }
-
+   
     function openVideoModal(videoUrl) {
         document.getElementById('videoSource').src = videoUrl;
         document.getElementById('videoPlayer').load();
@@ -411,7 +327,7 @@
             }
         });
     });
-        function openImageModal(src) {
+    function openImageModal(src) {
         const modal = document.getElementById('imageModal');
         const img = document.getElementById('imagePreview');
         img.src = src;
@@ -440,25 +356,5 @@
             updateDisplayText(this.options[this.selectedIndex]);
         });
     });
-    document.addEventListener('DOMContentLoaded', function () {
-        const selectAllCheckbox = document.getElementById('selectAll');
-        const checkboxes = document.querySelectorAll('.item-checkbox');
-        const countSpan = document.getElementById('selected-count');
-        const deleteBtn = document.getElementById('delete-multiple-btn');
-
-        function updateCount() {
-            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
-            countSpan.textContent = selectedCount;
-            deleteBtn.disabled = selectedCount === 0;
-        }
-
-        selectAllCheckbox.addEventListener('change', function () {
-            checkboxes.forEach(cb => cb.checked = this.checked);
-            updateCount();
-        });
-
-        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
-
-        updateCount();
-    });
+    
 </script>

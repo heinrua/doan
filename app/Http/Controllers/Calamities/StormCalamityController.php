@@ -99,7 +99,6 @@ class StormCalamityController extends Controller
         $user = auth()->user();
         $validated = $request->validate([
             'name' => 'required|unique:calamities',
-            'type_of_calamity_id' => 'required',
             'risk_level_id' => 'required',
             'video' => 'nullable|file|mimes:mp4',
             'image' => 'nullable|file|mimes:jpg,jpeg,png',
@@ -153,7 +152,7 @@ class StormCalamityController extends Controller
             $imageFile->move(public_path('uploads/calamities/storm/images'), $newFileName);
             $data['image'] = "uploads/calamities/storm/images/$newFileName";
         }
-        $data['type_of_calamity_id'] = $validated['type_of_calamity_id'];
+    
         $data['risk_level_id'] = $validated['risk_level_id'];
         $data['name'] = $validated['name'];
         $data['coordinates'] = $request['coordinates'];
@@ -186,7 +185,52 @@ class StormCalamityController extends Controller
                 new CalamityCreated($calamities, $subscriber->name)
             );
         }
-        return redirect('/calamity/list-storm')->with('success', 200);
+        return redirect('/calamity/list-storm')->with('success', 'Thêm thành công!');
+    }
+    public function importStorm(Request $request)
+    {
+        $user = auth()->user();
+        $request->validate([
+            'excelFile' => 'required|file|mimes:xlsx,csv'
+        ]);
+        $file = $request->file('excelFile');
+        $data = Excel::toArray([], $file)[0];
+        $header = array_map('trim', $data[0]);
+        unset($data[0]);
+        
+        $requiredHeaders = ['Tên'];
+        foreach ($requiredHeaders as $col) {
+            if (!in_array($col, $header)) {
+                return back()->with('error', 'Thiếu cột bắt buộc: ' . $col);
+            }
+        }
+        
+        foreach ($data as $row) {
+            $row = array_combine($header, $row);
+            if (empty($row['Tên']) || empty($row['Loại thiên tai'])) {
+                continue;
+            }
+            $calamity = Calamities::create([
+                'name' => $row['Tên'],
+                'sub_type_of_calamity_ids' => SubTypeOfCalamities::where('name', $row['Loại thiên tai'])->first()->id,
+                'risk_level_id' => RiskLevel::where('name', $row['Mức độ rủi ro'])->first()->id,
+                'coordinates' => $row['Tọa độ'],
+                'investment_level' => $row['Mức đầu tư'],
+                'time_start' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $row['Thời gian bắt đầu'])->format('Y-m-d'),
+                'time_end' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $row['Thời gian kết thúc'])->format('Y-m-d'),
+                'human_damage' => $row['Thiệt hại con người'],
+                'property_damage' => $row['Thiệt hại tài sản'],
+                'mitigation_measures' => $row['Biện pháp khắc phục'],
+                'support_policy' => $row['Chính sách hỗ trợ'],
+                'watermark_points' => $row['Điểm đánh dấu'],
+                'commune_ids' => Commune::where('name', $row['Xã'])->first()->id,
+                'created_by_user_id' => $user->id,
+            ]);
+            $calamity->sub_type_of_calamities()->sync($row['Loại thiên tai']);
+            $calamity->communes()->sync($row['Xã']);    
+            $calamity->save();
+        }
+        return back()->with('success', 'Import thành công!');
     }
 
     public function show($id)
@@ -335,5 +379,14 @@ class StormCalamityController extends Controller
         $calamity->communes()->detach();
         $calamity->delete();
         return redirect('/calamity/list-storm')->with('success', 200);
+    }
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->input('ids');
+        if (is_array($ids) && count($ids)) {
+            Calamities::whereIn('id', $ids)->delete();
+            return back()->with('success', 'Xóa thành công!');
+        }
+        return back()->with('error', 'Không có mục nào được chọn.');
     }
 }

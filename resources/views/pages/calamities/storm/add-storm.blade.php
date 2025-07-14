@@ -345,7 +345,6 @@
 @endsection
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -358,7 +357,7 @@
                     item: function(data, escape) {
                         return `<div class="bg-blue-100 text-blue-800 text-sm rounded-full px-3 py-1 mr-2 mb-1 inline-flex items-center">
                                     ${escape(data.text)}
-                                    <span class="ml-2 cursor-pointer text-blue-500 hover:text-blue-700" data-ts-remove>&times;</span>
+                                    
                                 </div>`;
                     },
                     option: function(data, escape) {

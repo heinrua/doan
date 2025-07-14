@@ -88,61 +88,28 @@ class UserController extends Controller
     }
     public function importUsers(Request $request)
     {
-        $request->validate([
-            'fileImport' => 'required|file|mimes:xlsx,csv,txt|max:2048',
-        ]);
-
-        $file = $request->file('fileImport');
-
-        try {
-            $rows = Excel::toArray([], $file)[0]; 
-
-            $header = array_map('trim', $rows[0]); 
-            $count = 0;
-            $skipped = 0;
-
-            foreach (array_slice($rows, 1) as $row) {
-                if (count($row) !== count($header)) {
-                    Log::warning('⚠️ Dòng sai số cột: ' . json_encode($row));
-                    $skipped++;
-                    continue;
-                }
-
-                $data = array_combine($header, $row);
-
-                if (!isset($data['name'], $data['user_name'], $data['email'], $data['password'])) {
-                    Log::warning('⚠️ Thiếu trường bắt buộc:', $data);
-                    $skipped++;
-                    continue;
-                }
-
-                if (
-                    User::where('user_name', $data['user_name'])->exists() ||
-                    User::where('email', $data['email'])->exists()
-                ) {
-                    Log::info('⚠️ Trùng user_name/email:', $data);
-                    $skipped++;
-                    continue;
-                }
-
-                try {
-                    User::create([
-                        'full_name' => $data['name'],
-                        'user_name' => $data['user_name'],
-                        'email'     => $data['email'],
-                        'password'  => Hash::make($data['password']),
-                    ]);
-                    $count++;
-                } catch (\Exception $e) {
-                    Log::error('❌ Lỗi khi tạo user: ' . $e->getMessage(), $data);
-                    $skipped++;
-                }
-            }
-
-            return redirect('/list-user')->with('success', "Đã import $count người dùng, bỏ qua $skipped dòng.");
-        } catch (\Exception $e) {
-            return back()->with('error', 'Lỗi khi đọc file Excel: ' . $e->getMessage());
+        $file = $request->file('excelFile');
+        $data = Excel::toArray(new UsersImport(), $file);
+        foreach ($data as $row) {
+            $validated = $row[0];
         }
+        $user = User::where('user_name', $validated['user_name'])->first();
+        if ($user) {
+            return back()->with('error', 'Người dùng đã tồn tại!');
+        }
+        $user = User::where('email', $validated['email'])->first();
+        if ($user) {
+            return back()->with('error', 'Email đã tồn tại!');
+        }
+        $user = User::create([
+            'full_name' => $validated['Tên đầy đủ'],    
+            'user_name' => $validated['Tên đăng nhập'],
+            'password' => Hash::make(12345678),
+            'email' => $validated['Email'],
+            'is_master' => 0,
+        ]);
+        return back()->with('success', 'Import thành công!');
+
     }
 
     public function destroy(Request $request)

@@ -14,6 +14,7 @@
             {!! $icons['refresh-ccw'] !!} Tải lại dữ liệu
         </a>
     </div>
+    <x-alert/>
     <div class="mt-5 grid grid-cols-12 gap-6">
         <div class="intro-y col-span-12 flex flex-wrap items-start gap-3">
             
@@ -51,10 +52,15 @@
             
             @auth
                 <a href="{{ route('create-commune') }}">
-                    <button class="shadow-md h-10" variant="primary">
-                        {!! $icons['plus-circle'] !!}
-                        Thêm Mới Xã Phường
+                    <button class="shadow-md h-10 flex items-center gap-2 bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-800">
+                        {!! $icons['plus-circle'] !!} Thêm Mới Xã Phường
                     </button>
+                </a>
+                <button type="button" onclick="openUploadModal('{{ route('import-communes') }}')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2 ml-2">
+                    {!! $icons['cloud-upload'] !!} Nhập file
+                </button>
+                <a href="{{ asset('downloads/mau-du-lieu-xa.xlsx') }}" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" download>
+                    Tải file mẫu
                 </a>
             @endauth
         </div>
@@ -65,13 +71,14 @@
         </div>
 
        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
-            <form action="{{ route('delete-multiple-commune') }}" method="POST">
-            @csrf
-            @method('DELETE')
             @auth
-            <button type="submit" class="bg-red-700 z-1 sticky left-0" id="delete-multiple-btn" disabled>
+            <form action="{{ route('delete-multiple-commune') }}" method="POST" id="delete-multiple-form">
+                @csrf
+                @method('DELETE')
+                <button type="button" onclick="openDeleteMultipleModal()" class="bg-red-700 z-1 sticky left-0" id="delete-multiple-btn" disabled>
                 {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
             </button>
+            </form>
             @endauth
             <table class="mt-2 border-separate border-spacing-y-[10px] table-fixed">
                 <thead class="text-gray-700 uppercase bg-blue-100">
@@ -148,73 +155,10 @@
     
     </div>
     
-    <div class="fixed inset-0 z-50 hidden" id="delete-confirmation-modal" aria-modal="true">
-        
-        <div class="fixed inset-0 bg-black/50"></div>
-
-        <div class="flex min-h-screen items-center justify-center">
-            <div class="bg-white rounded-lg shadow-xl w-full max-w-md z-50 p-6">
-                <div class="flex items-start space-x-3">
-                    <div class="text-red-500">
-                        {!! $icons['warning-circle'] !!}
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900">Xác nhận xoá</h3>
-                        <p class="mt-1 text-sm text-gray-600">Xác nhận xóa dữ liệu này?</p>
-                    </div>
-                </div>
-
-                <div class="mt-6 flex justify-end space-x-2">
-                    <button type="button" onclick="closeDeleteModal()"
-                            class="bg-white px-4 py-2 rounded border text-gray-700 hover:bg-gray-100">
-                        Hủy
-                    </button>
-                     <a href="#" id="confirm-delete"
-                    class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">
-                        Xoá
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    
+    <x-importExel"/>
+    <x-delete-modal/>
+    <x-delete-multiple-modal/>
+    @vite(['resources/js/confirm-delete.js','resources/js/import-exel.js'])
 @endsection
 
-<script>
-    function openDeleteModal(url) {
-        const modal = document.getElementById('delete-confirmation-modal');
-        modal.classList.remove('hidden');
-        setDeleteUrl(url);
-    }
 
-    function closeDeleteModal() {
-        document.getElementById('delete-confirmation-modal').classList.add('hidden');
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
-    });
-    function setDeleteUrl(url) {
-        document.getElementById('confirm-delete').setAttribute('href', url);
-    }
-    document.addEventListener('DOMContentLoaded', function () {
-        const selectAllCheckbox = document.getElementById('selectAll');
-        const checkboxes = document.querySelectorAll('.item-checkbox');
-        const countSpan = document.getElementById('selected-count');
-        const deleteBtn = document.getElementById('delete-multiple-btn');
-
-        function updateCount() {
-            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
-            countSpan.textContent = selectedCount;
-            deleteBtn.disabled = selectedCount === 0;
-        }
-
-        selectAllCheckbox.addEventListener('change', function () {
-            checkboxes.forEach(cb => cb.checked = this.checked);
-            updateCount();
-        });
-
-        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
-
-        updateCount();
-    });
-</script>

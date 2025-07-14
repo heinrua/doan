@@ -13,6 +13,7 @@
             {!! $icons['refresh-ccw'] !!} Tải lại dữ liệu
         </a>
     </div>
+    <x-alert/>
 
     <div class="mt-5 grid grid-cols-12 gap-6">
         <div class="intro-y col-span-12 flex flex-wrap items-start gap-3">
@@ -170,27 +171,7 @@
         </div>
     </div>
 
-    <div class="fixed inset-0 z-50 hidden" id="delete-confirmation-modal" aria-modal="true">
-        <div class="fixed inset-0 bg-black/50"></div>
-        <div class="flex min-h-screen items-center justify-center">
-            <div class="bg-white rounded-lg shadow-xl w-full max-w-md z-50 p-6">
-                <div class="flex items-start space-x-3">
-                    <div class="text-red-500">{!! $icons['warning-circle'] !!}</div>
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900">Xác nhận xoá</h3>
-                        <p class="mt-1 text-sm text-gray-600">Bạn có chắc chắn muốn xoá phương án này?</p>
-                    </div>
-                </div>
-                <div class="mt-6 flex justify-end space-x-2">
-                    <button type="button" onclick="closeDeleteModal()"
-                            class="bg-white px-4 py-2 rounded border text-gray-700 hover:bg-gray-100">Hủy</button>
-                    <a href="#" id="confirm-delete" class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">
-                        Xoá
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
 <div id="file-modal" class="hidden fixed inset-0 bg-black/50  z-50 flex items-center justify-center">
 
@@ -200,46 +181,14 @@
     </div>
 </div>
 
+<x-delete-modal/>
+<x-delete-multiple-modal/>
+@vite(['resources/js/confirm-delete.js'])
 @endsection
 
 <script>
-    function openDeleteModal(url) {
-        document.getElementById('delete-confirmation-modal').classList.remove('hidden');
-        setDeleteUrl(url);
-    }
-
-    function closeDeleteModal() {
-        document.getElementById('delete-confirmation-modal').classList.add('hidden');
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
-    });
-    function setDeleteUrl(url) {
-        document.getElementById('confirm-delete').setAttribute('href', url);
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const selectAllCheckbox = document.getElementById('selectAll');
-        const checkboxes = document.querySelectorAll('.item-checkbox');
-        const countSpan = document.getElementById('selected-count');
-        const deleteBtn = document.getElementById('delete-multiple-btn');
-
-        function updateCount() {
-            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
-            countSpan.textContent = selectedCount;
-            deleteBtn.disabled = selectedCount === 0;
-        }
-
-        selectAllCheckbox.addEventListener('change', function () {
-            checkboxes.forEach(cb => cb.checked = this.checked);
-            updateCount();
-        });
-
-        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
-
-        updateCount();
-    });
+    
+    
     function openFileModal(fileUrl) {
         const fileExt = fileUrl.split('.').pop().toLowerCase();
         const container = document.getElementById("file-content");
@@ -292,11 +241,10 @@
     }
 </script>
 
-<!-- PDF.js -->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 </script>
-<!-- Mammoth.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.0.0/mammoth.browser.min.js"></script>
 

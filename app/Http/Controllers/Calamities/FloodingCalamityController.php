@@ -12,8 +12,10 @@ use App\Models\Calamities;
 use App\Models\District;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
-use App\Model\DisasterSubscription;
+use App\Models\DisasterSubscription;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\CalamityCreated;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FloodingCalamityController extends Controller
 {
@@ -186,11 +188,60 @@ class FloodingCalamityController extends Controller
         $subscribers = DisasterSubscription::all();
         foreach ($subscribers as $subscriber) {
             Mail::to($subscriber->email)->send(
-                new CalamityCreated($calamity, $subscriber->name)
+                new CalamityCreated($calamities, $subscriber->name)
             );
         }
 
-        return redirect('/calamity/list-flooding')->with('success', 200);
+        return redirect('/calamity/list-flooding')->with('success', 'Thêm thành công!');
+    }
+    public function importFlooding(Request $request)
+    {
+        $user = auth()->user();
+        $request->validate([
+            'excelFile' => 'required|file|mimes:xlsx,csv'
+        ]);
+        $file = $request->file('excelFile');
+        $data = Excel::toArray([], $file)[0];
+        $header = array_map('trim', $data[0]);
+        unset($data[0]);
+        
+        $requiredHeaders = ['Tên khu vực ngập'];
+        foreach ($requiredHeaders as $col) {
+            if (!in_array($col, $header)) {
+                return back()->with('error', 'Thiếu cột bắt buộc: ' . $col);
+            }
+        }
+        
+        foreach ($data as $row) {
+            $row = array_combine($header, $row);
+            if (empty($row['Tên khu vực ngập']) || empty($row['Loại hình ngập']) ) {
+                continue;
+            }
+            $calamity = Calamities::create([
+                'name' => $row['Tên khu vực ngập'],
+                'sub_type_of_calamity_ids' => SubTypeOfCalamities::where('name', $row['Loại hình ngập'])->first()->id,
+                'risk_level_id' => RiskLevel::where('name', $row['Cấp độ rủi ro'])->first()->id,
+                'coordinates' => $row['Tọa độ'],
+                'flood_level' => $row['Mức độ (m)'],
+                'flood_range' => $row['Khoảng ngập'],
+                'flooded_area' => $row['Diện tích (ha)'],
+                'time_start' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $row['Bắt đầu'])->format('Y-m-d'),
+                'time_end' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $row['Kết thúc'])->format('Y-m-d'),
+                'sprint_time' => $row['Nước rút (giờ)'],
+                'reason' => $row['Nguyên nhân'],
+                'number_of_people_affected' => $row['Số hộ ảnh hưởng'],
+                'human_damage' => $row['Thiệt hại người'],
+                'property_damage' => $row['Thiệt hại tài sản'],
+                'damaged_infrastructure' => $row['Hạ tầng hư hại'],
+                'mitigation_measures' => $row['Biện pháp'],
+                'data_source' => $row['Nguồn'],
+                'created_by_user_id' => $user->id,
+            ]);
+            $calamity->sub_type_of_calamities()->sync($row['Loại hình ngập']);
+            $calamity->communes()->sync($row['Địa phương']);    
+            $calamity->save();
+        }
+        return back()->with('success', 'Import thành công!');
     }
 
     public function show($id)
@@ -336,12 +387,7 @@ class FloodingCalamityController extends Controller
             $calamity->sub_type_of_calamities()->sync($validated['sub_type_of_calamity_ids']);
         }
 
-        $subscribers = DisasterSubscription::all();
-
-        foreach ($subscribers as $subscriber) {
-            Notification::route('mail', $subscriber->email)
-                ->notify(new DisasterCreated($calamity, $subscriber->fullname));
-        }
+       
 
         return redirect('/calamity/list-flooding')->with('success', 200);
     }
@@ -356,4 +402,17 @@ class FloodingCalamityController extends Controller
         return redirect('/calamity/list-flooding')->with('success', 200);
     }
    
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (is_array($ids) && count($ids)) {
+            Calamities::whereIn('id', $ids)->delete();
+
+            return back()->with('success', 'Xóa thành công!');
+        }
+
+        return back()->with('error', 'Không có mục nào được chọn.');
+    }
+
 }

@@ -86,6 +86,34 @@ class GeographicalDataController extends Controller
         return redirect()->route("view-$type")->with('success', 'Xóa thành công!');
     }
 
+    public function destroyMultiple(Request $request)
+    {
+        $type = $request->input('type');
+        $ids = $request->input('ids', []);
+
+        if (empty($ids)) {
+            return back()->with('error', 'Vui lòng chọn ít nhất một bản ghi để xóa');
+        }
+
+        foreach ($ids as $id) {
+            $geographicalData = GeographicalData::find($id);
+
+            if ($geographicalData && $geographicalData->type === $type) {
+                // Xóa file nếu có
+                foreach (['image', 'video', 'map'] as $field) {
+                    if (!empty($geographicalData->$field) && file_exists(public_path($geographicalData->$field))) {
+                        unlink(public_path($geographicalData->$field));
+                    }
+                }
+
+                $geographicalData->delete();
+            }
+        }
+
+        return back()->with('success', 'Đã xóa các bản ghi đã chọn!');
+    }
+
+
     private function validateRequest($request, $id = null)
     {  
         return $request->validate([

@@ -19,23 +19,29 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'user_name' => 'testuser',
+            'password' => bcrypt('password'),
+        ]);
 
         $response = $this->post('/login', [
-            'email' => $user->email,
+            'user_name' => 'testuser',
             'password' => 'password',
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response->assertRedirect('/');
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'user_name' => 'testuser',
+            'password' => bcrypt('password'),
+        ]);
 
         $this->post('/login', [
-            'email' => $user->email,
+            'user_name' => 'testuser',
             'password' => 'wrong-password',
         ]);
 
@@ -46,7 +52,7 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->post('/logout');
+        $response = $this->actingAs($user)->get('/logout');
 
         $this->assertGuest();
         $response->assertRedirect('/');

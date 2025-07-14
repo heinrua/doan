@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>Test Documentation</title>
+        <style>
+            body {
+                text-rendering: optimizeLegibility;
+                font-family: Source SansSerif Pro, Arial, sans-serif;
+                font-variant-ligatures: common-ligatures;
+                font-kerning: normal;
+                margin-left: 2rem;
+                background-color: #fff;
+                color: #000;
+            }
+
+            body > ul > li {
+                font-size: larger;
+            }
+
+            h2 {
+                font-size: larger;
+                text-decoration-line: underline;
+                text-decoration-thickness: 2px;
+                margin: 0;
+                padding: 0.5rem 0;
+            }
+
+            ul {
+                list-style: none;
+                margin: 0 0 2rem;
+                padding: 0 0 0 1rem;
+                text-indent: -1rem;
+            }
+
+            .success:before {
+                color: #4e9a06;
+                content: '✓';
+                padding-right: 0.5rem;
+            }
+
+            .defect {
+                color: #a40000;
+            }
+
+            .defect:before {
+                color: #a40000;
+                content: '✗';
+                padding-right: 0.5rem;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Administrative Management (Tests\Feature\AdministrativeManagement)</h2>
+        <ul>
+            <li class="success">Guest can view school list</li>
+            <li class="success">Guest can view medical list</li>
+            <li class="success">Guest can view center list</li>
+            <li class="success">Authenticated user can view create school form</li>
+            <li class="success">Authenticated user can view create medical form</li>
+            <li class="success">Authenticated user can view create center form</li>
+            <li class="success">Authenticated user can create new school</li>
+            <li class="success">Authenticated user can create new medical</li>
+            <li class="success">Authenticated user can create new center</li>
+            <li class="success">Cannot create administrative with duplicate name</li>
+            <li class="success">Authenticated user can view edit school form</li>
+            <li class="success">Authenticated user can update school</li>
+            <li class="success">Authenticated user can delete school</li>
+            <li class="success">Authenticated user can delete multiple schools</li>
+            <li class="success">School list can be searched</li>
+            <li class="success">Guest cannot access create school form</li>
+            <li class="success">Guest cannot access create medical form</li>
+            <li class="success">Guest cannot access create center form</li>
+        </ul>
+        <h2>Auth (Tests\Feature\Auth)</h2>
+        <ul>
+            <li class="success">User can view login page</li>
+            <li class="success">User can login with valid credentials</li>
+            <li class="success">User cannot login with invalid credentials</li>
+            <li class="success">User can logout</li>
+            <li class="success">User can view edit profile page</li>
+            <li class="success">User can update profile</li>
+            <li class="success">User cannot update profile with duplicate username</li>
+        </ul>
+        <h2>Authentication (Tests\Feature\Auth\Authentication)</h2>
+        <ul>
+            <li class="success">Login screen can be rendered</li>
+            <li class="success">Users can authenticate using the login screen</li>
+            <li class="success">Users can not authenticate with invalid password</li>
+            <li class="success">Users can logout</li>
+        </ul>
+        <h2>Basic (Tests\Feature\Basic)</h2>
+        <ul>
+            <li class="success">Homepage works</li>
+            <li class="success">Login page works</li>
+            <li class="success">User can login</li>
+            <li class="success">User can logout</li>
+            <li class="success">City management works</li>
+            <li class="success">User management works</li>
+            <li class="success">Incident report works</li>
+            <li class="success">Chat functionality works</li>
+            <li class="success">Guest can subscribe to disaster alerts</li>
+            <li class="success">Basic factories work</li>
+            <li class="success">Public pages are accessible</li>
+        </ul>
+        <h2>Calamity Management (Tests\Feature\CalamityManagement)</h2>
+        <ul>
+            <li class="defect">Guest can view flooding calamity list</li>
+            <li class="defect">Guest can view storm calamity list</li>
+            <li class="defect">Guest can view river bank calamity list</li>
+            <li class="success">Authenticated user can view create flooding calamity form</li>
+            <li class="success">Authenticated user can view create storm calamity form</li>
+            <li class="success">Authenticated user can view create river bank calamity form</li>
+            <li class="defect">Authenticated user can create new flooding calamity</li>
+            <li class="defect">Authenticated user can create new storm calamity</li>
+            <li class="defect">Authenticated user can create new river bank calamity</li>
+            <li class="success">Authenticated user can view edit flooding calamity form</li>
+            <li class="defect">Authenticated user can update flooding calamity</li>
+            <li class="defect">Authenticated user can delete flooding calamity</li>
+            <li class="success">Authenticated user can delete multiple flooding calamities</li>
+            <li class="defect">Flooding calamity list can be searched</li>
+            <li class="success">Guest cannot access create flooding calamity form</li>
+            <li class="success">Guest cannot access create storm calamity form</li>
+            <li class="success">Guest cannot access create river bank calamity form</li>
+        </ul>
+        <h2>City Management (Tests\Feature\CityManagement)</h2>
+        <ul>
+            <li class="success">Guest can view city list</li>
+            <li class="success">Authenticated user can view create city form</li>
+            <li class="success">Authenticated user can create new city</li>
+            <li class="success">Cannot create city with duplicate name</li>
+            <li class="success">Cannot create city with duplicate code</li>
+            <li class="success">Authenticated user can view edit city form</li>
+            <li class="success">Authenticated user can update city</li>
+            <li class="success">Authenticated user can delete city</li>
+            <li class="success">Authenticated user can delete multiple cities</li>
+            <li class="success">City list can be searched</li>
+            <li class="success">Guest cannot access create city form</li>
+        </ul>
+        <h2>Commune Management (Tests\Feature\CommuneManagement)</h2>
+        <ul>
+            <li class="success">Guest can view commune list</li>
+            <li class="success">Authenticated user can view create commune form</li>
+            <li class="success">Authenticated user can create new commune</li>
+            <li class="success">Cannot create commune with duplicate name</li>
+            <li class="success">Cannot create commune with duplicate code</li>
+            <li class="success">Authenticated user can view edit commune form</li>
+            <li class="success">Authenticated user can update commune</li>
+            <li class="success">Authenticated user can delete commune</li>
+            <li class="success">Authenticated user can delete multiple communes</li>
+            <li class="success">Commune list can be searched</li>
+            <li class="success">Can get communes by district</li>
+            <li class="success">Guest cannot access create commune form</li>
+        </ul>
+        <h2>District Management (Tests\Feature\DistrictManagement)</h2>
+        <ul>
+            <li class="success">Guest can view district list</li>
+            <li class="success">Authenticated user can view create district form</li>
+            <li class="success">Authenticated user can create new district</li>
+            <li class="success">Cannot create district with duplicate name</li>
+            <li class="success">Cannot create district with duplicate code</li>
+            <li class="success">Authenticated user can view edit district form</li>
+            <li class="success">Authenticated user can update district</li>
+            <li class="success">Authenticated user can delete district</li>
+            <li class="success">Authenticated user can delete multiple districts</li>
+            <li class="success">District list can be searched</li>
+            <li class="success">Guest cannot access create district form</li>
+        </ul>
+        <h2>Example (Tests\Feature\Example)</h2>
+        <ul>
+            <li class="defect">The application returns a successful response</li>
+        </ul>
+        <h2>Example (Tests\Unit\Example)</h2>
+        <ul>
+            <li class="success">That true is true</li>
+        </ul>
+        <h2>Incident Report (Tests\Feature\IncidentReport)</h2>
+        <ul>
+            <li class="success">Guest can view incident report page</li>
+            <li class="success">Guest can view create incident report page</li>
+            <li class="success">Guest can create incident report</li>
+            <li class="success">Incident report requires required fields</li>
+            <li class="success">Authenticated user can delete incident report</li>
+            <li class="defect">Authenticated user can delete multiple incident reports</li>
+            <li class="success">Can get sub type of calamities</li>
+            <li class="success">Can get communes by district</li>
+            <li class="success">Incident report list displays data</li>
+            <li class="success">Guest cannot delete incident reports</li>
+        </ul>
+        <h2>Integration (Tests\Feature\Integration)</h2>
+        <ul>
+            <li class="defect">Complete workflow from login to calamity management</li>
+            <li class="success">Guest can access public features</li>
+            <li class="success">Authentication flow</li>
+            <li class="success">Data relationships work correctly</li>
+            <li class="success">Search functionality</li>
+            <li class="success">Bulk operations</li>
+        </ul>
+        <h2>Simple (Tests\Feature\Simple)</h2>
+        <ul>
+            <li class="success">Basic authentication</li>
+            <li class="success">User can logout</li>
+            <li class="success">Guest can access public pages</li>
+        </ul>
+        <h2>Type Of Calamity Management (Tests\Feature\TypeOfCalamityManagement)</h2>
+        <ul>
+            <li class="success">Guest can view type of calamity list</li>
+            <li class="success">Authenticated user can view create type of calamity form</li>
+            <li class="success">Authenticated user can create new type of calamity</li>
+            <li class="defect">Cannot create type of calamity with duplicate name</li>
+            <li class="success">Authenticated user can view edit type of calamity form</li>
+            <li class="defect">Authenticated user can update type of calamity</li>
+            <li class="success">Authenticated user can delete type of calamity</li>
+            <li class="success">Authenticated user can delete multiple type of calamities</li>
+            <li class="success">Type of calamity list can be searched</li>
+            <li class="success">Guest cannot access create type of calamity form</li>
+        </ul>
+        <h2>User Management (Tests\Feature\UserManagement)</h2>
+        <ul>
+            <li class="success">Authenticated user can view user list</li>
+            <li class="success">Authenticated user can view create user form</li>
+            <li class="defect">Authenticated user can create new user</li>
+            <li class="success">Cannot create user with duplicate user name</li>
+            <li class="success">Cannot create user with duplicate email</li>
+            <li class="success">Authenticated user can view edit user form</li>
+            <li class="defect">Authenticated user can update user</li>
+            <li class="success">Authenticated user can delete user</li>
+            <li class="success">Authenticated user can delete multiple users</li>
+            <li class="defect">User list can be searched</li>
+            <li class="success">Guest cannot access user management</li>
+            <li class="success">Guest cannot access create user form</li>
+        </ul>
+    </body>
+</html>

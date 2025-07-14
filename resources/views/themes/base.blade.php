@@ -17,8 +17,6 @@
     @vite('resources/js/components/base/theme-color.js')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    @vite('resources/css/themes/rubick/side-nav.css')
-    @vite('resources/js/themes/rubick.js')
     @stack('scripts')
 </head>
 
@@ -101,8 +99,62 @@
 
                     </div>
                     
-                    <div class="relative">
+                    <div class="relative flex items-center gap-2">
                         @auth
+                        @php
+                            $unreadCount = auth()->user()->unreadNotifications->count();
+                            $notifications = auth()->user()->notifications->take(5); // mới nhất 5 cái
+                            @endphp
+
+                            <div class="relative mr-4">
+                                <a href="javascript:void(0)" onclick="openNotification()" class="relative">
+                                    {!! $icons['bell'] !!}
+
+                                    <!-- Badge đỏ số lượng -->
+                                    @if($unreadCount > 0)
+                                        <span id="notification-badge" class="absolute top-0 right-0 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full">
+                                            {{ $unreadCount }}
+                                        </span>
+                                    @endif
+                                </a>
+                                
+
+                                <!-- Dropdown thông báo -->
+                                <div class="absolute right-0 mt-2 w-80 bg-white border rounded shadow z-50 hidden" id="notification-dropdown">
+                                    <ul class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
+                                        @forelse($notifications as $notification)
+                                            @php
+                                                $notificationData = [];
+                                                if (is_array($notification->data)) {
+                                                    $notificationData = $notification->data;
+                                                } elseif (is_string($notification->data)) {
+                                                    $decoded = json_decode($notification->data, true);
+                                                    $notificationData = is_array($decoded) ? $decoded : [];
+                                                }
+                                                $isUnread = $notification->read_at === null;
+                                            @endphp
+                                            <li class="p-3 text-sm hover:bg-gray-50 {{ $isUnread ? 'bg-blue-50 border-l-4 border-blue-500' : 'bg-white' }} cursor-pointer" 
+                                                onclick="markNotificationAsRead('{{ $notification->id }}', this)">
+                                                <div class="flex items-center justify-between">
+                                                    <div class="flex-1">
+                                                        <div class="font-semibold {{ $isUnread ? 'text-blue-900' : 'text-gray-900' }}">{{ $notificationData['title'] ?? 'Thông báo' }}</div>
+                                                        <div class="{{ $isUnread ? 'text-blue-700' : 'text-gray-600' }}">{{ $notificationData['message'] ?? 'Nội dung thông báo' }}</div>
+                                                        <div class="text-xs text-gray-400">{{ \Carbon\Carbon::parse($notification->created_at)->diffForHumans() }}</div>
+                                                    </div>
+                                                    @if($isUnread)
+                                                        <div class="ml-2">
+                                                            <span class="inline-block w-2 h-2 bg-blue-500 rounded-full"></span>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </li>
+                                        @empty
+                                            <li class="p-3 text-sm text-gray-500">Không có thông báo nào</li>
+                                        @endforelse
+                                    </ul>
+                                </div>
+                            </div>
+
                             <button type="button" style="all: unset" id="user-menu-button" aria-expanded="false">
                                 {!! $icons['user-circle'] !!}
                             </button>
@@ -142,7 +194,96 @@
 </html>
 
 <script>
-    
+    function openNotification() {
+        console.log('openNotification');
+        const dropdown = document.getElementById('notification-dropdown');
+        if (dropdown) {
+            dropdown.classList.toggle('hidden');
+            
+            // Nếu dropdown đang hiển thị, đánh dấu tất cả thông báo đã đọc
+            if (!dropdown.classList.contains('hidden')) {
+                markNotificationsAsRead();
+            }
+        }
+    }
+
+    function markNotificationsAsRead() {
+        // Gửi request để đánh dấu thông báo đã đọc
+        fetch('/mark-notifications-as-read', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Ẩn badge số lượng thông báo
+                const badge = document.getElementById('notification-badge');
+                if (badge) {
+                    badge.style.display = 'none';
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error marking notifications as read:', error);
+        });
+    }
+
+    function markNotificationAsRead(notificationId, element) {
+        // Gửi request để đánh dấu một thông báo cụ thể đã đọc
+        fetch('/mark-notification-as-read', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                notification_id: notificationId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Cập nhật giao diện
+                element.classList.remove('bg-blue-50', 'border-l-4', 'border-blue-500');
+                element.classList.add('bg-white');
+                
+                // Cập nhật màu text
+                const titleElement = element.querySelector('.font-semibold');
+                const messageElement = element.querySelector('.text-blue-700');
+                if (titleElement) titleElement.classList.remove('text-blue-900');
+                if (messageElement) messageElement.classList.remove('text-blue-700');
+                
+                // Ẩn dot xanh
+                const dotElement = element.querySelector('.bg-blue-500');
+                if (dotElement) dotElement.style.display = 'none';
+                
+                // Cập nhật badge số lượng
+                updateNotificationBadge();
+            }
+        })
+        .catch(error => {
+            console.error('Error marking notification as read:', error);
+        });
+    }
+
+    function updateNotificationBadge() {
+        // Đếm số thông báo chưa đọc còn lại
+        const unreadItems = document.querySelectorAll('.bg-blue-50');
+        const badge = document.getElementById('notification-badge');
+        
+        if (badge) {
+            if (unreadItems.length === 0) {
+                badge.style.display = 'none';
+            } else {
+                badge.textContent = unreadItems.length;
+                badge.style.display = 'inline-block';
+            }
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         const toggles = document.querySelectorAll('.toggle-submenu');
 
@@ -160,22 +301,35 @@
                 }
             });
         });
-         const btn = document.getElementById('user-menu-button');
-    const dropdown = document.getElementById('user-dropdown');
+        
+        const btn = document.getElementById('user-menu-button');
+        const dropdown = document.getElementById('user-dropdown');
 
-    if (btn && dropdown) {
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        dropdown.classList.toggle('hidden');
-      });
+        if (btn && dropdown) {
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('hidden');
+            });
 
-      document.addEventListener('click', function (e) {
-        if (!dropdown.classList.contains('hidden') &&
-            !dropdown.contains(e.target) &&
-            !btn.contains(e.target)) {
-          dropdown.classList.add('hidden');
+            document.addEventListener('click', function (e) {
+                if (!dropdown.classList.contains('hidden') &&
+                    !dropdown.contains(e.target) &&
+                    !btn.contains(e.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            });
         }
-      });
-    }
+
+        // Thêm event listener để đóng dropdown thông báo khi click ra ngoài
+        document.addEventListener('click', function (e) {
+            const notificationDropdown = document.getElementById('notification-dropdown');
+            const notificationButton = document.querySelector('[onclick="openNotification()"]');
+            
+            if (notificationDropdown && !notificationDropdown.classList.contains('hidden') &&
+                !notificationDropdown.contains(e.target) &&
+                !notificationButton.contains(e.target)) {
+                notificationDropdown.classList.add('hidden');
+            }
+        });
     });
 </script>

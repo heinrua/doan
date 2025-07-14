@@ -27,13 +27,6 @@
     <form id="chatForm"> 
         <label for="chat" class="sr-only">Nhập tin nhắn</label>
         <div class="flex items-center px-3 py-2 rounded-lg bg-gray-50">
-            <button type="button" onclick="document.getElementById('imageInput').click()" class="...">
-                {!!$icons['paper-clip']!!}
-                <span class="sr-only">Upload image</span>
-            </button>
-           
-            <input type="file" id="imageInput" name="file" accept="image/*,video/*" class="hidden">
-
             <textarea id="chat" name="message" class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Your message..."></textarea>
             <button type="submit" class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100">
                 {!!$icons['send']!!}

@@ -1,28 +1,14 @@
 @extends('themes.base')
+@section('subhead')
+    <title>Báo Cáo Thiên Tai - PCTT Cà Mau Dashboard</title>
+@endsection
 @section('subcontent')
-
-@if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert" id="success-message">
-        <div class="flex items-center">
-            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-            </svg>
-            <span class="block sm:inline">{{ session('success') }}</span>
-        </div>
-        <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3 hover:bg-green-200 rounded" onclick="this.parentElement.remove()">
-            <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                <title>Close</title>
-                <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/>
-            </svg>
-        </button>
-    </div>
-@endif
+<x-alert/>
 
 @guest
 
 <form enctype="multipart/form-data" class="validate-form" action="{{ route('incident-reports.store') }}" method="post">
     @csrf
-    
     <div class="intro-y box">
         <div class="rounded-md border border-slate-200/60 p-5">
             <div
@@ -122,7 +108,6 @@
                 </div>
                
                 <div>
-                    {{-- Số điện thoại --}}
                     <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                         formInline>
                         <label class="md:w-80">
@@ -162,7 +147,6 @@
                             @enderror
                         </div>
                     </div>
-                    {{-- Địa chỉ --}}
                     <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                         formInline>
                         <label class="md:w-80">
@@ -242,49 +226,25 @@
             {!! $icons['refresh-ccw'] !!} Tải lại dữ liệu
         </a>
     </div>
+
     <div class="mt-5 grid grid-cols-12 gap-6">
-        <div class="intro-y col-span-12 flex flex-wrap items-start gap-3">
-            <form action="{{ route('view-calamity-storm') }}" method="GET" class="flex flex-wrap items-center gap-3 grow">
-                <select name="date_range"
-                    class="h-10 w-48 min-w-[150px] border-gray-500 rounded-md shadow-sm focus:ring-blue-500">
-                    <option value="">-- Chọn khoảng thời gian --</option>
-                    <option value="yesterday" {{ request('date_range') == 'yesterday' ? 'selected' : '' }}>Hôm qua</option>
-                    <option value="last_3_days" {{ request('date_range') == 'last_3_days' ? 'selected' : '' }}>3 ngày gần đây</option>
-                    <option value="last_7_days" {{ request('date_range') == 'last_7_days' ? 'selected' : '' }}>7 ngày gần đây</option>
-                </select>
-
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 flex items-center ps-3 pointer-events-none">
-                        {!! $icons['search'] !!}
-                    </div>
-                    <input type="text" name="search" placeholder="Tìm kiếm..." value="{{ request('search') }}"
-                        class="block w-full p-4 ps-10 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-
-                <button type="submit"
-                    class="h-10 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow-md transition-all">
-                    Tìm kiếm
-                </button>
-            </form>
-            
-        </div>
+       
        
         <div
             class="intro-y col-span-3 overflow-visible lg:overflow-visible text-base text-gray-800  bg-gray-300 rounded-md px-4 py-2 shadow-sm text-center">
             Tổng số bản ghi: <span class="font-semibold">{{ $data->total() }}</span>
         </div>
    
-        <form action="{{ route('delete-multiple-calamity-storm') }}" class = "col-span-2" method="POST">
-            @csrf
-            @method('DELETE')
-  
-            <button type="submit" class="bg-red-700 sticky left-0" id="delete-multiple-btn" disabled>
-                {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
-            </button>
-          
-        </form>
-
         <div class="intro-y col-span-12 overflow-visible lg:overflow-x-auto">
+          
+            <form action="{{ route('delete-multiple-incident-report') }}" method="POST" id="delete-multiple-form">
+                @csrf
+                @method('DELETE')
+                <button type="button" onclick="openDeleteMultipleModal()" class="bg-red-700 z-1 sticky left-0" id="delete-multiple-btn" disabled>
+                    {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
+                </button>
+            </form>
+           
             <table class="mt-2 border-separate border-spacing-y-[10px] ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
@@ -378,7 +338,7 @@
                             <div class="flex items-center justify-center">
                                 <a class="flex items-center text-red-700" data-tw-toggle="modal"
                                     data-tw-target="#delete-confirmation-modal"
-                                    onclick="openDeleteModal('{{ route('delete-calamity-storm', ['id' => $value->id]) }}')"
+                                    onclick="openDeleteModal('{{ route('delete-incident-report', ['id' => $value->id]) }}')"
                                     href="javascript:void(0);">
                                     {!! $icons['trash-2'] !!} Xoá
                                 </a>
@@ -399,35 +359,7 @@
    
     </div>
 
-    <div class="fixed inset-0 z-50 hidden" id="delete-confirmation-modal" aria-modal="true">
-        
-        <div class="fixed inset-0 bg-black/50"></div>
-
-        <div class="flex min-h-screen items-center justify-center">
-            <div class="bg-white rounded-lg shadow-xl w-full max-w-md z-50 p-6">
-                <div class="flex items-start space-x-3">
-                    <div class="text-red-500">
-                        {!! $icons['warning-circle'] !!}
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900">Xác nhận xoá</h3>
-                        <p class="mt-1 text-sm text-gray-600">Xác nhận xóa dữ liệu này?</p>
-                    </div>
-                </div>
-
-                <div class="mt-6 flex justify-end space-x-2">
-                    <button type="button" onclick="closeDeleteModal()"
-                            class="bg-white px-4 py-2 rounded border text-gray-700 hover:bg-gray-100">
-                        Hủy
-                    </button>
-                     <a href="#" id="confirm-delete"
-                    class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">
-                        Xoá
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <div id="videoModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
         <div class="relative w-[80%] max-w-4xl">
@@ -442,14 +374,15 @@
             <img id="imagePreview"
                 src=""
                 class="w-full max-h-[80vh] object-contain rounded-lg shadow-lg" />
-            <button onclick="closeImageModal()"
-                    class="absolute top-4 right-4 text-white text-3xl font-bold hover:text-gray-300">
-                ×
-            </button>
+                <button type="button" class="text-gray-400 bg-white rounded-lg text-black text-sm p-1.5 ml-auto inline-flex absolute top-4 right-4" onclick="closeImageModal()">
+                        {!! $icons['x'] !!}
+                    </button>   
         </div>
     </div>
 
-    
+    <x-delete-modal/>
+    <x-delete-multiple-modal/>
+    @vite(['resources/js/confirm-delete.js'])
 @endauth
 
 @endsection
@@ -458,7 +391,7 @@
 
 @push('scripts')
 <script>
-    // Simple calamity select functionality
+
     document.addEventListener("DOMContentLoaded", function() {
         const calamitySelect = document.getElementById("type_of_calamity_id"); 
         const subTypeOfCalamitySelect = document.querySelector("#sub-type-of-calamity-select"); 
@@ -467,7 +400,7 @@
             calamitySelect.addEventListener("change", function() {
                 const calamityId = calamitySelect.value;
                 
-                // Reset sub-type select
+               
                 subTypeOfCalamitySelect.innerHTML = `<option value="">--Chọn thiên tai phụ--</option>`;
                 
                 if (!calamityId || calamityId === '--Chọn thiên tai--') {
@@ -494,7 +427,6 @@
         }
     });
 
-    // Google Maps functionality
     let map1, marker;
 
     function initMap() {
@@ -527,7 +459,6 @@
             marker.setPosition(event.latLng);
         });
 
-        // Current location button
         const getCurrentLocationBtn = document.getElementById("get-current-location");
         if (getCurrentLocationBtn) {
             getCurrentLocationBtn.addEventListener("click", function () {

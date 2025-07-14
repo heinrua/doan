@@ -2,6 +2,7 @@
 
 @section('subhead')
     <title>Cập Nhật Sạt Lở - PCTT Cà Mau Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
 @endsection
 
 @section('subcontent')
@@ -80,14 +81,10 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <select class="w-full" id="crud-form-2" name="sub_type_of_calamity_id">
+                                        <select id="sub_type_of_calamity_id" name="sub_type_of_calamity_id" multiple>
                                             @foreach ($subTypeOfCalamities as $subTypeOfCalamity)
-                                                <option value="{{ $subTypeOfCalamity->id }}"
-                                                    {{ optional($calamity->sub_type_of_calamities->first())->id == $subTypeOfCalamity->id ? 'selected' : '' }}>
-                                                    {{ $subTypeOfCalamity->name }}
-                                                </option>
+                                                <option value="{{ $subTypeOfCalamity->id }}" {{ $calamity->sub_type_of_calamity_id == $subTypeOfCalamity->id ? 'selected' : '' }}>{{ $subTypeOfCalamity->name }}</option>
                                             @endforeach
-
                                         </select>
                                         @error('sub_type_of_calamity_id')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -185,12 +182,9 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <select class="w-full" id="crud-form-2" name="commune_id">
+                                        <select id="commune_ids" name="commune_ids[]" multiple>
                                             @foreach ($communes as $commune)
-                                                <option value="{{ $commune->id }}"
-                                                    {{ optional($calamity->communes->first())->id == $commune->id ? 'selected' : '' }}>
-                                                    {{ $commune->name }}
-                                                </option>
+                                                <option value="{{ $commune->id }}" {{ $calamity->commune_id == $commune->id ? 'selected' : '' }}>{{ $commune->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -513,17 +507,27 @@
                     </div>
                 </div>
                 
-                <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
-                    <a href="{{ route('view-calamity-river-bank') }}">
-                        <button type="button"
-                            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
-                            Huỷ Bỏ</button>
-                    </a>
-                    
-                       <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
-                        Lưu
-                    </button>
-                    
+                <div class="mt-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+                    <div class="w-full md:w-auto text-left">
+                        <p class="italic">
+                            Tạo bởi: {{ optional($calamity->created_by_user)->full_name ?? 'Không rõ' }}.
+                        </p>
+                        <p class="italic">
+                            Cập nhật lần cuối: {{ optional($calamity->updated_by_user)->full_name ?? 'Không rõ' }}.
+                        </p>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <a href="{{ route('view-calamity-river-bank') }}">
+                            <button type="button"
+                                class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                                Huỷ Bỏ</button>
+                        </a>
+                        <button type="submit"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+                            Lưu
+                        </button>
+                    </div>
                 </div>
             </form>
             <div id="mapRiver" class="mt-5 w-full h-[700px] rounded-lg border"></div>
@@ -531,6 +535,48 @@
     </div>
 @endsection
 @push('scripts')
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new TomSelect(
+            "#commune_ids", {
+                plugins: ['remove_button'],
+                placeholder: "Chọn các xã...",
+                maxItems: null,
+                render: {
+                    item: function(data, escape) {
+                        return `<div class="bg-blue-100 text-blue-800 text-sm rounded-full px-3 py-1 mr-2 mb-1 inline-flex items-center">
+                                    ${escape(data.text)}
+                                    
+                                </div>`;
+                    },
+                    option: function(data, escape) {
+                        return `<div class="py-2 px-3 text-sm hover:bg-blue-50 cursor-pointer">${escape(data.text)}</div>`;
+                    }
+                }
+        }
+    );
+    new TomSelect("#sub_type_of_calamity_id", {
+        plugins: ['remove_button'],
+        placeholder: "Chọn các loại hình...",
+        maxItems: null,
+        render: {
+            item: function(data, escape) {
+                return `<div class="bg-green-100 text-green-800 text-sm rounded-full px-3 py-1 mr-2 mb-1 inline-flex items-center">
+                            ${escape(data.text)}
+                           
+                        </div>`;
+            },
+            option: function(data, escape) {
+                return `<div class="py-2 px-3 text-sm hover:bg-green-50 cursor-pointer">${escape(data.text)}</div>`;
+            }
+        }
+    });
+
+    });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const container = document.getElementById('mapContainer');

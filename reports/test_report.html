@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>Test Documentation</title>
+        <style>
+            body {
+                text-rendering: optimizeLegibility;
+                font-family: Source SansSerif Pro, Arial, sans-serif;
+                font-variant-ligatures: common-ligatures;
+                font-kerning: normal;
+                margin-left: 2rem;
+                background-color: #fff;
+                color: #000;
+            }
+
+            body > ul > li {
+                font-size: larger;
+            }
+
+            h2 {
+                font-size: larger;
+                text-decoration-line: underline;
+                text-decoration-thickness: 2px;
+                margin: 0;
+                padding: 0.5rem 0;
+            }
+
+            ul {
+                list-style: none;
+                margin: 0 0 2rem;
+                padding: 0 0 0 1rem;
+                text-indent: -1rem;
+            }
+
+            .success:before {
+                color: #4e9a06;
+                content: '✓';
+                padding-right: 0.5rem;
+            }
+
+            .defect {
+                color: #a40000;
+            }
+
+            .defect:before {
+                color: #a40000;
+                content: '✗';
+                padding-right: 0.5rem;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Auth (Tests\Feature\Auth)</h2>
+        <ul>
+            <li class="success">User can view login page</li>
+            <li class="success">User can login with valid credentials</li>
+            <li class="success">User cannot login with invalid credentials</li>
+            <li class="success">User can logout</li>
+            <li class="success">User can view edit profile page</li>
+            <li class="defect">User can update profile</li>
+            <li class="success">User cannot update profile with duplicate username</li>
+        </ul>
+        <h2>Authentication (Tests\Feature\Auth\Authentication)</h2>
+        <ul>
+            <li class="success">Login screen can be rendered</li>
+            <li class="defect">Users can authenticate using the login screen</li>
+            <li class="success">Users can not authenticate with invalid password</li>
+            <li class="defect">Users can logout</li>
+        </ul>
+        <h2>Basic (Tests\Feature\Basic)</h2>
+        <ul>
+            <li class="success">Homepage works</li>
+            <li class="success">Login page works</li>
+            <li class="success">User can login</li>
+            <li class="success">User can logout</li>
+            <li class="success">City management works</li>
+            <li class="success">User management works</li>
+            <li class="success">Incident report works</li>
+            <li class="success">Chat functionality works</li>
+            <li class="success">Guest can subscribe to disaster alerts</li>
+            <li class="success">Basic factories work</li>
+            <li class="success">Public pages are accessible</li>
+        </ul>
+        <h2>City Management (Tests\Feature\CityManagement)</h2>
+        <ul>
+            <li class="success">Guest can view city list</li>
+            <li class="success">Authenticated user can view create city form</li>
+            <li class="success">Authenticated user can create new city</li>
+            <li class="success">Cannot create city with duplicate name</li>
+            <li class="success">Cannot create city with duplicate code</li>
+            <li class="success">Authenticated user can view edit city form</li>
+            <li class="success">Authenticated user can update city</li>
+            <li class="success">Authenticated user can delete city</li>
+            <li class="success">Authenticated user can delete multiple cities</li>
+            <li class="success">City list can be searched</li>
+            <li class="success">Guest cannot access create city form</li>
+        </ul>
+        <h2>Dashboard (Tests\Feature\Dashboard)</h2>
+        <ul>
+            <li class="defect">Dashboard displays calamity statistics</li>
+            <li class="defect">Dashboard shows recent calamities</li>
+            <li class="defect">Authenticated user can send chat message</li>
+            <li class="defect">Guest can send chat message</li>
+            <li class="defect">Chat page displays messages</li>
+            <li class="defect">Notification mark as read</li>
+            <li class="defect">Single notification mark as read</li>
+        </ul>
+        <h2>Email Verification (Tests\Feature\Auth\EmailVerification)</h2>
+        <ul>
+            <li class="defect">Email verification screen can be rendered</li>
+            <li class="defect">Email can be verified</li>
+            <li class="defect">Email is not verified with invalid hash</li>
+        </ul>
+        <h2>Example (Tests\Feature\Example)</h2>
+        <ul>
+            <li class="defect">The application returns a successful response</li>
+        </ul>
+        <h2>Example (Tests\Unit\Example)</h2>
+        <ul>
+            <li class="success">That true is true</li>
+        </ul>
+        <h2>Incident Report (Tests\Feature\IncidentReport)</h2>
+        <ul>
+            <li class="success">Guest can view incident report page</li>
+            <li class="success">Guest can view create incident report page</li>
+            <li class="success">Guest can create incident report</li>
+            <li class="success">Incident report requires required fields</li>
+            <li class="success">Authenticated user can delete incident report</li>
+            <li class="defect">Authenticated user can delete multiple incident reports</li>
+            <li class="defect">Can get sub type of calamities</li>
+            <li class="success">Can get communes by district</li>
+            <li class="defect">Incident report list displays data</li>
+            <li class="defect">Guest cannot delete incident reports</li>
+        </ul>
+        <h2>Integration (Tests\Feature\Integration)</h2>
+        <ul>
+            <li class="defect">Complete workflow from login to calamity management</li>
+            <li class="success">Guest can access public features</li>
+            <li class="success">Authentication flow</li>
+            <li class="success">Data relationships work correctly</li>
+            <li class="success">Search functionality</li>
+            <li class="success">Bulk operations</li>
+        </ul>
+        <h2>Password Confirmation (Tests\Feature\Auth\PasswordConfirmation)</h2>
+        <ul>
+            <li class="defect">Confirm password screen can be rendered</li>
+            <li class="defect">Password can be confirmed</li>
+            <li class="defect">Password is not confirmed with invalid password</li>
+        </ul>
+        <h2>Password Reset (Tests\Feature\Auth\PasswordReset)</h2>
+        <ul>
+            <li class="defect">Reset password link screen can be rendered</li>
+            <li class="defect">Reset password link can be requested</li>
+            <li class="defect">Reset password screen can be rendered</li>
+            <li class="defect">Password can be reset with valid token</li>
+        </ul>
+        <h2>Password Update (Tests\Feature\Auth\PasswordUpdate)</h2>
+        <ul>
+            <li class="defect">Password can be updated</li>
+            <li class="defect">Correct password must be provided to update password</li>
+        </ul>
+        <h2>Profile (Tests\Feature\Profile)</h2>
+        <ul>
+            <li class="defect">Profile page is displayed</li>
+            <li class="defect">Profile information can be updated</li>
+            <li class="defect">Email verification status is unchanged when the email address is unchanged</li>
+            <li class="defect">User can delete their account</li>
+            <li class="defect">Correct password must be provided to delete account</li>
+        </ul>
+        <h2>Registration (Tests\Feature\Auth\Registration)</h2>
+        <ul>
+            <li class="defect">Registration screen can be rendered</li>
+            <li class="defect">New users can register</li>
+        </ul>
+        <h2>Simple (Tests\Feature\Simple)</h2>
+        <ul>
+            <li class="success">Basic authentication</li>
+            <li class="success">User can logout</li>
+            <li class="success">Guest can access public pages</li>
+        </ul>
+        <h2>User Management (Tests\Feature\UserManagement)</h2>
+        <ul>
+            <li class="success">Authenticated user can view user list</li>
+            <li class="success">Authenticated user can view create user form</li>
+            <li class="success">Authenticated user can create new user</li>
+            <li class="success">Cannot create user with duplicate username</li>
+            <li class="success">Authenticated user can view edit user form</li>
+            <li class="success">Authenticated user can update user</li>
+            <li class="success">Authenticated user can delete user</li>
+            <li class="success">Authenticated user can delete multiple users</li>
+            <li class="success">Guest cannot access user management pages</li>
+        </ul>
+    </body>
+</html>

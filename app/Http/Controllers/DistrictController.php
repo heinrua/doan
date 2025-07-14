@@ -6,6 +6,7 @@ use App\Models\District;
 use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DistrictController extends Controller
 {
@@ -82,6 +83,46 @@ class DistrictController extends Controller
         return redirect('/list-district');
     }
 
+    public function importDistricts(Request $request)
+    {
+        $request->validate([
+            'excelFile' => 'required|file|mimes:xlsx,csv'
+        ]);
+        $file = $request->file('excelFile');
+        $data = Excel::toArray([], $file)[0];
+        $header = array_map('trim', $data[0]);
+        unset($data[0]);
+                
+        $requiredHeaders = ['Tên', 'Mã', 'Tọa độ', 'Thành phố', 'Dân số'];
+        foreach ($requiredHeaders as $col) {
+            if (!in_array($col, $header)) {
+                return back()->with('error', 'Thiếu cột bắt buộc: ' . $col);
+            }
+        }
+
+        foreach ($data as $row) {
+            $row = array_combine($header, $row);
+            if (empty($row['Tên']) || empty($row['Mã']) || empty($row['Tọa độ']) || empty($row['Thành phố'])) {
+                continue;
+            }
+            $city = City::where('name', $row['Thành phố'])->first();
+            if (!$city) {
+                return back()->with('error', 'Thành phố không tồn tại: ' . $row['Thành phố']);
+            }
+            $district = District::create([
+                'name' => $row['Tên'],
+                'code' => $row['Mã'],
+                'slug' => Str::slug($row['Tên']),
+                'coordinates' => $row['Tọa độ'],
+                'city_id' => $city->id,
+                'population' => $row['Dân số'] ?? 0
+            ]);
+            
+            $district->save();
+        }
+        return back()->with('success', 'Import thành công!');
+    }
+
     public function show($id)
     {
         $district = District::findOrFail($id);
@@ -125,7 +166,8 @@ class DistrictController extends Controller
         }
         
         $existingMaps = !empty($district->map) ? json_decode($district->map, true) : [];
-        $existingMaps = array_diff($existingMaps, $deletedMaps ?? []); 
+        $deletedMaps = $deletedMaps ?? [];
+        $existingMaps = is_array($existingMaps) ? array_diff($existingMaps, $deletedMaps) : [];
         if ($request->hasFile('map')) {
             $mapFiles = $request->file('map');
             $allowedMimeTypes = [

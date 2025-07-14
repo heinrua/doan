@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DisasterSubscription;
 use Illuminate\Http\Request;
 
 class DisasterSubscriptionController extends Controller
@@ -14,7 +15,7 @@ class DisasterSubscriptionController extends Controller
         ]);
 
         DisasterSubscription::create([
-            'full_name'  => $request->name,
+            'full_name'  => $request->full_name,
             'email' => $request->email,
         ]);
 

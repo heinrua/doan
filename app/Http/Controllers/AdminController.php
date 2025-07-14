@@ -87,19 +87,11 @@ class AdminController extends Controller
         $citizenCount = DisasterSubscription::count();
 
         
-        $ip = $request->ip();
-        $ipList = Cache::get('dashboard_visitor_ips', []);
-        $visitorCount = Cache::get('dashboard_visits', 0);
-    
-        if (!in_array($ip, $ipList)) {
-            $visitorCount = Cache::increment('dashboard_visits');
-            $ipList[] = $ip;
-            Cache::put('dashboard_visitor_ips', $ipList, now()->addMinutes(1)); 
-        }
+       
     
         return view('pages.dashboard', compact(
             'typeOfCalamities', 'calamities', 'disasters', 'data7Days',
-            'citizenCount', 'visitorCount'
+            'citizenCount'
         ));
     }
 

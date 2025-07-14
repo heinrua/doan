@@ -2,11 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class DisasterSubscription extends Model
 {
-      protected $table = 'disaster_subscriptions';
-    protected $fillable = ['email', 'full_name'];
-    public $timestamps = false; 
+    use HasFactory;
+
+    protected $fillable = [
+        'full_name',
+        'email',
+    ];
+
+    protected $table = 'disaster_subscriptions';
 }

@@ -4,7 +4,7 @@
     <title>Danh Sách Địa Điểm Y Tế - PCTT Cà Mau Dashboard</title>
 @endsection
 
-@vite(['resources/js/district-commune.js'])
+
 
 @section('subcontent')
 <div class="intro-y mt-5 flex items-center justify-between">
@@ -15,7 +15,7 @@
         {!! $icons['refresh-ccw'] !!} Tải lại dữ liệu
     </a>
 </div>
-
+<x-alert />
 <div class="mt-5 grid grid-cols-12 gap-6">
     <div class="intro-y col-span-12 flex flex-wrap items-start gap-3">
         <form action="{{ route('view-medical') }}" method="GET" class="flex flex-wrap items-center gap-3 grow">
@@ -51,9 +51,15 @@
         @auth
             <a href="{{ route('create-medical') }}">
                 <button type="button"
-                    class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">
-                    {!! $icons['plus-circle'] !!} Tạo Mới Y Tế
+                    class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center gap-2">
+                    {!! $icons['plus-circle'] !!} Thêm mới y tế
                 </button>
+            </a>
+            <button type="button" onclick="openUploadModal('{{ route('import-medical') }}')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2 ml-2">
+                {!! $icons['cloud-upload'] !!} Nhập file
+            </button>
+            <a href="{{ asset('downloads/mau-du-lieu-y-te.xlsx') }}" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" download>
+                Tải file mẫu
             </a>
         @endauth
     </div>
@@ -61,16 +67,18 @@
     <div class="intro-y col-span-3 text-base text-gray-800 bg-gray-300 rounded-md px-4 py-2 shadow-sm text-center">
         Tổng địa điểm y tế: <span class="font-semibold">{{ $data->total() }}</span>
     </div>
-    <form action="{{ route('destroy-multiple-user') }}"  class=" col-span-2" method="POST">
+    
+    <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
+        @auth
+        <form action="{{ route('delete-multiple-medical') }}" method="POST" id="delete-multiple-form">
             @csrf
             @method('DELETE')
-             @auth
-            <button type="submit" class="bg-red-700 z-1 sticky left-0" id="delete-multiple-btn" disabled>
+            <input type="hidden" name="type" value="medical">
+            <button type="button" onclick="openDeleteMultipleModal()" class="bg-red-700 z-1 sticky left-0" id="delete-multiple-btn" disabled>
                 {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
             </button>
-            @endauth
-</form>
-    <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
+        </form>
+        @endauth
             <table class="mt-2 border-separate border-spacing-y-[10px] ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
@@ -170,44 +178,9 @@
     </div>
 </div>
 @endsection
+    
+<x-delete-modal/>
+<x-delete-multiple-modal/>
+<x-importExel/>
+@vite(['resources/js/district-commune.js','resources/js/confirm-delete.js','resources/js/import-exel.js'])
 
-<script>
-   function openDeleteModal(url) {
-        const modal = document.getElementById('delete-confirmation-modal');
-        modal.classList.remove('hidden');
-        setDeleteUrl(url);
-    }
-
-    function closeDeleteModal() {
-        document.getElementById('delete-confirmation-modal').classList.add('hidden');
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
-    });
-    function setDeleteUrl(url) {
-        document.getElementById('confirm-delete').setAttribute('href', url);
-    }
-    document.addEventListener("DOMContentLoaded", function() {
-
-        const selectAllCheckbox = document.getElementById('selectAll');
-        const checkboxes = document.querySelectorAll('.item-checkbox');
-        const countSpan = document.getElementById('selected-count');
-        const deleteBtn = document.getElementById('delete-multiple-btn');
-
-        function updateCount() {
-            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
-            countSpan.textContent = selectedCount;
-            deleteBtn.disabled = selectedCount === 0;
-        }
-
-        selectAllCheckbox.addEventListener('change', function () {
-            checkboxes.forEach(cb => cb.checked = this.checked);
-            updateCount();
-        });
-
-        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
-
-        updateCount();
-    });
-
-</script>

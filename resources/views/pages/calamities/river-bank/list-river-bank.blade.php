@@ -3,7 +3,7 @@
 @section('subhead')
     <title>Danh Sách Thiên Tai Sạt Lở - PCTT Cà Mau Dashboard</title>
 @endsection
-@vite(['resources/js/district-commune.js'])
+
 @section('subcontent')
     <div class="intro-y mt-5 flex items-center justify-between">
         <div class="flex items-center text-lg font-medium uppercase">
@@ -14,6 +14,7 @@
             {!! $icons['refresh-ccw'] !!} Tải lại dữ liệu
         </a>
     </div>
+    <x-alert/>
     <div class="mt-5 grid grid-cols-12 gap-6 ">
         <div class="intro-y col-span-12 flex flex-wrap items-start gap-3">
             
@@ -74,12 +75,17 @@
                         Tạo Mới Sạt Lở
                     </button>
                 </a>
-                
+                <button type="button" onclick="openUploadModal('{{ route('import-river-bank-calamity') }}')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2">
+                    {!! $icons['cloud-upload'] !!} Nhập file
+                </button>
+                <a href="{{ asset('downloads/mau-du-lieu-sat-lo.xlsx') }}" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" download>
+                    Tải file mẫu
+                </a>
                 <a href="{{ route('export-river-bank-calamity') }}">
                     <button class="h-10 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow-md transition-all">
                     {!! $icons['download'] !!}Tải dữ liệu
                     </button>
-                </a> 
+                </a>
             @endauth
         </div>
         
@@ -87,18 +93,18 @@
             class="intro-y col-span-3 overflow-auto lg:overflow-visible text-base text-gray-800  bg-gray-300 rounded-md px-4 py-2 shadow-sm text-center">
             Tổng vị trí sạt lở: <span class="font-semibold">{{ $data->total() }}</span>
         </div>
-        
-         <form action="{{ route('delete-multiple-calamity-river-bank') }}" class = "col-span-2" method="POST">
-            @csrf
-            @method('DELETE')
-            @auth
-            <button type="submit" class="bg-red-700 z-1 sticky left-0" id="delete-multiple-btn" disabled>
-                {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
-            </button>
-            @endauth
-</form>
+
 
         <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
+            @auth
+            <form action="{{ route('delete-multiple-calamity-river-bank') }}" method="POST" id="delete-multiple-form">
+                @csrf
+                @method('DELETE')
+                <button type="button" onclick="openDeleteMultipleModal()" class="bg-red-700 z-1 sticky left-0" id="delete-multiple-btn" disabled>
+                    {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
+                </button>
+            </form>
+            @endauth
             <table class="mt-2 border-separate border-spacing-y-[10px] ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
@@ -246,8 +252,8 @@
             </tbody>
         </table>
         
-        </form>
-    </div>
+        </div>
+
 
     <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
         {{ $data->links() }}
@@ -255,35 +261,7 @@
     
     </div>
     
-    <div class="fixed inset-0 z-50 hidden" id="delete-confirmation-modal" aria-modal="true">
-        
-        <div class="fixed inset-0 bg-black/50"></div>
-
-        <div class="flex min-h-screen items-center justify-center">
-            <div class="bg-white rounded-lg shadow-xl w-full max-w-md z-50 p-6">
-                <div class="flex items-start space-x-3">
-                    <div class="text-red-500">
-                        {!! $icons['warning-circle'] !!}
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900">Xác nhận xoá</h3>
-                        <p class="mt-1 text-sm text-gray-600">Xác nhận xóa dữ liệu này?</p>
-                    </div>
-                </div>
-
-                <div class="mt-6 flex justify-end space-x-2">
-                    <button type="button" onclick="closeDeleteModal()"
-                            class="bg-white px-4 py-2 rounded border text-gray-700 hover:bg-gray-100">
-                        Hủy
-                    </button>
-                    <a href="#" id="confirm-delete"
-                    class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">
-                        Xoá
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <div id="videoModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
         <div class="relative w-[80%] max-w-4xl">
@@ -304,24 +282,14 @@
             </button>
         </div>
     </div>
+
+    <x-importExel/>
+    <x-delete-modal/>
+    <x-delete-multiple-modal/>
+    @vite(['resources/js/confirm-delete.js','resources/js/district-commune.js','resources/js/import-exel.js'])
 @endsection
 <script>
-      function openDeleteModal(url) {
-        const modal = document.getElementById('delete-confirmation-modal');
-        modal.classList.remove('hidden');
-        setDeleteUrl(url);
-    }
-
-    function closeDeleteModal() {
-        document.getElementById('delete-confirmation-modal').classList.add('hidden');
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('confirm-delete').addEventListener('click', closeDeleteModal);
-    });
-    function setDeleteUrl(url) {
-        document.getElementById('confirm-delete').setAttribute('href', url);
-    }
-
+    
     function openVideoModal(videoUrl) {
         document.getElementById('videoSource').src = videoUrl;
         document.getElementById('videoPlayer').load();
@@ -350,26 +318,6 @@
         modal.classList.add('hidden');
         document.getElementById('imagePreview').src = ''; 
     }
-    document.addEventListener('DOMContentLoaded', function () {
-        const selectAllCheckbox = document.getElementById('selectAll');
-        const checkboxes = document.querySelectorAll('.item-checkbox');
-        const countSpan = document.getElementById('selected-count');
-        const deleteBtn = document.getElementById('delete-multiple-btn');
-
-        function updateCount() {
-            const selectedCount = document.querySelectorAll('.item-checkbox:checked').length;
-            countSpan.textContent = selectedCount;
-            deleteBtn.disabled = selectedCount === 0;
-        }
-
-        selectAllCheckbox.addEventListener('change', function () {
-            checkboxes.forEach(cb => cb.checked = this.checked);
-            updateCount();
-        });
-
-        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
-
-        updateCount();
-    });
+    
     
 </script>

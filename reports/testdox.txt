@@ -1,0 +1,164 @@
+Administrative Management (Tests\Feature\AdministrativeManagement)
+ [x] Guest can view school list
+ [x] Guest can view medical list
+ [x] Guest can view center list
+ [x] Authenticated user can view create school form
+ [x] Authenticated user can view create medical form
+ [x] Authenticated user can view create center form
+ [x] Authenticated user can create new school
+ [x] Authenticated user can create new medical
+ [x] Authenticated user can create new center
+ [x] Cannot create administrative with duplicate name
+ [x] Authenticated user can view edit school form
+ [x] Authenticated user can update school
+ [x] Authenticated user can delete school
+ [x] Authenticated user can delete multiple schools
+ [x] School list can be searched
+ [x] Guest cannot access create school form
+ [x] Guest cannot access create medical form
+ [x] Guest cannot access create center form
+
+Auth (Tests\Feature\Auth)
+ [x] User can view login page
+ [x] User can login with valid credentials
+ [x] User cannot login with invalid credentials
+ [x] User can logout
+ [x] User can view edit profile page
+ [x] User can update profile
+ [x] User cannot update profile with duplicate username
+
+Authentication (Tests\Feature\Auth\Authentication)
+ [x] Login screen can be rendered
+ [x] Users can authenticate using the login screen
+ [x] Users can not authenticate with invalid password
+ [x] Users can logout
+
+Basic (Tests\Feature\Basic)
+ [x] Homepage works
+ [x] Login page works
+ [x] User can login
+ [x] User can logout
+ [x] City management works
+ [x] User management works
+ [x] Incident report works
+ [x] Chat functionality works
+ [x] Guest can subscribe to disaster alerts
+ [x] Basic factories work
+ [x] Public pages are accessible
+
+Calamity Management (Tests\Feature\CalamityManagement)
+ [ ] Guest can view flooding calamity list
+ [ ] Guest can view storm calamity list
+ [ ] Guest can view river bank calamity list
+ [x] Authenticated user can view create flooding calamity form
+ [x] Authenticated user can view create storm calamity form
+ [x] Authenticated user can view create river bank calamity form
+ [ ] Authenticated user can create new flooding calamity
+ [ ] Authenticated user can create new storm calamity
+ [ ] Authenticated user can create new river bank calamity
+ [x] Authenticated user can view edit flooding calamity form
+ [ ] Authenticated user can update flooding calamity
+ [ ] Authenticated user can delete flooding calamity
+ [x] Authenticated user can delete multiple flooding calamities
+ [ ] Flooding calamity list can be searched
+ [x] Guest cannot access create flooding calamity form
+ [x] Guest cannot access create storm calamity form
+ [x] Guest cannot access create river bank calamity form
+
+City Management (Tests\Feature\CityManagement)
+ [x] Guest can view city list
+ [x] Authenticated user can view create city form
+ [x] Authenticated user can create new city
+ [x] Cannot create city with duplicate name
+ [x] Cannot create city with duplicate code
+ [x] Authenticated user can view edit city form
+ [x] Authenticated user can update city
+ [x] Authenticated user can delete city
+ [x] Authenticated user can delete multiple cities
+ [x] City list can be searched
+ [x] Guest cannot access create city form
+
+Commune Management (Tests\Feature\CommuneManagement)
+ [x] Guest can view commune list
+ [x] Authenticated user can view create commune form
+ [x] Authenticated user can create new commune
+ [x] Cannot create commune with duplicate name
+ [x] Cannot create commune with duplicate code
+ [x] Authenticated user can view edit commune form
+ [x] Authenticated user can update commune
+ [x] Authenticated user can delete commune
+ [x] Authenticated user can delete multiple communes
+ [x] Commune list can be searched
+ [x] Can get communes by district
+ [x] Guest cannot access create commune form
+
+District Management (Tests\Feature\DistrictManagement)
+ [x] Guest can view district list
+ [x] Authenticated user can view create district form
+ [x] Authenticated user can create new district
+ [x] Cannot create district with duplicate name
+ [x] Cannot create district with duplicate code
+ [x] Authenticated user can view edit district form
+ [x] Authenticated user can update district
+ [x] Authenticated user can delete district
+ [x] Authenticated user can delete multiple districts
+ [x] District list can be searched
+ [x] Guest cannot access create district form
+
+Example (Tests\Feature\Example)
+ [ ] The application returns a successful response
+
+Example (Tests\Unit\Example)
+ [x] That true is true
+
+Incident Report (Tests\Feature\IncidentReport)
+ [x] Guest can view incident report page
+ [x] Guest can view create incident report page
+ [x] Guest can create incident report
+ [x] Incident report requires required fields
+ [x] Authenticated user can delete incident report
+ [ ] Authenticated user can delete multiple incident reports
+ [x] Can get sub type of calamities
+ [x] Can get communes by district
+ [x] Incident report list displays data
+ [x] Guest cannot delete incident reports
+
+Integration (Tests\Feature\Integration)
+ [ ] Complete workflow from login to calamity management
+ [x] Guest can access public features
+ [x] Authentication flow
+ [x] Data relationships work correctly
+ [x] Search functionality
+ [x] Bulk operations
+
+Simple (Tests\Feature\Simple)
+ [x] Basic authentication
+ [x] User can logout
+ [x] Guest can access public pages
+
+Type Of Calamity Management (Tests\Feature\TypeOfCalamityManagement)
+ [x] Guest can view type of calamity list
+ [x] Authenticated user can view create type of calamity form
+ [x] Authenticated user can create new type of calamity
+ [ ] Cannot create type of calamity with duplicate name
+ [x] Authenticated user can view edit type of calamity form
+ [ ] Authenticated user can update type of calamity
+ [x] Authenticated user can delete type of calamity
+ [x] Authenticated user can delete multiple type of calamities
+ [x] Type of calamity list can be searched
+ [x] Guest cannot access create type of calamity form
+
+User Management (Tests\Feature\UserManagement)
+ [x] Authenticated user can view user list
+ [x] Authenticated user can view create user form
+ [ ] Authenticated user can create new user
+ [x] Cannot create user with duplicate user name
+ [x] Cannot create user with duplicate email
+ [x] Authenticated user can view edit user form
+ [ ] Authenticated user can update user
+ [x] Authenticated user can delete user
+ [x] Authenticated user can delete multiple users
+ [ ] User list can be searched
+ [x] Guest cannot access user management
+ [x] Guest cannot access create user form
+

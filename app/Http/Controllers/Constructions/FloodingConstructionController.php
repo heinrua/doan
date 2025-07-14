@@ -13,6 +13,7 @@ use App\Models\District;
 use App\Models\TypeOfConstruction;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class FloodingConstructionController extends Controller
 {
@@ -92,6 +93,7 @@ class FloodingConstructionController extends Controller
             'name' => $validated['name'],
             'risk_level_id' => $validated['risk_level_id'],
             'type_of_construction_id' => $validated['type_of_construction_id'],
+            'commune_id' => $request['commune_id'],
             'year_of_construction' => $request['year_of_construction'],
             'year_of_completion' => $request['year_of_completion'],
             'scale' => $request['scale'],
@@ -137,10 +139,8 @@ class FloodingConstructionController extends Controller
 
         $construction = Construction::create($data);
 
-        if (isset($request['commune_id'])) {
-            $construction->commune()->sync($request['commune_id']);
-        }
-        return redirect('/construction/list-flooding')->with('success', 200);
+        
+        return redirect('/construction/list-flooding')->with('success', "Thêm thành công");
     }
 
     public function show($id)
@@ -151,6 +151,55 @@ class FloodingConstructionController extends Controller
         $communes = Commune::all();
         $risk_levels = RiskLevel::whereRelation('type_of_calamities', 'slug', 'ngap-lut')->get();
         return view('pages/constructions/flooding/edit-flooding', compact('calamities', 'construction', 'typeOfConstructions', 'communes', 'risk_levels'));
+    }
+    public function importFloodingConstruction(Request $request)
+    {
+        $user = auth()->user();
+        $validated = $request->validate([
+            'excelFile' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
+        $file = $request->file('excelFile');
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $slugName = Str::slug($originalName);
+        $timestamp = now()->format('YmdHis');
+        $newFileName = "{$slugName}-{$timestamp}.{$file->getClientOriginalExtension()}";
+        $file->move(public_path('uploads/constructions/flooding/imports'), $newFileName);
+        $filePath = public_path('uploads/constructions/flooding/imports/' . $newFileName);
+        $spreadsheet = IOFactory::load($filePath);
+        $sheet = $spreadsheet->getActiveSheet();
+        $rows = $sheet->toArray();
+        foreach ($rows as $row) {
+
+            $data = [
+                'name' => $row["Tên công trình"],
+                'risk_level_id' => RiskLevel::where('name', $row["Cấp độ"])->first()->id,
+                'type_of_construction_id' => TypeOfConstruction::where('name', $row["Loại công trình"])->first()->id,
+                'commune_id' => Commune::where('name', $row["Xã"])->first()->id,
+                'year_of_construction' => $row["Năm xây dựng"],
+                'year_of_completion' => $row["Năm hoàn thành"],
+                'scale' => $row["Quy mô"],
+                'coordinates' => $row["Toạ độ"],
+                'address' => $row["Vị trí công trình"],
+                'main_function' => $row["Chức năng chính"],
+                'characteristic' => $row["Đặc điểm nhận dạng"],
+                'width_of_door' => $row["Bề rộng 1 cửa"],
+                'base_level' => $row["Cao trình đáy"],
+                'pillar_top_level' => $row["Cao trình đỉnh trụ pin"],
+                'total_door_width' => $row["Tổng bề rộng cửa"],
+                'notes' => $row["Ghi chú"],
+                'operation_method' => $row["Hình thức vận hành"],
+                'irrigation_system' => $row["Hệ thống thuỷ lợi"],
+                'irrigation_area' => $row["Vùng thuỷ lợi"],
+                'culver_type' => $row["Loại cống"],
+                'culver_code' => $row["Mã cống"],
+                'management_unit' => $row["Đơn vị quản lý"],
+                'update_time' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $row["Thời gian cập nhật"])->format('Y-m-d'),
+                'created_by_user_id' => $user->id
+            ];
+            $construction = Construction::create($data);
+            
+        }
+        return redirect('/construction/list-flooding')->with('success', "Nhập thành công");
     }
 
     public function update(Request $request)
@@ -168,6 +217,7 @@ class FloodingConstructionController extends Controller
             'name' => $validated['name'],
             'risk_level_id' => $validated['risk_level_id'],
             'type_of_construction_id' => $validated['type_of_construction_id'],
+            'commune_id' => $request['commune_id'],
             'year_of_construction' => $request['year_of_construction'],
             'year_of_completion' => $request['year_of_completion'],
             'scale' => $request['scale'],
@@ -218,11 +268,7 @@ class FloodingConstructionController extends Controller
 
         $construction->update($data);
 
-        if (isset($request['commune_id'])) {
-            $construction->commune()->sync($request['commune_id']);
-        }
-
-        return redirect('/construction/list-flooding')->with('success', 200);
+        return redirect('/construction/list-flooding')->with('success', "Cập nhật thành công");
     }
 
     public function destroy($id)
@@ -230,6 +276,12 @@ class FloodingConstructionController extends Controller
         $construction = Construction::findOrFail($id);
         $construction->commune()->detach();
         $construction->delete();
-        return redirect('/construction/list-flooding')->with('success', 200);
+        return redirect('/construction/list-flooding')->with('success', "Xóa thành công");
+    }
+    public function destroyMultiple(Request $request)
+    {
+        $ids = $request->ids;
+        Construction::whereIn('id', $ids)->delete();
+        return redirect('/construction/list-flooding')->with('success', "Xóa thành công");
     }
 }
