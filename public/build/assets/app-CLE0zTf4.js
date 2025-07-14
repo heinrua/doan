@@ -1,0 +1,1 @@
+window.$=window.jQuery=jQuery;window.Echo.channel("chat-room").listen("NewMessageEvent",e=>{const n=document.getElementById("chatBox");n.innerHTML+=`<div class="mb-1"><strong>${e.sender}:</strong> ${e.message}</div>`});
