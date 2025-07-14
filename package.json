@@ -22,7 +22,8 @@
         "postcss-nested": "^7.0.2",
         "tailwindcss": "^4.1.11",
         "tailwindcss-cli": "^0.1.2",
-        "vite": "^6.2.4"
+        "vite": "^6.2.4",
+        "vite-plugin-glob-input": "^0.2.1"
     },
     "dependencies": {
         "@ckeditor/ckeditor5-build-balloon": "^41.4.2",

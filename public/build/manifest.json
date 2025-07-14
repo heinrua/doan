@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-D9pQdzhC.css",
+    "file": "assets/app-ODfZsdpM.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -464,6 +464,12 @@
     "file": "assets/app-CLE0zTf4.js",
     "name": "app",
     "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/vendors.js": {
+    "file": "assets/vendors-D3E_SEHL.js",
+    "name": "vendors",
+    "src": "resources/js/vendors.js",
     "isEntry": true
   }
 }
