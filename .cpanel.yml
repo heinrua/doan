@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export COMPOSER_ALLOW_SUPERUSER=1
+    - /bin/bash /home/ucwyak5ghs80/repositories/doan/deploy.sh
