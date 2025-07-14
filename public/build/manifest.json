@@ -1,4 +1,8 @@
 {
+  "_dom-B2Mi1o5W.js": {
+    "file": "assets/dom-B2Mi1o5W.js",
+    "name": "dom"
+  },
   "resources/css/app.css": {
     "file": "assets/app-OG8A80O_.css",
     "src": "resources/css/app.css",
@@ -466,10 +470,28 @@
     "src": "resources/js/app.js",
     "isEntry": true
   },
+  "resources/js/components/base/theme-color.js": {
+    "file": "assets/theme-color-DdlFizRS.js",
+    "name": "theme-color",
+    "src": "resources/js/components/base/theme-color.js",
+    "isEntry": true
+  },
   "resources/js/vendors.js": {
-    "file": "assets/vendors-D3E_SEHL.js",
+    "file": "assets/vendors-D6VPFdzQ.js",
     "name": "vendors",
     "src": "resources/js/vendors.js",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "_dom-B2Mi1o5W.js"
+    ]
+  },
+  "resources/js/vendors/dom.js": {
+    "file": "assets/dom-DkMjEz9B.js",
+    "name": "dom",
+    "src": "resources/js/vendors/dom.js",
+    "isEntry": true,
+    "imports": [
+      "_dom-B2Mi1o5W.js"
+    ]
   }
 }
