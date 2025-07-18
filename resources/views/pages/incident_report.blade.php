@@ -551,8 +551,6 @@
     }
    
 </script>
-<script async
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMhd9dHKpWfJ57Ndv2alnxEcSvP_-_uN8&libraries=places&callback=initMap">
-    </script>
+
 
 @endpush

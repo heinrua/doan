@@ -222,6 +222,7 @@
                                 <div class="w-full">
                                     <input name="coordinates" id="coordinates" type="text"
                                         value="{{ $data->coordinates }}" placeholder="Toạ độ" />
+                                    <div id="map1" class="w-full h-[200px] rounded-lg border"></div>
                                 </div>
                             </div>
                         </div>
@@ -274,7 +275,13 @@
                                 </label>
                                 <div class="w-full">
                                     <input value="{{ $data->map }}" name="map" id="map"
-                                        type="file" placeholder="Chọn lớp bản đồ" />
+                                        type="file" placeholder="Chọn lớp bản đồ"
+                                        class="block w-full text-sm text-gray-900
+                                            file:mr-2 file:py-1 file:px-3
+                                            file:rounded file:border-0
+                                            file:text-sm file:font-medium
+                                            file:bg-blue-100 file:text-blue-700
+                                            hover:file:bg-blue-200 border border-gray-300 rounded-md" />
                                 </div>
                             </div>
                         </div>
@@ -296,7 +303,13 @@
                                     @endif
                                     
                                     <input name="image" id="image" type="file"
-                                        placeholder="Hình ảnh" />
+                                        placeholder="Hình ảnh"
+                                        class="block w-full text-sm text-gray-900
+                                            file:mr-2 file:py-1 file:px-3
+                                            file:rounded file:border-0
+                                            file:text-sm file:font-medium
+                                            file:bg-blue-100 file:text-blue-700
+                                            hover:file:bg-blue-200 border border-gray-300 rounded-md" />
                                 </div>
                             </div>
                         </div>
@@ -312,8 +325,13 @@
                                 </label>
                                 <div class="w-full">
                                     
-                                    <input type="file" name="video" id="videoInput" accept="video/mp4"
-                                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                                    <input type="file" name="video" id="video" accept="video/mp4"
+                                        class="block w-full text-sm text-gray-900
+                                            file:mr-2 file:py-1 file:px-3
+                                            file:rounded file:border-0
+                                            file:text-sm file:font-medium
+                                            file:bg-blue-100 file:text-blue-700
+                                            hover:file:bg-blue-200 border border-gray-300 rounded-md">
                                     
                                     @if (!empty($data->video))
                                         <div class="mt-4">
@@ -345,7 +363,20 @@
     </div>
 @endsection
 <script>
-    document.getElementById('videoInput').addEventListener('change', function(event) {
+    let map1, marker;
+    document.addEventListener("DOMContentLoaded", function() {
+        initializeApp();
+    });
+    function initializeApp() {
+        initMap();
+    }   
+    function initMap() {
+        map1 = new google.maps.Map(document.getElementById('map1'), {
+            center: { lat: 9.176, lng: 105.15 },
+            zoom: 10
+        });
+    }
+    document.getElementById('video').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
             const videoPreview = document.getElementById('videoPreview');

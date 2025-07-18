@@ -85,6 +85,24 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
+                                    formInline>
+                                    <label class="md:w-80">
+                                        <div class="text-left">
+                                            <div class="flex items-center">
+                                                <div class="font-medium">Toạ độ</div>
+                                                <div class="ml-2 text-red-500 text-xl font-bold">*</div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <div class="w-full">
+                                        <div class="relative">
+                                            <input name="coordinates" id="coordinates" type="text"
+                                                placeholder="Nhập tọa độ (VD: 10.7769, 106.7009)" onblur="updateMapFromInput()" />
+                                        </div>
+                                        <div id="map1" class="w-full h-[200px] rounded-lg border"></div>
+                                    </div>
+                                </div>
                             </div>
                             
                             <div>
@@ -142,6 +160,7 @@
                                             placeholder="Địa chỉ" />
                                     </div>
                                 </div>
+                                
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -335,3 +354,38 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+<script>
+    let map1, marker;
+    document.addEventListener("DOMContentLoaded", function() {
+        initializeApp();
+    });
+    function initializeApp() {
+        initMap();
+    }   
+    function initMap() {
+        map1 = new google.maps.Map(document.getElementById('map1'), {
+            center: { lat: 9.176, lng: 105.15 },
+            zoom: 10
+        });
+        map1.addListener("click", function(event) {
+            let lat = event.latLng.lat().toFixed(6);
+            let lng = event.latLng.lng().toFixed(6);
+            
+            document.getElementById("coordinates").value = lat + ", " + lng;
+            
+            if (marker) {
+                marker.setPosition(event.latLng);
+            } else {
+                marker = new google.maps.Marker({
+                    position: event.latLng,
+                    map: map1,
+                    draggable: true
+                });
+            }
+        });
+        
+        
+    }
+</script>
+@endpush

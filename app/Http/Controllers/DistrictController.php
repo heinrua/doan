@@ -63,7 +63,8 @@ class DistrictController extends Controller
                 'application/vnd.google-earth.kml+xml', 
                 'application/octet-stream', 
                 'application/zip', 
-                'text/xml'  
+                'text/xml',
+                'text/html'
             ];
             $filePaths = []; 
             foreach ($mapFiles as $mapFile) {
@@ -93,7 +94,7 @@ class DistrictController extends Controller
         $header = array_map('trim', $data[0]);
         unset($data[0]);
                 
-        $requiredHeaders = ['Tên', 'Mã', 'Tọa độ', 'Thành phố', 'Dân số'];
+        $requiredHeaders = ['Tên', 'Mã', 'Thành phố'];
         foreach ($requiredHeaders as $col) {
             if (!in_array($col, $header)) {
                 return back()->with('error', 'Thiếu cột bắt buộc: ' . $col);
@@ -101,21 +102,31 @@ class DistrictController extends Controller
         }
 
         foreach ($data as $row) {
-            $row = array_combine($header, $row);
-            if (empty($row['Tên']) || empty($row['Mã']) || empty($row['Tọa độ']) || empty($row['Thành phố'])) {
-                continue;
+            $rowData = array_combine($header, $row);
+            $requiredKeys = ['Tên', 'Mã', 'Thành phố'];
+            foreach ($requiredKeys as $key) {
+                if (!isset($rowData[$key]) || $rowData[$key] === null || $rowData[$key] === '') {
+                    return redirect()->back()->with('error', "Thiếu hoặc để trống cột '$key' trong file Excel!");
+                }
             }
-            $city = City::where('name', $row['Thành phố'])->first();
+            if(District::where('name', $rowData['Tên'])->exists()){
+                return back()->with('error', 'Huyện đã tồn tại: ' . $rowData['Tên']);
+            }
+            if(District::where('code', $rowData['Mã'])->exists()){
+                return back()->with('error', 'Mã huyện đã tồn tại: ' . $rowData['Mã']);
+            }
+            $city = City::where('name', $rowData['Thành phố'])->first();
             if (!$city) {
-                return back()->with('error', 'Thành phố không tồn tại: ' . $row['Thành phố']);
+                return back()->with('error', 'Thành phố của huyện không tồn tại: ' . $rowData['Thành phố']);
             }
             $district = District::create([
-                'name' => $row['Tên'],
-                'code' => $row['Mã'],
-                'slug' => Str::slug($row['Tên']),
-                'coordinates' => $row['Tọa độ'],
+                'name' => $rowData['Tên'],
+                'code' => $rowData['Mã'],
+                'slug' => Str::slug($rowData['Tên']),
+                'coordinates' => $rowData['Tọa độ'] ?? "0,0",
                 'city_id' => $city->id,
-                'population' => $row['Dân số'] ?? 0
+                'population' => $rowData['Dân số'] ?? 0,
+                'map' => "[]",
             ]);
             
             $district->save();
@@ -175,7 +186,8 @@ class DistrictController extends Controller
                 'application/vnd.google-earth.kml+xml', 
                 'application/octet-stream',
                 'application/zip',
-                'text/xml'
+                'text/xml',
+                'text/html'
             ];
             $filePaths = [];
             foreach ($mapFiles as $mapFile) {

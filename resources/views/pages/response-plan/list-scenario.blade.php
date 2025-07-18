@@ -65,16 +65,16 @@
         <div class="intro-y col-span-3 overflow-auto lg:overflow-visible text-base text-gray-800 bg-gray-300 rounded-md px-4 py-2 shadow-sm text-center">
             Tổng số phương án: <span class="font-semibold">{{ $data->total() }}</span>
         </div>
-         <form action="{{ route('delete-multiple-scenarios') }}" class=" col-span-2" method="POST">
+         
+        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
+            <form action="{{ route('delete-multiple-scenarios') }}" class=" col-span-2" method="POST">
             @csrf
             @method('DELETE')
             @auth
-            <button type="submit" class="bg-red-700 z-1 sticky left-0" id="delete-multiple-btn" disabled>
+            <button type="button" onclick="openDeleteMultipleModal()" class="bg-red-700 z-1 sticky left-0" id="delete-multiple-btn" disabled>
                 {!! $icons['trash-2'] !!} Xoá (<span id="selected-count">0</span>)
             </button>
             @endauth
-</form>
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
             <table class="mt-2 border-separate border-spacing-y-[10px] min-w-max table-auto ">
                 <thead class="text-gray-700 uppercase bg-blue-100">
                     <tr>
@@ -163,7 +163,7 @@
                 </tbody>
                 
             </table>
-        </form>
+            </form>
         </div>
 
         <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
@@ -183,7 +183,7 @@
 
 <x-delete-modal/>
 <x-delete-multiple-modal/>
-@vite(['resources/js/confirm-delete.js'])
+@vite(['resources/js/confirm-delete.js', 'resources/js/delete-multiple.js'])
 @endsection
 
 <script>

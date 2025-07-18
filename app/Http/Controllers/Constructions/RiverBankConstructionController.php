@@ -152,29 +152,97 @@ class RiverBankConstructionController extends Controller
         $spreadsheet = IOFactory::load($filePath);
         $sheet = $spreadsheet->getActiveSheet();
         $rows = $sheet->toArray();
+        
+        // Bỏ qua dòng đầu tiên (dòng tiêu đề)
+        $header = array_shift($rows);
+        
         foreach ($rows as $row) {
-            $data = [
-                'name' => $row["Tên công trình"],
-                'risk_level_id' => RiskLevel::where('name', $row["Cấp độ"])->first()->id,
-                'type_of_construction_id' => TypeOfConstruction::where('name', $row["Loại công trình"])->first()->id,
-                'commune_id' => Commune::where('name', $row["Phường/Xã"])->first()->id,
-                'year_of_construction' => $row["Năm xây dựng"],
-                'year_of_completion' => $row["Năm hoàn thành"],
-                'length' => $row["Chiều dài (km)"],
-                'width' => $row["Chiều rộng (m)"],
-                'scale' => $row["Quy mô"],
-                'geology' => $row["Địa chất"],
-                'influence_level' => $row["Mức độ ảnh hưởng"],
-                'coordinates' => $row["Toạ độ"],
-                'total_investment' => $row["Tổng mức đầu tư"],
-                'capital_source' => $row["Nguồn vốn"],
-                'created_by_user_id' => $user->id,
-                'update_time' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $row["Thời gian cập nhật"])->format('Y-m-d'),
+            // Tạo mảng associative từ header và data
+            $rowData = array_combine($header, $row);
+            
+            $requiredKeys = [
+                'Tên công trình',
+                'Loại công trình',
+                'Cấp độ rủi ro thiên tai',
             ];
-            $construction = Construction::create($data);
-           
+            foreach ($requiredKeys as $key) {
+                if (!isset($rowData[$key]) || $rowData[$key] === null || $rowData[$key] === '') {
+                    return redirect()->back()->with('error', "Thiếu hoặc để trống cột '$key' trong file Excel!");
+                }
+            }
+            // Kiểm tra trùng lặp theo tên công trình
+            $exists = Construction::where('name', $rowData["Tên công trình"])->exists();
+            if ($exists) {
+                \Log::info("Bỏ qua do trùng tên công trình: " . $rowData["Tên công trình"]);
+                continue;
+            }
+            $data = [
+                'name' => $rowData["Tên công trình"],
+                'slug' => $this->generateUniqueSlug($rowData["Tên công trình"]),
+                'risk_level_id' => RiskLevel::where('name', $rowData["Cấp độ rủi ro thiên tai"])->first()->id,
+                'type_of_construction_id' => TypeOfConstruction::where('name', $rowData["Loại công trình"])->first()->id,
+                'commune_id' => Commune::where('name', $rowData["Phường/Xã"])->first()->id,
+                'year_of_construction' => $rowData["Năm xây dựng"],
+                'year_of_completion' => $rowData["Năm hoàn thành"],
+                'length' => $rowData["Chiều dài (km)"],
+                'width' => $rowData["Chiều rộng (m)"],
+                'scale' => $rowData["Quy mô"],
+                'influence_level' => $rowData["Mức độ ảnh hưởng"],
+                'coordinates' => $rowData["Toạ độ"],
+                'total_investment' => $rowData["Tổng mức đầu tư"],
+                'capital_source' => $rowData["Nguồn vốn"],
+                'progress' => $rowData["Tiến độ thực hiện"],
+                'created_by_user_id' => $user->id,
+                'update_time' => $this->parseDate($rowData["Thời gian cập nhật"]),
+            ];
+            
+            try {
+                $construction = Construction::create($data);
+            } catch (\Illuminate\Database\QueryException $e) {
+                if ($e->getCode() == 23000 && strpos($e->getMessage(), 'Duplicate entry') !== false) {
+                    return redirect()->back()->with('error', "Công trình '{$rowData['Tên công trình']}' đã tồn tại trong hệ thống!");
+                }
+                return redirect()->back()->with('error', "Lỗi khi thêm công trình: " . $e->getMessage());
+            }
         }
         return redirect('/construction/list-river-bank')->with('success', "Nhập thành công");
+    }
+
+    private function generateUniqueSlug($name)
+    {
+        $slug = Str::slug($name);
+        $count = Construction::where('slug', 'like', "{$slug}%")->count();
+        if ($count > 0) {
+            $slug = "{$slug}-{$count}";
+        }
+        return $slug;
+    }
+
+    private function parseDate($dateString)
+    {
+        if (empty($dateString)) {
+            return null;
+        }
+        
+        // Thử các format khác nhau
+        $formats = [
+            'd \T\h\á\n\g m, Y',  // 10 tháng 7, 2025
+            'd/m/Y',               // 10/7/2025
+            'Y-m-d',               // 2025-07-10
+            'd-m-Y',               // 10-7-2025
+            'm/d/Y',               // 7/10/2025
+        ];
+        
+        foreach ($formats as $format) {
+            try {
+                return Carbon::createFromFormat($format, $dateString)->format('Y-m-d');
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
+        
+        // Nếu không parse được, trả về null
+        return null;
     }
 
     public function show($id)

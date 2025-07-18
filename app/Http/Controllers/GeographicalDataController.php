@@ -28,6 +28,7 @@ class GeographicalDataController extends Controller
 
     public function index($type)
     {
+        
         $data = GeographicalData::where('type', $type)->orderByDesc('id')->paginate(10);
         return view("pages/geographical/{$type}/list-{$type}", compact('data'));
     }
@@ -39,17 +40,19 @@ class GeographicalDataController extends Controller
         return view("pages/geographical/{$type}/add-{$type}", compact('calamities', 'communes'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request,$type)
     {
         $user = auth()->user();
         $validated = $this->validateRequest($request);
-        $validated['last_updated'] = $this->formatDate($request->last_updated);
         $validated['created_by_user_id'] = $user->id;
+        $validated['last_updated'] = $this->formatDate($request->last_updated);
+        $validated['type'] = $type;
         foreach (['map', 'video', 'image'] as $fileType) {
             $validated[$fileType] = $this->saveFile($request, $fileType, $validated['type']);
         }
 
         GeographicalData::create($validated);
+        
         return redirect()->route($this->redirectRoutes[$validated['type']])->with('success', 'Dữ liệu đã được lưu thành công!');
     }
 
@@ -67,8 +70,9 @@ class GeographicalDataController extends Controller
         $geographicalData = GeographicalData::findOrFail($request->id);
         $validated = $this->validateRequest($request, $geographicalData->id);
         $validated['last_updated'] = $this->formatDate($request->last_updated);
-        $validated['updated_by_user_id'] = $user->id();
-
+        $validated['updated_by_user_id'] = $user->id;
+        $validated['type'] = $type;
+        
         foreach (['map', 'video', 'image'] as $fileType) {
             $validated[$fileType] = $this->saveFile($request, $fileType, $validated['type'], $geographicalData->$fileType);
         }
@@ -144,7 +148,12 @@ class GeographicalDataController extends Controller
             'last_updated'=> 'nullable|string',
             'video' => 'nullable|file|mimes:mp4',
             'image' => 'nullable|file|mimes:jpg,jpeg,png',
-            'map' => 'nullable|max:51200',
+            'map' => 'nullable|max:51200|mimes:application/vnd.google-earth.kmz, 
+                application/vnd.google-earth.kml+xml,
+                application/octet-stream, 
+                application/zip,
+                text/xml,
+                text/html',
             'population'=>'nullable|numeric',
         ]);
     }
@@ -159,6 +168,7 @@ class GeographicalDataController extends Controller
         if (!$request->hasFile($field)) {
             return $oldFile;
         }
+        
 
         $file = $request->file($field);
         $slugName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));

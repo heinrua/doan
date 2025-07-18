@@ -132,26 +132,126 @@ class StormConstructionController extends Controller
         $spreadsheet = IOFactory::load($filePath);
         $sheet = $spreadsheet->getActiveSheet();
         $rows = $sheet->toArray();
+        
+        // Bỏ qua dòng đầu tiên (dòng tiêu đề)
+        $header = array_shift($rows);
+        
+        // Debug: In ra header để kiểm tra
+        \Log::info('Header columns:', $header);
+        
         foreach ($rows as $row) {
-            $data = [
-                'name' => $row["Tên công trình"],
-                'risk_level_id' => RiskLevel::where('name', $row["Cấp độ"])->first()->id,
-                'type_of_construction_id' => TypeOfConstruction::where('name', $row["Loại công trình"])->first()->id,
-                'commune_id' => Commune::where('name', $row["Xã"])->first()->id,
-                'year_of_construction' => $row["Năm xây dựng"],
-                'year_of_completion' => $row["Năm hoàn thành"],
-                'scale' => $row["Quy mô"],
-                'geology' => $row["Địa chất"],
-                'influence_level' => $row["Mức độ ảnh hưởng"],
-                'coordinates' => $row["Toạ độ"],
-                'total_investment' => $row["Tổng mức đầu tư"],
-                'capital_source' => $row["Nguồn vốn"],
-                'created_by_user_id' => $user->id,
-                'update_time' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $row["Thời gian cập nhật"])->format('Y-m-d'),
+            // Tạo mảng associative từ header và data
+            $rowData = array_combine($header, $row);
+            
+            // Debug: In ra rowData để kiểm tra
+            \Log::info('Row data:', $rowData);
+            
+            // Kiểm tra xem dòng có dữ liệu thực không
+            $hasData = false;
+            foreach ($rowData as $value) {
+                if (!empty($value) && $value !== null) {
+                    $hasData = true;
+                    break;
+                }
+            }
+            
+            // Bỏ qua dòng trống
+            if (!$hasData) {
+                \Log::info('Skipping empty row');
+                continue;
+            }
+            
+            $requiredKeys = [
+                'Mã công trình',
+                'Tên công trình',
+                'Loại công trình',
+                'Cấp độ rủi ro thiên tai',
             ];
-            $construction = Construction::create($data);
+            
+            foreach ($requiredKeys as $key) {
+                if (!isset($rowData[$key]) || $rowData[$key] === null || $rowData[$key] === '') {
+                    \Log::info("Missing key: '$key' in row data:", $rowData);
+                    return redirect()->back()->with('error', "Thiếu hoặc để trống cột '$key' trong file Excel!");
+                }
+            }
+            $data = [
+                'construction_code'=>$rowData["Mã công trình"],
+                'name' => $rowData["Tên công trình"],
+                'slug' => $this->generateUniqueSlug($rowData["Tên công trình"]),
+                'risk_level_id' => RiskLevel::where('name', $rowData["Cấp độ rủi ro thiên tai"])->first()->id,
+                'type_of_construction_id' => TypeOfConstruction::where('name', $rowData["Loại công trình"])->first()->id,
+                'commune_id' => Commune::where('name', $rowData["Khu vực"])->first()->id,
+                'address' => $rowData["Địa điểm"],
+                'size' => $rowData["Kích thước"],
+                'construction_date' => $this->parseDate($rowData["Ngày xây dựng"]),
+                'completion_date' => $this->parseDate($rowData["Ngày hoàn thành"]),
+                'status' => $rowData["Trình trạng"],
+                'capital_source' => $rowData["Nguồn vốn"],
+                'total_investment' => $rowData["Chi phí"],
+                'operating_status' => $rowData["Tình trạng hoạt động"],
+                'coordinates' => $rowData["Toạ độ"],
+                'contractor' => $rowData["Nhà thầu"],
+                'efficiency_level' => $rowData["Mức độ hiệu quả"],
+                'created_by_user_id' => $user->id,
+                'update_time' => $this->parseDate($rowData["Thời gian cập nhật"]),
+            ];
+            
+            $exists = Construction::where('construction_code', $rowData["Mã công trình"])
+                ->orWhere('name', $rowData["Tên công trình"])
+                ->exists();
+
+            if ($exists) {
+                \Log::info("Bỏ qua do trùng mã hoặc tên công trình: " . $rowData["Mã công trình"]);
+                continue;
+            }
+
+            try {
+                $construction = Construction::create($data);
+            } catch (\Illuminate\Database\QueryException $e) {
+                if ($e->getCode() == 23000 && strpos($e->getMessage(), 'Duplicate entry') !== false) {
+                    return redirect()->back()->with('error', "Công trình '{$rowData['Tên công trình']}' đã tồn tại trong hệ thống!");
+                }
+                return redirect()->back()->with('error', "Lỗi khi thêm công trình: " . $e->getMessage());
+            }
         }
         return redirect('/construction/list-storm')->with('success', "Nhập thành công");
+    }
+
+    private function generateUniqueSlug($name)
+    {
+        $slug = Str::slug($name);
+        $count = Construction::where('slug', 'like', "{$slug}%")->count();
+        if ($count > 0) {
+            $slug = "{$slug}-{$count}";
+        }
+        return $slug;
+    }
+
+    private function parseDate($dateString)
+    {
+        if (empty($dateString)) {
+            return null;
+        }
+        
+        // Thử các format khác nhau
+        $formats = [
+            'd \T\h\á\n\g m, Y',  // 10 tháng 7, 2025
+            'd/m/Y',               // 10/7/2025
+            'Y-m-d',               // 2025-07-10
+            'd-m-Y',               // 10-7-2025
+            'm/d/Y',               // 7/10/2025
+        ];
+        
+        foreach ($formats as $format) {
+            try {
+                return Carbon::createFromFormat($format, $dateString)->format('Y-m-d');
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
+        
+        // Nếu không parse được, trả về null
+        return null;
     }
     public function show($id)
     {
@@ -190,6 +290,7 @@ class StormConstructionController extends Controller
         }
 
         $data['status'] = $request->status;
+        $data['coordinates'] = $request->coordinates;
         $data['capital_source'] = $request->capital_source;
         $data['operating_status'] = $request->operating_status;
         $data['contractor'] = $request->contractor;

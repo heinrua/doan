@@ -81,12 +81,12 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <select id="sub_type_of_calamity_id" name="sub_type_of_calamity_id" multiple>
+                                        <select id="sub_type_of_calamity_ids" name="sub_type_of_calamity_ids[]" multiple>
                                             @foreach ($subTypeOfCalamities as $subTypeOfCalamity)
-                                                <option value="{{ $subTypeOfCalamity->id }}" {{ $calamity->sub_type_of_calamity_id == $subTypeOfCalamity->id ? 'selected' : '' }}>{{ $subTypeOfCalamity->name }}</option>
+                                                <option value="{{ $subTypeOfCalamity->id }}" {{ $calamity->sub_type_of_calamities->pluck('id')->contains($subTypeOfCalamity->id) ? 'selected' : '' }}>{{ $subTypeOfCalamity->name }}</option>
                                             @endforeach
                                         </select>
-                                        @error('sub_type_of_calamity_id')
+                                        @error('sub_type_of_calamity_ids')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -107,9 +107,10 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <input value="{{ $calamity->coordinates }}" name="coordinates"
-                                            id="coordinates" type="text" placeholder="Tọa độ vị trí"
-                                            onblur="updateMapFromInput()" />
+                                        <div class="relative">
+                                            <input value="{{ $calamity->coordinates }}" name="coordinates"
+                                                id="coordinates" type="text" placeholder="Nhập tọa độ (VD: 10.7769, 106.7009)" onblur="updateMapFromInput()" />
+                                        </div>
                                     </div>
                                 </div>
                                 
@@ -401,13 +402,7 @@
                                             Hoàn tác
                                         </button>
                                         
-                                        <input type="file" name="map[]" id="map" multiple
-                                            class="block w-full text-sm text-gray-900
-                                            file:mr-2 file:py-1 file:px-3
-                                            file:rounded file:border-0
-                                            file:text-sm file:font-medium
-                                            file:bg-blue-100 file:text-blue-700
-                                            hover:file:bg-blue-200 border border-gray-300 rounded-md">
+                                        <input type="file" name="map[]" id="map" multiple class="block w-full text-sm text-gray-900 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 border border-gray-300 rounded-md">
                                         
                                         <input type="hidden" name="deleted_maps" id="deletedMaps" value="[]">
                                     </div>
@@ -439,13 +434,7 @@
                                             @endif
                                         </div>
                                         
-                                         <input type="file" name="image" id="imageInput" accept="image/*"
-                                            class="block w-full text-sm text-gray-900
-                                            file:mr-2 file:py-1 file:px-3
-                                            file:rounded file:border-0
-                                            file:text-sm file:font-medium
-                                            file:bg-blue-100 file:text-blue-700
-                                            hover:file:bg-blue-200 border border-gray-300 rounded-md">
+                                         <input type="file" name="image" id="imageInput" accept="image/*" class="block w-full text-sm text-gray-900 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 border border-gray-300 rounded-md">
                                         
                                         <button type="button" id="restoreImage" onclick="showImage()"
                                             class="hidden mt-2 text-blue-600 hover:underline">
@@ -470,13 +459,7 @@
                                     </label>
                                     <div class="w-full">
                                         
-                                         <input type="file" name="video" id="videoInput" accept="video/mp4"
-                                            class="block w-full text-sm text-gray-900
-                                            file:mr-2 file:py-1 file:px-3
-                                            file:rounded file:border-0
-                                            file:text-sm file:font-medium
-                                            file:bg-blue-100 file:text-blue-700
-                                            hover:file:bg-blue-200 border border-gray-300 rounded-md">
+                                         <input type="file" name="video" id="videoInput" accept="video/mp4" class="block w-full text-sm text-gray-900 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 border border-gray-300 rounded-md">
                                         
                                         @if (!empty($calamity->video))
                                             <div id="videoContainer" class="mt-4 relative w-fit group">
@@ -547,34 +530,27 @@
                 maxItems: null,
                 render: {
                     item: function(data, escape) {
-                        return `<div class="bg-blue-100 text-blue-800 text-sm rounded-full px-3 py-1 mr-2 mb-1 inline-flex items-center">
-                                    ${escape(data.text)}
-                                    
-                                </div>`;
+                        return `<div class='bg-blue-100 text-blue-800 text-sm rounded-full px-3 py-1 mr-2 mb-1 inline-flex items-center'>${escape(data.text)}</div>`;
                     },
                     option: function(data, escape) {
-                        return `<div class="py-2 px-3 text-sm hover:bg-blue-50 cursor-pointer">${escape(data.text)}</div>`;
+                        return `<div class='py-2 px-3 text-sm hover:bg-blue-50 cursor-pointer'>${escape(data.text)}</div>`;
                     }
                 }
-        }
-    );
-    new TomSelect("#sub_type_of_calamity_id", {
-        plugins: ['remove_button'],
-        placeholder: "Chọn các loại hình...",
-        maxItems: null,
-        render: {
-            item: function(data, escape) {
-                return `<div class="bg-green-100 text-green-800 text-sm rounded-full px-3 py-1 mr-2 mb-1 inline-flex items-center">
-                            ${escape(data.text)}
-                           
-                        </div>`;
-            },
-            option: function(data, escape) {
-                return `<div class="py-2 px-3 text-sm hover:bg-green-50 cursor-pointer">${escape(data.text)}</div>`;
+        });
+        new TomSelect("#sub_type_of_calamity_ids", {
+            plugins: ['remove_button'],
+            placeholder: "Chọn các loại hình...",
+            maxItems: null,
+            render: {
+                item: function(data, escape) {
+                    return `<div class='bg-green-100 text-green-800 text-sm rounded-full px-3 py-1 mr-2 mb-1 inline-flex items-center'>${escape(data.text)}</div>`;
+                },
+                option: function(data, escape) {
+                    return `<div class='py-2 px-3 text-sm hover:bg-green-50 cursor-pointer'>${escape(data.text)}</div>`;
+                }
             }
-        }
-    });
-
+        });
+      
     });
     </script>
     <script>
@@ -893,6 +869,5 @@
             kmlLayers.set(url, layer);
         }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMhd9dHKpWfJ57Ndv2alnxEcSvP_-_uN8&callback=initializeApp" async
-    defer loading="async"></script>
+
 @endpush

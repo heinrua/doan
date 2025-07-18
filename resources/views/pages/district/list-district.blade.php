@@ -131,10 +131,10 @@
                                             @foreach ($maps as $map)
                                             <li>
                                             <a onclick="showMapModal('{{ $map }}')"
-   href="javascript:void(0);"
-   class="text-blue-500 hover:underline">
-    {{ basename($map) }}
-</a>
+                                            href="javascript:void(0);"
+                                            class="text-blue-500 hover:underline">
+                                                {{ basename($map) }}
+                                            </a>
 
                                             </li>
                                             @endforeach
@@ -199,6 +199,7 @@
     @vite(['resources/js/confirm-delete.js','resources/js/import-exel.js'])
 @endsection
 <script>
+const NGROK_DOMAIN = 'https://ad4999a1bb78.ngrok-free.app';
         
         function closeMapModal() {
             document.getElementById('mapModal').classList.add('hidden');
@@ -215,35 +216,29 @@
         // Biến lưu các lớp KML đang hiển thị trong modal
         let modalKmlLayers = new Map();
         function showMapModal(kmlUrl) {
-    console.log("⛳ KML INPUT:", kmlUrl);
-
-    const fullUrl = kmlUrl.startsWith("http")
-        ? kmlUrl
-        : `${window.location.origin}/${kmlUrl}`;
-
-    console.log("📍 FULL URL:", fullUrl);
-
-    document.getElementById('mapModal').classList.remove('hidden');
-    if (!map) initMap();
-
-    // Xoá lớp cũ nếu có
-    modalKmlLayers.forEach(layer => layer.setMap(null));
-    modalKmlLayers.clear();
-
-    const layer = new google.maps.KmlLayer({
-        url: fullUrl,
-        map: map,
-        preserveViewport: false,
-    });
-
-    modalKmlLayers.set(fullUrl, layer);
-
-    // DEBUG lỗi nếu có
-    google.maps.event.addListener(layer, "status_changed", function () {
-        if (layer.getStatus() !== google.maps.KmlLayerStatus.OK) {
-            alert(`❌ Không thể tải KML từ ${fullUrl}.`);
-        }
-    });
+            console.log("⛳ KML INPUT:", kmlUrl);
+            const cleanKmlUrl = kmlUrl.replace(/^\/+/, '');
+            const fullUrl = kmlUrl.startsWith("http")
+                ? kmlUrl
+                : `${NGROK_DOMAIN}/${cleanKmlUrl}`;
+            console.log("📍 FULL URL:", fullUrl);
+            document.getElementById('mapModal').classList.remove('hidden');
+            if (!map) initMap();
+            // Xoá lớp cũ nếu có
+            modalKmlLayers.forEach(layer => layer.setMap(null));
+            modalKmlLayers.clear();
+            const layer = new google.maps.KmlLayer({
+                url: fullUrl,
+                map: map,
+                preserveViewport: false,
+            });
+            modalKmlLayers.set(fullUrl, layer);
+            // DEBUG lỗi nếu có
+            google.maps.event.addListener(layer, "status_changed", function () {
+                if (layer.getStatus() !== google.maps.KmlLayerStatus.OK) {
+                    alert(`❌ Không thể tải KML từ ${fullUrl}.`);
+                }
+            });
 }
 
 
@@ -263,13 +258,7 @@
 
         }
 
-
-
-
 </script>
-<script 
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMhd9dHKpWfJ57Ndv2alnxEcSvP_-_uN8&callback=initMap&loading=async"
-    defer>
-</script>
+
 
    

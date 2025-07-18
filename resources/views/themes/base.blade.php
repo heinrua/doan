@@ -18,6 +18,10 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @stack('scripts')
+    <script 
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMhd9dHKpWfJ57Ndv2alnxEcSvP_-_uN8&callback=initializeApp&loading=async"
+        defer>
+    </script>
 </head>
 
 <body style="background-color: #1E3A8A;">
@@ -106,8 +110,8 @@
                             $notifications = auth()->user()->notifications->take(5); // mới nhất 5 cái
                             @endphp
 
-                            <div class="relative mr-4">
-                                <a href="javascript:void(0)" onclick="openNotification()" class="relative">
+                            <div class="relative mr-4 flex ">
+                                <a href="javascript:void(0)" onclick="openNotification()" class="relative mr-5">
                                     {!! $icons['bell'] !!}
 
                                     <!-- Badge đỏ số lượng -->
@@ -120,7 +124,7 @@
                                 
 
                                 <!-- Dropdown thông báo -->
-                                <div class="absolute right-0 mt-2 w-80 bg-white border rounded shadow z-50 hidden" id="notification-dropdown">
+                                <div class="absolute right-0 mt-2 w-64 bg-white border rounded shadow z-1 hidden" id="notification-dropdown">
                                     <ul class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
                                         @forelse($notifications as $notification)
                                             @php
@@ -153,13 +157,12 @@
                                         @endforelse
                                     </ul>
                                 </div>
-                            </div>
+                            
 
                             <button type="button" style="all: unset" id="user-menu-button" aria-expanded="false">
                                 {!! $icons['user-circle'] !!}
                             </button>
-
-                            <div class="hidden absolute right-0 mt-2 w-48 z-1 text-base bg-white divide-y divide-gray-100 rounded-lg shadow-lg" id="user-dropdown">
+                            <div class="hidden absolute right-0 mt-5 w-48 max-w-xs z-10 text-base bg-white divide-y divide-gray-100 rounded-lg shadow-lg" id="user-dropdown">
                                 <div class="px-4 py-3">
                                     <span class="block text-sm text-gray-900">Tên: {{ Auth::user()->full_name ?? 'user' }}</span>
                                     <span class="block text-sm text-gray-500 truncate">Tên đăng nhập: {{ Auth::user()->user_name ?? '' }}</span>
@@ -174,6 +177,7 @@
                                     </li>
                                 </ul>
                             </div>
+                                            </div>
                         @endauth
 
                         @guest

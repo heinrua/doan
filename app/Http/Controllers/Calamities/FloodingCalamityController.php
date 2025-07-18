@@ -214,31 +214,56 @@ class FloodingCalamityController extends Controller
         
         foreach ($data as $row) {
             $row = array_combine($header, $row);
+            $requiredKeys = [
+                'Tên khu vực ngập',
+                'Loại hình ngập',
+                'Cấp độ rủi ro',
+               
+               
+            ];
+            foreach ($requiredKeys as $key) {
+                if (!isset($row[$key]) || $row[$key] === null || $row[$key] === '') {
+                    return redirect()->back()->with('error', "Thiếu hoặc để trống cột '$key' trong file Excel!");
+                }
+            }
             if (empty($row['Tên khu vực ngập']) || empty($row['Loại hình ngập']) ) {
                 continue;
             }
+             // Kiểm tra trùng lặp theo tên khu vực ngập
+            $exists = Calamities::where('name', $rowData["Tên khu vực ngập"])->exists();
+             if ($exists) {
+                 \Log::info("Bỏ qua do trùng tên khu vực ngập: " . $rowData["Tên khu vực ngập"]);
+                 continue;
+             }
+            $communes = array_map('trim',explode(',', $row['Xã']));
+            $communeIds = Commune::whereIn('name', $communes)->pluck('id')->toArray();
+            $sub_type_of_calamities = array_map('trim',explode(',', $rowData['Loại hình ngập']));
+            $sub_type_of_calamity_ids = SubTypeOfCalamities::whereIn('name', $sub_type_of_calamities)->pluck('id')->toArray();
             $calamity = Calamities::create([
-                'name' => $row['Tên khu vực ngập'],
-                'sub_type_of_calamity_ids' => SubTypeOfCalamities::where('name', $row['Loại hình ngập'])->first()->id,
-                'risk_level_id' => RiskLevel::where('name', $row['Cấp độ rủi ro'])->first()->id,
-                'coordinates' => $row['Tọa độ'],
-                'flood_level' => $row['Mức độ (m)'],
-                'flood_range' => $row['Khoảng ngập'],
-                'flooded_area' => $row['Diện tích (ha)'],
-                'time_start' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $row['Bắt đầu'])->format('Y-m-d'),
-                'time_end' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $row['Kết thúc'])->format('Y-m-d'),
-                'sprint_time' => $row['Nước rút (giờ)'],
-                'reason' => $row['Nguyên nhân'],
-                'number_of_people_affected' => $row['Số hộ ảnh hưởng'],
-                'human_damage' => $row['Thiệt hại người'],
-                'property_damage' => $row['Thiệt hại tài sản'],
-                'damaged_infrastructure' => $row['Hạ tầng hư hại'],
-                'mitigation_measures' => $row['Biện pháp'],
-                'data_source' => $row['Nguồn'],
+                'name' => $rowData['Tên khu vực ngập'],
+                'slug' => Str::slug($rowData['Tên khu vực ngập']),
+                'sub_type_of_calamity_ids' => $sub_type_of_calamity_ids,
+                'risk_level_id' => RiskLevel::where('name', $rowData['Cấp độ rủi ro'])->first()->id,
+                'coordinates' => $rowData['Tọa độ'],
+                'flood_level' => $rowData['Mức độ (m)'],
+                'flood_range' => $rowData['Khoảng ngập'],
+                'flooded_area' => $rowData['Diện tích (ha)'],
+                'time_start' => Carbon::createFromFormat('d \\T\\h\\á\\n\\g m, Y', $rowData['Bắt đầu'])->format('Y-m-d'),
+                'time_end' => Carbon::createFromFormat('d \\T\\h\\á\\n\\g m, Y', $rowData['Kết thúc'])->format('Y-m-d'),
+                'sprint_time' => $rowData['Nước rút (giờ)'],
+                'reason' => $rowData['Nguyên nhân'],
+                'number_of_people_affected' => $rowData['Số hộ ảnh hưởng'],
+                'human_damage' => $rowData['Thiệt hại người'],
+                'property_damage' => $rowData['Thiệt hại tài sản'],
+                'damaged_infrastructure' => $rowData['Hạ tầng hư hại'],
+                'mitigation_measures' => $rowData['Biện pháp'],
+                'data_source' => $rowData['Nguồn'],
+                'updated_at' => Carbon::createFromFormat('d \\T\\h\\á\\n\\g m, Y', $rowData['Cập nhật'])->format('Y-m-d'),
+                'commune_ids' => $communeIds,
                 'created_by_user_id' => $user->id,
             ]);
-            $calamity->sub_type_of_calamities()->sync($row['Loại hình ngập']);
-            $calamity->communes()->sync($row['Địa phương']);    
+            $calamity->sub_type_of_calamities()->sync($sub_type_of_calamity_ids);
+            $calamity->communes()->sync($communeIds);    
             $calamity->save();
         }
         return back()->with('success', 'Import thành công!');

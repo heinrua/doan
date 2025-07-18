@@ -114,7 +114,8 @@ class StormCalamityController extends Controller
                 'application/vnd.google-earth.kml+xml',
                 'application/octet-stream', 
                 'application/zip',
-                'text/xml'  
+                'text/xml',
+                'text/html'
             ];
             $filePaths = []; 
             foreach ($mapFiles as $mapFile) {
@@ -207,27 +208,49 @@ class StormCalamityController extends Controller
         
         foreach ($data as $row) {
             $row = array_combine($header, $row);
+            $requiredKeys = [
+                'Tên',
+                'Loại thiên tai',
+                'Mức độ rủi ro',
+               
+            ];
+            foreach ($requiredKeys as $key) {
+                if (!isset($row[$key]) || $row[$key] === null || $row[$key] === '') {
+                    return redirect()->back()->with('error', "Thiếu hoặc để trống cột '$key' trong file Excel!");
+                }
+            }
             if (empty($row['Tên']) || empty($row['Loại thiên tai'])) {
                 continue;
             }
+            $communes = array_map('trim',explode(',', $rowData['Xã']));
+            $communeIds = Commune::whereIn('name', $communes)->pluck('id')->toArray();
+            $sub_type_of_calamities = array_map('trim',explode(',', $rowData['Loại thiên tai']));
+            $sub_type_of_calamity_ids = SubTypeOfCalamities::whereIn('name', $sub_type_of_calamities)->pluck('id')->toArray();
+             // Kiểm tra trùng lặp theo tên thiên tai
+            $exists = Calamities::where('name', $rowData["Tên"])->exists();
+            if ($exists) {
+                \Log::info("Bỏ qua do trùng tên thiên tai: " . $rowData["Tên"]);
+                continue;
+            }
             $calamity = Calamities::create([
-                'name' => $row['Tên'],
-                'sub_type_of_calamity_ids' => SubTypeOfCalamities::where('name', $row['Loại thiên tai'])->first()->id,
-                'risk_level_id' => RiskLevel::where('name', $row['Mức độ rủi ro'])->first()->id,
-                'coordinates' => $row['Tọa độ'],
-                'investment_level' => $row['Mức đầu tư'],
-                'time_start' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $row['Thời gian bắt đầu'])->format('Y-m-d'),
-                'time_end' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $row['Thời gian kết thúc'])->format('Y-m-d'),
-                'human_damage' => $row['Thiệt hại con người'],
-                'property_damage' => $row['Thiệt hại tài sản'],
-                'mitigation_measures' => $row['Biện pháp khắc phục'],
-                'support_policy' => $row['Chính sách hỗ trợ'],
-                'watermark_points' => $row['Điểm đánh dấu'],
-                'commune_ids' => Commune::where('name', $row['Xã'])->first()->id,
+                'name' => $rowData['Tên'],
+                'slug' => Str::slug($rowData['Tên']),
+                'sub_type_of_calamity_ids' => $sub_type_of_calamity_ids,
+                'risk_level_id' => RiskLevel::where('name', $rowData['Mức độ rủi ro'])->first()->id,
+                'coordinates' => $rowData['Tọa độ'],
+                'investment_level' => $rowData['Mức đầu tư'],
+                'time_start' => Carbon::createFromFormat('d \\T\\h\\á\\n\\g m, Y', $rowData['Thời gian bắt đầu'])->format('Y-m-d'),
+                'time_end' => Carbon::createFromFormat('d \\T\\h\\á\\n\\g m, Y', $rowData['Thời gian kết thúc'])->format('Y-m-d'),
+                'human_damage' => $rowData['Thiệt hại con người'],
+                'property_damage' => $rowData['Thiệt hại tài sản'],
+                'mitigation_measures' => $rowData['Biện pháp khắc phục'],
+                'support_policy' => $rowData['Chính sách hỗ trợ'],
+                'watermark_points' => $rowData['Điểm đánh dấu'],
+                'commune_ids' => $communeIds,
                 'created_by_user_id' => $user->id,
             ]);
-            $calamity->sub_type_of_calamities()->sync($row['Loại thiên tai']);
-            $calamity->communes()->sync($row['Xã']);    
+            $calamity->sub_type_of_calamities()->sync($sub_type_of_calamity_ids);
+            $calamity->communes()->sync($communeIds);    
             $calamity->save();
         }
         return back()->with('success', 'Import thành công!');
@@ -260,6 +283,8 @@ class StormCalamityController extends Controller
 
     public function update(Request $request)
     {
+        \Log::info('hasFile', ['hasFile' => $request->hasFile('map')]);
+        \Log::info('file', ['file' => $request->file('map')]);
         $user = auth()->user();
         $calamity = Calamities::findOrFail($request->id);
         $validated = $request->validate([
@@ -289,18 +314,30 @@ class StormCalamityController extends Controller
         $existingMaps = array_diff($existingMaps, $deletedMaps ?? []); 
         if ($request->hasFile('map')) {
             $mapFiles = $request->file('map');
+            
             $allowedMimeTypes = [
                 'application/vnd.google-earth.kmz', 
                 'application/vnd.google-earth.kml+xml', 
                 'application/octet-stream',
                 'application/zip',
-                'text/xml'
+                'text/xml',
+                'text/html'
             ];
+            $allowedExtensions = ['kml', 'kmz'];
             $filePaths = [];
             foreach ($mapFiles as $mapFile) {
-                if (!in_array($mapFile->getMimeType(), $allowedMimeTypes)) {
+                $extension = strtolower($mapFile->getClientOriginalExtension());
+                $mimeType = $mapFile->getMimeType();
+                 // Ghi log mime type và tên file để kiểm tra
+                \Log::info('Thông tin file map upload', [
+                    'original_name' => $mapFile->getClientOriginalName(),
+                    'extension' => $extension,
+                    'mime_type' => $mimeType
+                ]);
+                if (!in_array($extension, $allowedExtensions) || !in_array($mimeType, $allowedMimeTypes)) {
                     return back()->withErrors(['map' => 'Định dạng file không hợp lệ. Chỉ chấp nhận KML hoặc KMZ.']);
                 }
+                
                 $slugName = Str::slug(pathinfo($mapFile->getClientOriginalName(), PATHINFO_FILENAME));
                 $timestamp = now()->format('YmdHis');
                 $newFileName = "{$slugName}-{$timestamp}.{$mapFile->getClientOriginalExtension()}";
@@ -378,7 +415,7 @@ class StormCalamityController extends Controller
         $calamity->sub_type_of_calamities()->detach();
         $calamity->communes()->detach();
         $calamity->delete();
-        return redirect('/calamity/list-storm')->with('success', 200);
+        return redirect('/calamity/list-storm')->with('success', 'Xóa thành công!');
     }
     public function destroyMultiple(Request $request)
     {

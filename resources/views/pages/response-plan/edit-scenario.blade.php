@@ -188,8 +188,10 @@
                                                 @foreach ($documents as $document)
                                                     <div class="file-item flex items-center gap-2 mt-2"
                                                         data-file="{{ $document }}">
-                                                        <a href="{{ asset($document) }}" target="_blank"
-                                                            class="text-blue-500 hover:underline">
+                                                        <a href="javascript:void(0);" 
+                                                            class="text-blue-500 hover:underline view-document-modal" 
+                                                            data-file="{{ asset($document) }}"
+                                                            onclick="openFileModal('{{ asset($document) }}')">
                                                             {{ basename($document) }}
                                                         </a>
                                                         <button type="button" onclick="hideDocument(this)"
@@ -252,6 +254,13 @@
 
         </div>
     </div>
+    <div id="file-modal" class="hidden fixed inset-0 bg-black/50  z-50 flex items-center justify-center">
+
+    <div class="bg-white p-4 rounded w-[80%] max-h-[90%] overflow-y-auto relative">
+        <button onclick="closeFileModal()" class="absolute top-2 right-2 bg-gray-300">Đóng</button>
+        <div id="file-content" class="mt-8 space-y-4"></div>
+    </div>
+</div>
 @endsection
 @push('scripts')
     <script>
@@ -283,5 +292,60 @@
                 document.getElementById("restoreDocument").classList.add("hidden");
             }
         }
+        function openFileModal(fileUrl) {
+        const fileExt = fileUrl.split('.').pop().toLowerCase();
+        const container = document.getElementById("file-content");
+        container.innerHTML = "";
+
+        if (fileExt === 'docx') {
+            fetch(fileUrl)
+                .then(response => response.arrayBuffer())
+                .then(arrayBuffer => mammoth.convertToHtml({ arrayBuffer }))
+                .then(result => {
+                    container.innerHTML = result.value;
+                    document.getElementById("file-modal").classList.remove("hidden");
+                })
+                .catch(error => {
+                    console.error("Lỗi đọc DOCX:", error);
+                    alert("Không thể hiển thị nội dung file DOCX.");
+                });
+
+        } else if (fileExt === 'pdf') {
+            pdfjsLib.getDocument(fileUrl).promise.then(function (pdf) {
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    pdf.getPage(i).then(function (page) {
+                        const scale = 1.2;
+                        const viewport = page.getViewport({ scale });
+
+                        const canvas = document.createElement("canvas");
+                        const context = canvas.getContext("2d");
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+
+                        page.render({ canvasContext: context, viewport }).promise.then(() => {
+                            container.appendChild(canvas);
+                        });
+                    });
+                }
+                document.getElementById("file-modal").classList.remove("hidden");
+            }).catch(error => {
+                console.error("Lỗi đọc PDF:", error);
+                alert("Không thể hiển thị nội dung file PDF.");
+            });
+
+        } else {
+            alert("Định dạng file không hỗ trợ.");
+        }
+    }
+
+    function closeFileModal() {
+        document.getElementById("file-modal").classList.add("hidden");
+        document.getElementById("file-content").innerHTML = "";
+    }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.0.0/mammoth.browser.min.js"></script>
 @endpush

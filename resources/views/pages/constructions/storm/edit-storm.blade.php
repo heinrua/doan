@@ -89,6 +89,27 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
+                                    formInline>
+                                    <label class="md:w-80">
+                                        <div class="text-left">
+                                            <div class="flex items-center">
+                                                <div class="font-medium">Toạ Độ</div>
+                                                <div class="ml-2 text-red-500 text-xl font-bold">*</div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <div class="w-full">
+                                        <div class="relative">
+                                            <input value="{{ $construction->coordinates }}" name="coordinates"
+                                                id="coordinates" type="text" placeholder="Nhập tọa độ (VD: 10.7769, 106.7009)" onblur="updateMapFromInput()" />
+                                        </div>
+                                        <div id="map1" class="w-full h-[200px] rounded-lg border"></div>
+                                        @error('coordinates')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                             
                             <div>
@@ -119,8 +140,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <select class="w-full" id="crud-form-2" name="type_of_construction_id"
-                                            multiple>
+                                        <select id="type_of_construction_id" name="type_of_construction_id">
                                             @foreach ($typeOfConstructions as $typeOfConstruction)
                                                 <option value="{{ $typeOfConstruction->id }}"
                                                     {{ $construction->type_of_construction_id == $typeOfConstruction->id ? 'selected' : '' }}>
@@ -159,7 +179,7 @@
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <select class="w-full" id="crud-form-2" name="commune_id">
+                                        <select id="commune_id" name="commune_id">
                                             @foreach ($communes as $commune)
                                                 <option value="{{ $commune->id }}"
                                                     {{ !empty($construction->communes) && isset($construction->communes[0]->id) && $construction->communes[0]->id == $commune->id ? 'selected' : '' }}>
@@ -167,6 +187,9 @@
                                                 </option>
                                             @endforeach
                                         </select>
+                                        @error('commune_id')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -357,6 +380,113 @@
                     </div>
                 </div>
             </form>
+           
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof google === "undefined" || typeof google.maps === "undefined") {
+            console.warn("Google Maps API chưa tải xong, đang chờ...");
+            let maxRetries = 10; 
+            let retries = 0;
+            let checkGoogleMaps = setInterval(() => {
+                if (typeof google !== "undefined" && typeof google.maps !== "undefined") {
+                    clearInterval(checkGoogleMaps);
+                    console.log("Google Maps API đã sẵn sàng!");
+                    initializeApp();
+                } else {
+                    retries++;
+                    console.warn(`Đợi Google Maps API... (${retries})`);
+                    if (retries >= maxRetries) {
+                        clearInterval(checkGoogleMaps);
+                        console.error("Không thể load Google Maps API sau 10 giây.");
+                    }
+                }
+            }, 1000);
+        } else {
+            console.log("Google Maps API đã sẵn sàng!");
+            initializeApp();
+        }
+    });
+    
+    let mapStorm, marker;
+    let infoWindowStorm;
+
+    function initializeApp() {
+        initMap();
+        const construction = @json($construction); 
+        showSingleConstructionMarker(construction);
+    }
+
+    function initMap() {
+        map1 = new google.maps.Map(document.getElementById('map1'), {
+            center: {
+                lat: 8.946132,
+                lng: 105.033270
+            },
+            zoom: 11
+        });
+        infoWindowStorm = new google.maps.InfoWindow();
+        
+        map1.addListener("click", function(event) {
+            let lat = event.latLng.lat().toFixed(6);
+            let lng = event.latLng.lng().toFixed(6);
+            
+            document.getElementById("coordinates").value = lat + ", " + lng;
+            
+            if (marker) {
+                marker.setPosition(event.latLng);
+            } else {
+                marker = new google.maps.Marker({
+                    position: event.latLng,
+                    map: map1,
+                    draggable: true
+                });
+            }
+        });
+    }
+
+    function updateMapFromInput() {
+        let inputVal = document.getElementById("coordinates").value.trim();
+        let coords = inputVal.split(",");
+
+        if (coords.length === 2) {
+            let lat = parseFloat(coords[0]);
+            let lng = parseFloat(coords[1]);
+
+            if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+                let newLocation = {
+                    lat: lat,
+                    lng: lng
+                };
+                map1.setCenter(newLocation);
+                map1.setZoom(13);
+                if (marker) {
+                    marker.setPosition(newLocation); 
+                }
+            } else {
+                showToast("⚠️ Tọa độ không hợp lệ! Vui lòng nhập lại.");
+            }
+        } else {
+            showToast("⚠️ Định dạng tọa độ không đúng! Vui lòng nhập theo dạng: lat, lng");
+        }
+    }
+    function showSingleConstructionMarker(construction) {
+        console.log(construction);
+        if (construction.coordinates) {
+            const [lat, lng] = construction.coordinates.split(",");
+            const marker = new google.maps.Marker({
+                position: { lat: parseFloat(lat), lng: parseFloat(lng) },
+                map: map1,
+                title: 'Toạ độ công trình'
+            });
+        }
+    }
+
+
+    
+</script>
+@endpush

@@ -155,7 +155,7 @@
     
     </div>
     
-    <x-importExel"/>
+    <x-importExel/>
     <x-delete-modal/>
     <x-delete-multiple-modal/>
     @vite(['resources/js/confirm-delete.js','resources/js/import-exel.js'])

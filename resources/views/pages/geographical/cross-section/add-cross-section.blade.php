@@ -214,7 +214,13 @@
                                 </label>
                                 <div class="w-full">
                                     <input name="map" id="map" type="file"
-                                        placeholder="Chọn lớp bản đồ" />
+                                        placeholder="Chọn lớp bản đồ"
+                                        class="block w-full text-sm text-gray-900
+                                            file:mr-2 file:py-1 file:px-3
+                                            file:rounded file:border-0
+                                            file:text-sm file:font-medium
+                                            file:bg-blue-100 file:text-blue-700
+                                            hover:file:bg-blue-200 border border-gray-300 rounded-md" />
                                 </div>
                             </div>
                         </div>
@@ -232,7 +238,13 @@
                                 </label>
                                 <div class="w-full">
                                     <input name="image" id="image" type="file"
-                                        placeholder="Hình ảnh" />
+                                        placeholder="Hình ảnh"
+                                        class="block w-full text-sm text-gray-900
+                                            file:mr-2 file:py-1 file:px-3
+                                            file:rounded file:border-0
+                                            file:text-sm file:font-medium
+                                            file:bg-blue-100 file:text-blue-700
+                                            hover:file:bg-blue-200 border border-gray-300 rounded-md" />
                                 </div>
                             </div>
                         </div>
@@ -250,7 +262,13 @@
                                 </label>
                                 <div class="w-full">
                                     <input name="video" id="video" type="file"
-                                        placeholder="Video" />
+                                        placeholder="Video"
+                                        class="block w-full text-sm text-gray-900
+                                            file:mr-2 file:py-1 file:px-3
+                                            file:rounded file:border-0
+                                            file:text-sm file:font-medium
+                                            file:bg-blue-100 file:text-blue-700
+                                            hover:file:bg-blue-200 border border-gray-300 rounded-md" />
                                 </div>
                             </div>
                         </div>

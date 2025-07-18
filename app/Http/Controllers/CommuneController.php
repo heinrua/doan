@@ -79,20 +79,31 @@ class CommuneController extends Controller
         }
         foreach ($data as $row) {
             $row = array_combine($header, $row);
+            $requiredKeys = [
+                'Tên',
+                'Mã',
+                'Tọa độ',
+                'Huyện',
+            ];
+            foreach ($requiredKeys as $key) {
+                if (!isset($row[$key]) || $row[$key] === null || $row[$key] === '') {
+                    return redirect()->back()->with('error', "Thiếu hoặc để trống cột '$key' trong file Excel!");
+                }
+            }
             if (empty($row['Tên']) || empty($row['Mã']) || empty($row['Tọa độ']) || empty($row['Huyện'])) {
                 continue;
             }
-            $district = District::where('name', $row['Huyện'])->first();
+            $district = District::where('name', $rowData['Huyện'])->first();
             if (!$district) {
-                return back()->with('error', 'Huyện không tồn tại: ' . $row['Huyện']);
+                return back()->with('error', 'Huyện không tồn tại: ' . $rowData['Huyện']);
             }
             $commune = Commune::create([
-                'name' => $row['Tên'],
-                'code' => $row['Mã'],
-                'slug' => Str::slug($row['Tên']),
-                'coordinates' => $row['Tọa độ'],
+                'name' => $rowData['Tên'],
+                'code' => $rowData['Mã'],
+                'slug' => Str::slug($rowData['Tên']),
+                'coordinates' => $rowData['Tọa độ'],
                 'district_id' => $district->id,
-                'population' => $row['Dân số'] ?? 0
+                'population' => $rowData['Dân số'] ?? 0
             ]);
             $commune->save();
         }

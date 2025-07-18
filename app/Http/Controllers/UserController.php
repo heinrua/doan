@@ -92,6 +92,16 @@ class UserController extends Controller
         $data = Excel::toArray(new UsersImport(), $file);
         foreach ($data as $row) {
             $validated = $row[0];
+            $requiredKeys = [
+                'Tên đầy đủ',
+                'Tên đăng nhập',
+                'Email',
+            ];
+            foreach ($requiredKeys as $key) {
+                if (!isset($validated[$key]) || $validated[$key] === null || $validated[$key] === '') {
+                    return redirect()->back()->with('error', "Thiếu hoặc để trống cột '$key' trong file Excel!");
+                }
+            }
         }
         $user = User::where('user_name', $validated['user_name'])->first();
         if ($user) {

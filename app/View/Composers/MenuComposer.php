@@ -73,12 +73,12 @@ class MenuComposer
                         'route_name' => 'view-type-of-construction',
                         'title' => 'Loại Công Trình',
                     ],
-                    'view-scenarios' => [
-                        'icon' => 'activity',
-                        'route_name' => 'view-scenarios',
-                        'title' => 'Phương Án Ứng Phó'
-                    ],
                 ]
+            ],
+            'view-scenarios' => [
+                'icon' => 'activity',
+                'title' => 'Phương Án Ứng Phó',
+                'route_name' => 'view-scenarios',
             ],
             'calamities' => [
                 'icon' => 'group',

@@ -25,13 +25,7 @@
                 </button>
             </a>
             @endauth
-             <div class="relative">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                    {!! $icons['search'] !!}
-                </div>
-                <input type="text" name="name" placeholder="Tìm kiếm..." value="{{ request('name') }}"
-                            class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" />
-            </div>
+             
         </div>
        
         <div class="intro-y col-span-12 overflow-auto lg:overflow-x-auto">
@@ -115,8 +109,7 @@
                                         <ul class="list-disc text-left pl-4">
                                             @foreach ($maps as $map)
                                                 <li>
-                                                    <a href="{{ asset($map) }}" target="_blank"
-                                                        class="text-blue-500 hover:underline">
+                                                    <a href="javascript:void(0);" onclick="showMapModal('{{ $map }}')" class="text-blue-500 hover:underline">
                                                         {{ basename($map) }}
                                                     </a>
                                                 </li>
@@ -248,4 +241,55 @@
         modal.classList.add('hidden');
         document.getElementById('imagePreview').src = ''; 
     }
+</script>
+
+<div id="mapModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="fixed inset-0 bg-black opacity-50"></div>
+        <div class="relative bg-white rounded-lg w-full max-w-4xl">
+            <div class="flex items-center justify-between p-4 border-b">
+                <h3 class="text-xl font-semibold text-gray-900" id="mapModalTitle">Bản đồ</h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" onclick="closeMapModal()">
+                    <!-- icon close -->
+                    &times;
+                </button>
+            </div>
+            <div class="p-6">
+                <div id="map" class="w-full h-[60vh] rounded-lg border"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function closeMapModal() {
+    document.getElementById('mapModal').classList.add('hidden');
+}
+let map;
+let modalKmlLayers = new Map();
+function showMapModal(kmlUrl) {
+    const cleanKmlUrl = kmlUrl.replace(/^\/+/, '');
+    const fullUrl = kmlUrl.startsWith("http") ? kmlUrl : `${NGROK_DOMAIN}/${cleanKmlUrl}`;
+    document.getElementById('mapModal').classList.remove('hidden');
+    if (!map) initMap();
+    modalKmlLayers.forEach(layer => layer.setMap(null));
+    modalKmlLayers.clear();
+    const layer = new google.maps.KmlLayer({
+        url: fullUrl,
+        map: map,
+        preserveViewport: false,
+    });
+    modalKmlLayers.set(fullUrl, layer);
+    google.maps.event.addListener(layer, "status_changed", function () {
+        if (layer.getStatus() !== google.maps.KmlLayerStatus.OK) {
+            alert(`❌ Không thể tải KML từ ${fullUrl}.`);
+        }
+    });
+}
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: 9.176, lng: 105.15 },
+        zoom: 10
+    });
+}
 </script>

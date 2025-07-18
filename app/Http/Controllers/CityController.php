@@ -67,6 +67,16 @@ class CityController extends Controller
 
         foreach ($data as $row) {
             $row = array_combine($header, $row);
+            $requiredKeys = [
+                'Tên',
+                'Mã',
+                'Tọa độ',
+            ];
+            foreach ($requiredKeys as $key) {
+                if (!isset($row[$key]) || $row[$key] === null || $row[$key] === '') {
+                    return redirect()->back()->with('error', "Thiếu hoặc để trống cột '$key' trong file Excel!");
+                }
+            }
             if (empty($row['Tên']) || empty($row['Mã']) || empty($row['Tọa độ'])) {
                 continue;
             }

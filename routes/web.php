@@ -192,6 +192,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 
        
         Route::get('/create-scenarios', [App\Http\Controllers\ResponsePlan\ScenarioController::class, 'viewFormScenarios'])->name('create-scenarios');
+        Route::post('/create-scenarios', [App\Http\Controllers\ResponsePlan\ScenarioController::class, 'store'])->name('store-scenarios');
         Route::get('/edit-scenarios/{id}', [App\Http\Controllers\ResponsePlan\ScenarioController::class, 'show'])->name('edit-scenarios');
         Route::post('/update-scenarios', [App\Http\Controllers\ResponsePlan\ScenarioController::class, 'update'])->name('update-scenarios');
         Route::get('/delete-scenarios/{id}', [App\Http\Controllers\ResponsePlan\ScenarioController::class, 'destroy'])->name('delete-scenarios');
@@ -255,30 +256,30 @@ use App\Http\Controllers\Auth\NewPasswordController;
             Route::post('/import-storm-construction', [App\Http\Controllers\Constructions\StormConstructionController::class, 'importStormConstruction'])->name('import-storm-construction');
 
         });
-        Route::prefix('geographical')->group(function () {
-            $types = ['erosion', 'shoreline', 'cross-section', 'monitoring'];
-            foreach ($types as $type) {
-            Route::get("/create-{$type}", [App\Http\Controllers\GeographicalDataController::class, 'viewForm'])
-                ->name("create-{$type}")->defaults('type', $type);
-
-            Route::post("/create-{$type}", [App\Http\Controllers\GeographicalDataController::class, 'store'])
-                ->name("store-{$type}")->defaults('type', $type);
-
-            Route::get("/edit-{$type}/{id}", [App\Http\Controllers\GeographicalDataController::class, 'show'])
-                ->name("edit-{$type}");
-
-            Route::post("/edit-{$type}", [App\Http\Controllers\GeographicalDataController::class, 'update'])
-                ->name("update-{$type}");
-
-            Route::get("/delete-{$type}/{id}", [App\Http\Controllers\GeographicalDataController::class, 'destroy'])
-                ->name("delete-{$type}");
-                
-            Route::delete("/delete-multiple-{$type}", [App\Http\Controllers\GeographicalDataController::class, 'destroyMultiple'])
-                ->name("delete-multiple-{$type}")->defaults('type', $type);
-        }
-        });
+        
         Route::prefix('administrative')->group(function () {
             $types = ['school', 'medical', 'center'];
+            foreach ($types as $type) {
+                Route::get("/create-{$type}", [App\Http\Controllers\AdministrativeController::class, 'viewForm'])
+                    ->name("create-{$type}")->defaults('type', $type);
+
+                Route::post("/create-{$type}", [App\Http\Controllers\AdministrativeController::class, 'store'])
+                    ->name("store-{$type}")->defaults('type', $type);
+
+                Route::get("/edit-{$type}/{id}", [App\Http\Controllers\AdministrativeController::class, 'show'])
+                    ->name("edit-{$type}");
+                Route::post("/edit-{$type}", [App\Http\Controllers\AdministrativeController::class, 'update'])
+                    ->name("update-{$type}");
+
+                Route::get("/delete-{$type}/{id}", [App\Http\Controllers\AdministrativeController::class, 'destroy'])
+                    ->name("delete-{$type}");
+                    
+                Route::delete("/delete-multiple-{$type}", [App\Http\Controllers\AdministrativeController::class, 'destroyMultiple'])
+                    ->name("delete-multiple-{$type}")->defaults('type', $type);
+            }
+        });
+        Route::prefix('geographical')->group(function () {
+            $types = ['erosion', 'shoreline', 'cross-section', 'monitoring'];
             foreach ($types as $type) {
                 Route::get("/create-{$type}", [App\Http\Controllers\AdministrativeController::class, 'viewForm'])
                     ->name("create-{$type}")->defaults('type', $type);

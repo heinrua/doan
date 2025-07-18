@@ -262,6 +262,7 @@
                 </div>
                 
                 <div class="col-span-12 xl:col-span-12 flex flex-col mt-4">
+                    
                     <div class="intro-y flex h-10 items-center">
                         <h2 class="flex items-center mr-5 uppercase text-lg font-medium">
                             {!! $icons['map-pin'] !!}
@@ -288,7 +289,7 @@
                             @endforeach
                         </div>
                     </div>
-                   
+                               
                     <div class="intro-y box mt-4 p-5 flex flex-col items-center justify-center space-y-4">
                         <div id="map" class="w-full h-[500px] md:h-[700px] rounded-lg border shadow-lg"></div>
                     </div>
@@ -596,9 +597,9 @@
                             </div>
                         </div>
                     <div style="padding: 16px 20px; font-size: 14.5px; color: #333; line-height: 1.8;">
-                            <div style="margin-bottom: 6px;"><strong>🌍 Thiên tai:</strong> ${calamity.risk_level.type_of_calamities.name || "Không có"}</div>
-                            <div style="margin-bottom: 6px;"><strong>🌀 Tác nhân:</strong> ${calamity.sub_type_of_calamities[0].name || "Không có"}</div>
-                            <div style="margin-bottom: 6px;"><strong>⚠️ Cấp độ:</strong> ${calamity.risk_level.name || "Không có"}</div>
+                            <div style="margin-bottom: 6px;"><strong>🌍 Thiên tai:</strong> ${calamity.risk_level?.type_of_calamities?.name || "Không có"}</div>
+                            <div style="margin-bottom: 6px;"><strong>🌀 Tác nhân:</strong> ${calamity.sub_type_of_calamities?.[0]?.name || "Không có"}</div>
+                            <div style="margin-bottom: 6px;"><strong>⚠️ Cấp độ:</strong> ${calamity.risk_level?.name || "Không có"}</div>
                             <div style="margin-bottom: 6px;"><strong>📍 Địa chỉ:</strong> ${calamity.address || "Không có"}</div>
                             <div style="margin-bottom: 6px;"><strong>🏘️ Xã:</strong> ${calamity.communes?.[0]?.name || "Không có"}</div>
                             <div style="margin-bottom: 6px;"><strong>🏞️ Huyện:</strong> ${calamity.communes?.[0]?.district?.name || "Không có"}</div>
@@ -650,9 +651,7 @@
             }, 3000);
         }
     </script>
-    <script async
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMhd9dHKpWfJ57Ndv2alnxEcSvP_-_uN8&libraries=places&callback=initMap">
-    </script>
+  
     @if (session('success') || $errors->any())
 <script>
     document.addEventListener('DOMContentLoaded', function () {

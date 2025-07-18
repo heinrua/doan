@@ -93,43 +93,87 @@ class AdministrativeController extends Controller
             $type = 'center';
         }
         
-        $requiredHeaders = ['Tên', 'Mã', 'Tọa độ', 'Huyện', 'Xã', 'Địa chỉ', 'Phân loại', 'Sức chứa'];
-        foreach ($requiredHeaders as $col) {
-            if (!in_array($col, $header)) {
-                return back()->with('error', 'Thiếu cột bắt buộc: ' . $col);
-            }
-        }
         
         foreach ($data as $row) {
             $row = array_combine($header, $row);
-            if (empty($row['Tên']) || empty($row['Mã']) || empty($row['Tọa độ']) || empty($row['Huyện']) || empty($row['Xã'])) {
-                continue;
+           
+            if($type == 'school'){
+                $requiredKeys = [
+                    'Tên',
+                ];
+                foreach ($requiredKeys as $key) {
+                    if (!isset($row[$key]) || $row[$key] === null || $row[$key] === '') {
+                        return redirect()->back()->with('error', "Thiếu hoặc để trống cột '$key' trong file Excel!");
+                    }
+                }
+                
+                if(Administrative::where('name', $row['Tên'])->exists()){
+                    continue;
+                }
+                $administrative = Administrative::create([
+                    'name' => $row['Tên'],
+                    'slug' => Str::slug($row['Tên']),
+                    'type' => $type,
+                    'commune_id' => Commune::where('name', $row['Xã/Phường'])->first()->id,
+                    'coordinates' => $row['Tọa độ'] ?? "0,0",
+                    'address' => $row['Địa chỉ'] ?? '',
+                    'description' => $row['Mô tả'] ?? '',
+                    'code' => $row['Mã'],
+                    'population' => $row['Sức chứa'] ?? 0,
+                    'map' => "[]",
+                ]);
+            }elseif($type == 'medical'){
+                $requiredKeys = [
+                    'Tên địa điểm',
+                    
+                ];
+                foreach ($requiredKeys as $key) {
+                    if (!isset($row[$key]) || $row[$key] === null || $row[$key] === '') {
+                        return redirect()->back()->with('error', "Thiếu hoặc để trống cột '$key' trong file Excel!");
+                    }
+                }
+                if(Administrative::where('name', $row['Tên địa điểm'])->exists()){
+                    continue;
+                }
+                
+                
+                $administrative = Administrative::create([
+                    'name' => $row['Tên địa điểm'],
+                    'slug' => Str::slug($row['Tên địa điểm']),
+                    'type' => $type,
+                    'commune_id' => Commune::where('name', $row['Xã'])->first()->id,
+                    'coordinates' => $row['Tọa độ'],
+                    'address' => $row['Địa chỉ'] ?? '',
+                    'description' => $row['Mô tả'] ?? '',
+                    'classify' => $row['Loại hình'] ?? '',
+                    'population' => $row['Sức chứa'] ?? 0
+                ]);
+                
+            }elseif($type == 'center'){
+                $requiredKeys = [
+                    'Tên TT hành chính',
+                    
+                ];
+                foreach ($requiredKeys as $key) {
+                    if (!isset($row[$key]) || $row[$key] === null || $row[$key] === '') {
+                        return redirect()->back()->with('error', "Thiếu hoặc để trống cột '$key' trong file Excel!");
+                    }
+                }
+                if(Administrative::where('name', $row['Tên TT hành chính'])->exists()){
+                    continue;
+                }
+                $administrative = Administrative::create([
+                    'name' => $row['Tên TT hành chính'],
+                    'slug' => Str::slug($row['Tên TT hành chính']),
+                    'type' => $type,
+                    'commune_id' => Commune::where('name', $row['Xã'])->first()->id,
+                    'coordinates' => $row['Tọa độ'],
+                    'address' => $row['Địa chỉ'] ?? '',
+                    'description' => $row['Mô tả'] ?? '',
+                    'classify' => $row['Loại hình'] ?? '',
+                    'population' => $row['Sức chứa'] ?? 0
+                ]);
             }
-            
-            $district = District::where('name', $row['Huyện'])->first();
-            if (!$district) {
-                return back()->with('error', 'Huyện không tồn tại: ' . $row['Huyện']);
-            }
-            
-            $commune = Commune::where('name', $row['Xã'])->where('district_id', $district->id)->first();
-            if (!$commune) {
-                return back()->with('error', 'Xã không tồn tại: ' . $row['Xã']);
-            }
-            
-            $administrative = Administrative::create([
-                'name' => $row['Tên'],
-                'slug' => Str::slug($row['Tên']),
-                'type' => $type,
-                'district_id' => $district->id,
-                'commune_id' => $commune->id,
-                'coordinates' => $row['Tọa độ'],
-                'address' => $row['Địa chỉ'] ?? '',
-                'description' => $row['Mô tả'] ?? '',
-                'code' => $row['Mã'],
-                'classify' => $row['Phân loại'] ?? '',
-                'population' => $row['Sức chứa'] ?? 0
-            ]);
-          
             $administrative->save();
         }
         

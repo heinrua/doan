@@ -168,38 +168,106 @@ class FloodingConstructionController extends Controller
         $spreadsheet = IOFactory::load($filePath);
         $sheet = $spreadsheet->getActiveSheet();
         $rows = $sheet->toArray();
+        
+        // Bỏ qua dòng đầu tiên (dòng tiêu đề)
+        $header = array_shift($rows);
+        
         foreach ($rows as $row) {
-
+            // Tạo mảng associative từ header và data
+            $rowData = array_combine($header, $row);
+            
+            $requiredKeys = [
+                'Tên công trình',
+                'Loại công trình',
+                'Cấp độ',
+                
+            ];
+            foreach ($requiredKeys as $key) {
+                if (!isset($rowData[$key]) || $rowData[$key] === null || $rowData[$key] === '') {
+                    return redirect()->back()->with('error', "Thiếu hoặc để trống cột '$key' trong file Excel!");
+                }
+            }
+            // Kiểm tra trùng lặp theo tên công trình
+            $exists = Construction::where('name', $rowData["Tên công trình"])->exists();
+            if ($exists) {
+                \Log::info("Bỏ qua do trùng tên công trình: " . $rowData["Tên công trình"]);
+                continue;
+            }
             $data = [
-                'name' => $row["Tên công trình"],
-                'risk_level_id' => RiskLevel::where('name', $row["Cấp độ"])->first()->id,
-                'type_of_construction_id' => TypeOfConstruction::where('name', $row["Loại công trình"])->first()->id,
-                'commune_id' => Commune::where('name', $row["Xã"])->first()->id,
-                'year_of_construction' => $row["Năm xây dựng"],
-                'year_of_completion' => $row["Năm hoàn thành"],
-                'scale' => $row["Quy mô"],
-                'coordinates' => $row["Toạ độ"],
-                'address' => $row["Vị trí công trình"],
-                'main_function' => $row["Chức năng chính"],
-                'characteristic' => $row["Đặc điểm nhận dạng"],
-                'width_of_door' => $row["Bề rộng 1 cửa"],
-                'base_level' => $row["Cao trình đáy"],
-                'pillar_top_level' => $row["Cao trình đỉnh trụ pin"],
-                'total_door_width' => $row["Tổng bề rộng cửa"],
-                'notes' => $row["Ghi chú"],
-                'operation_method' => $row["Hình thức vận hành"],
-                'irrigation_system' => $row["Hệ thống thuỷ lợi"],
-                'irrigation_area' => $row["Vùng thuỷ lợi"],
-                'culver_type' => $row["Loại cống"],
-                'culver_code' => $row["Mã cống"],
-                'management_unit' => $row["Đơn vị quản lý"],
-                'update_time' => Carbon::createFromFormat('d \T\h\á\n\g m, Y', $row["Thời gian cập nhật"])->format('Y-m-d'),
+                'name' => $rowData["Tên công trình"],
+                'slug' => $this->generateUniqueSlug($rowData["Tên công trình"]),
+                'risk_level_id' => RiskLevel::where('name', $rowData["Cấp độ"])->first()->id,
+                'type_of_construction_id' => TypeOfConstruction::where('name', $rowData["Loại công trình"])->first()->id,
+                'commune_id' => Commune::where('name', $rowData["Xã"])->first()->id,
+                'year_of_construction' => $rowData["Năm xây dựng"],
+                'year_of_completion' => $rowData["Năm hoàn thành"],
+                'scale' => $rowData["Quy mô"],
+                'coordinates' => $rowData["Toạ độ"],
+                'address' => $rowData["Vị trí công trình"],
+                'main_function' => $rowData["Chức năng chính"],
+                'characteristic' => $rowData["Đặc điểm nhận dạng"],
+                'width_of_door' => $rowData["Bề rộng 1 cửa"],
+                'base_level' => $rowData["Cao trình đáy"],
+                'pillar_top_level' => $rowData["Cao trình đỉnh trụ pin"],
+                'total_door_width' => $rowData["Tổng bề rộng cửa"],
+                'notes' => $rowData["Ghi chú"],
+                'operation_method' => $rowData["Hình thức vận hành"],
+                'irrigation_system' => $rowData["Hệ thống thuỷ lợi"],
+                'irrigation_area' => $rowData["Vùng thuỷ lợi"],
+                'culver_type' => $rowData["Loại cống"],
+                'culver_code' => $rowData["Mã cống"],
+                'management_unit' => $rowData["Đơn vị quản lý"],
+                'update_time' => $this->parseDate($rowData["Thời gian cập nhật"]),
                 'created_by_user_id' => $user->id
             ];
-            $construction = Construction::create($data);
             
+            try {
+                $construction = Construction::create($data);
+            } catch (\Illuminate\Database\QueryException $e) {
+                if ($e->getCode() == 23000 && strpos($e->getMessage(), 'Duplicate entry') !== false) {
+                    return redirect()->back()->with('error', "Công trình '{$rowData['Tên công trình']}' đã tồn tại trong hệ thống!");
+                }
+                return redirect()->back()->with('error', "Lỗi khi thêm công trình: " . $e->getMessage());
+            }
         }
         return redirect('/construction/list-flooding')->with('success', "Nhập thành công");
+    }
+
+    private function parseDate($dateString)
+    {
+        if (empty($dateString)) {
+            return null;
+        }
+        
+        // Thử các format khác nhau
+        $formats = [
+            'd \T\h\á\n\g m, Y',  // 10 tháng 7, 2025
+            'd/m/Y',               // 10/7/2025
+            'Y-m-d',               // 2025-07-10
+            'd-m-Y',               // 10-7-2025
+            'm/d/Y',               // 7/10/2025
+        ];
+        
+        foreach ($formats as $format) {
+            try {
+                return Carbon::createFromFormat($format, $dateString)->format('Y-m-d');
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
+        
+        // Nếu không parse được, trả về null
+        return null;
+    }
+
+    private function generateUniqueSlug($name)
+    {
+        $slug = Str::slug($name);
+        $count = Construction::where('slug', 'like', "{$slug}%")->count();
+        if ($count > 0) {
+            $slug = "{$slug}-{$count}";
+        }
+        return $slug;
     }
 
     public function update(Request $request)
@@ -210,13 +278,15 @@ class FloodingConstructionController extends Controller
             'name' => 'required|unique:constructions,name,' . $request->id,
             'video' => 'nullable|file|mimes:mp4',
             'image' => 'nullable|file|mimes:jpg,jpeg,png',
+            'type_of_construction_id' => 'required',
+            'commune_id' => 'required',
             'risk_level_id' => 'required',
         ]);
 
         $data = [
             'name' => $validated['name'],
-            'risk_level_id' => $validated['risk_level_id'],
             'type_of_construction_id' => $validated['type_of_construction_id'],
+            'risk_level_id' => $validated['risk_level_id'],
             'commune_id' => $request['commune_id'],
             'year_of_construction' => $request['year_of_construction'],
             'year_of_completion' => $request['year_of_completion'],

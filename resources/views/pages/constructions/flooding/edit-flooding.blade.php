@@ -1,13 +1,14 @@
 @extends('themes.base')
 
 @section('subhead')
-    <title>Cập Nhật Ngập Lụt - PCTT Cà Mau Dashboard</title>
+    <title>Cập Nhật Công Trình Ngập Lụt - PCTT Cà Mau Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
 @endsection
 
 @section('subcontent')
     <h2 class="intro-y mt-5 text-lg font-medium uppercase flex items-center">
         {!! $icons['arlett-triangle'] !!}
-        Cập Nhật Ngập Lụt
+        Cập Nhật Công Trình Ngập Lụt
     </h2>
     <div class="mt-5 grid grid-cols-1 gap-x-6 pb-20"> 
         <div class="intro-y">
@@ -22,10 +23,9 @@
                             class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             {!! $icons['chevron-down'] !!} Thông Tin Công Trình Ngập Lụt
                         </div>
-                        
                         <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             
-                            <div>
+                            <div class = "w-full">
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
                                     formInline>
                                     <label class="md:w-80">
@@ -58,80 +58,13 @@
                                         <select class="w-full" id="crud-form-2" name="type_of_calamity_id">
                                             @foreach ($calamities as $value)
                                                 <option value="{{ $value->id }}"
-                                                    {{ $construction->risk_level->type_of_calamity_id == $value->id ? 'selected' : '' }}>
+                                                    {{ $construction->type_of_calamity_id == $value->id ? 'selected' : '' }}>
                                                     {{ $value->name }}</option>
                                             @endforeach
                                         </select>
                                         @error('type_of_calamity_id')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                         @enderror
-                                    </div>
-                                </div>
-
-                            </div>
-                            
-                            <div>
-                                <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
-                                    formInline>
-                                    <label class="md:w-80">
-                                        <div class="text-left">
-                                            <div class="flex items-center">
-                                                <div class="font-medium">Ví trí công trình</div>
-                                                <div class="ml-2 text-red-500 text-xl font-bold">*</div>
-                                            </div>
-                                        </div>
-                                    </label>
-                                    <div class="w-full">
-                                        <input value="{{ $construction->address }}" name="address"
-                                            id="address" type="text" placeholder="Ví trí công trình" />
-                                    </div>
-                                </div>
-                                <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
-                                    formInline>
-                                    <label class="md:w-80">
-                                        <div class="text-left">
-                                            <div class="flex items-center">
-                                                <div class="font-medium">Loại công trình</div>
-                                                <div class="ml-2 text-red-500 text-xl font-bold">*</div>
-                                            </div>
-                                        </div>
-                                    </label>
-                                    <div class="w-full">
-                                        <select class="w-full" id="crud-form-2" name="type_of_construction_id">
-                                            @foreach ($typeOfConstructions as $typeOfConstruction)
-                                                <option value="{{ $typeOfConstruction->id }}"
-                                                    {{ $construction->type_of_construction_id == $typeOfConstruction->id ? 'selected' : '' }}>
-                                                    {{ $typeOfConstruction->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('type_of_construction_id')
-                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
-                                    formInline>
-                                    <label class="md:w-80">
-                                        <div class="text-left">
-                                            <div class="flex items-center">
-                                                <div class="font-medium">Phường/Xã</div>
-                                                <div class="ml-2 text-red-500 text-xl font-bold">*</div>
-                                            </div>
-                                        </div>
-                                    </label>
-                                    <div class="w-full">
-                                        <select class="w-full" id="crud-form-2" name="commune_id">
-                                            @foreach ($communes as $commune)
-                                                <option value="{{ $commune->id }}"
-                                                    {{ !empty($construction->communes) && isset($construction->communes[0]->id) && $construction->communes[0]->id == $commune->id ? 'selected' : '' }}>
-                                                    {{ $commune->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
                                     </div>
                                 </div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
@@ -158,12 +91,86 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
+                                    formInline>
+                                    <label class="md:w-80">
+                                        <div class="text-left">
+                                            <div class="flex items-center">
+                                                <div class="font-medium">Mã công trình</div>
+                                                <div class="ml-2 text-red-500 text-xl font-bold">*</div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <div class="w-full">
+                                        <input value="{{ $construction->construction_code }}"
+                                            name="construction_code" id="construction_code" type="text"
+                                            placeholder="Mã công trình" />
+                                    </div>
+                                </div>
+                                <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
+                                    formInline>
+                                    <label class="md:w-80">
+                                        <div class="text-left">
+                                            <div class="flex items-center">
+                                                <div class="font-medium">Loại công trình</div>
+                                                <div class="ml-2 text-red-500 text-xl font-bold">*</div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <div class="w-full">
+                                        <select id="type_of_construction_id" name="type_of_construction_id">
+                                            @foreach ($typeOfConstructions as $typeOfConstruction)
+                                                <option value="{{ $typeOfConstruction->id }}"
+                                                    {{ $construction->type_of_construction_id == $typeOfConstruction->id ? 'selected' : '' }}>
+                                                    {{ $typeOfConstruction->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('type_of_construction_id')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
+                                    formInline>
+                                    <label class="md:w-80">
+                                        <div class="text-left">
+                                            <div class="flex items-center">
+                                                <div class="font-medium">Địa chỉ</div>
+                                                <div class="ml-2 text-red-500 text-xl font-bold">*</div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <div class="w-full">
+                                        <input value="{{ $construction->address }}" name="address"
+                                            id="address" type="text" placeholder="Địa chỉ" />
+                                    </div>
+                                </div>
+                                <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
+                                    formInline>
+                                    <label class="md:w-80">
+                                        <div class="text-left">
+                                            <div class="flex items-center">
+                                                <div class="font-medium">Phường/Xã</div>
+                                                <div class="ml-2 text-red-500 text-xl font-bold">*</div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <div class="w-full">
+                                        <select id="commune_id" name="commune_id">
+                                            @foreach ($communes as $commune)
+                                                <option value="{{ $commune->id }}"
+                                                    {{ !empty($construction->communes) && isset($construction->communes[0]->id) && $construction->communes[0]->id == $commune->id ? 'selected' : '' }}>
+                                                    {{ $commune->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('commune_id')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                       
-                        <div class="w-full border-t-2 border-gray-300 my-4"></div>
-                        
-                        <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             
                             <div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
@@ -172,12 +179,19 @@
                                         <div class="text-left">
                                             <div class="flex items-center">
                                                 <div class="font-medium">Toạ độ</div>
+                                                <div class="ml-2 text-red-500 text-xl font-bold">*</div>
                                             </div>
                                         </div>
                                     </label>
                                     <div class="w-full">
-                                        <input value="{{ $construction->coordinates }}" name="coordinates"
-                                            id="coordinates" type="text" placeholder="Toạ độ" />
+                                        <div class="relative">
+                                            <input value="{{ $construction->coordinates }}" name="coordinates"
+                                                id="coordinates" type="text" placeholder="Nhập tọa độ (VD: 10.7769, 106.7009)" onblur="updateMapFromInput()" />
+                                        </div>
+                                        <div id="mapFlooding" class="w-full h-[200px] rounded-lg border"></div>
+                                        @error('coordinates')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="flex-col md:flex-row items-start pt-5 first:mt-0 first:pt-0"
@@ -459,13 +473,7 @@
                                                 class="mb-3 h-40 w-auto rounded-lg shadow" />
                                         @endif
                                         
-                                        <input type="file" name="image" id="image" accept="image/*"
-                                            class="block w-full text-sm text-gray-900
-                                            file:mr-2 file:py-1 file:px-3
-                                            file:rounded file:border-0
-                                            file:text-sm file:font-medium
-                                            file:bg-blue-100 file:text-blue-700
-                                            hover:file:bg-blue-200 border border-gray-300 rounded-md">
+                                        <input type="file" name="image" id="image" accept="image/*" class="block w-full text-sm text-gray-900 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 border border-gray-300 rounded-md">
                                     </div>
                                 </div>
                             </div>
@@ -482,13 +490,7 @@
                                     </label>
                                     <div class="w-full">
                                         
-                                         <input type="file" name="video" id="videoInput" accept="video/mp4"
-                                            class="block w-full text-sm text-gray-900
-                                            file:mr-2 file:py-1 file:px-3
-                                            file:rounded file:border-0
-                                            file:text-sm file:font-medium
-                                            file:bg-blue-100 file:text-blue-700
-                                            hover:file:bg-blue-200 border border-gray-300 rounded-md">
+                                         <input type="file" name="video" id="videoInput" accept="video/mp4" class="block w-full text-sm text-gray-900 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 border border-gray-300 rounded-md">
                                         
                                         @if (!empty($construction->video))
                                             <div class="mt-4">
@@ -532,13 +534,179 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+
 <script>
-    document.getElementById('videoInput').addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const videoPreview = document.getElementById('videoPreview');
-            videoPreview.src = URL.createObjectURL(file);
-            videoPreview.load();
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof google === "undefined" || typeof google.maps === "undefined") {
+            console.warn("Google Maps API chưa tải xong, đang chờ...");
+            let maxRetries = 10; 
+            let retries = 0;
+            let checkGoogleMaps = setInterval(() => {
+                if (typeof google !== "undefined" && typeof google.maps !== "undefined") {
+                    clearInterval(checkGoogleMaps);
+                    console.log("Google Maps API đã sẵn sàng!");
+                    initializeApp();
+                } else {
+                    retries++;
+                    console.warn(`Đợi Google Maps API... (${retries})`);
+                    if (retries >= maxRetries) {
+                        clearInterval(checkGoogleMaps);
+                        console.error("Không thể load Google Maps API sau 10 giây.");
+                    }
+                }
+            }, 1000);
+        } else {
+            console.log("Google Maps API đã sẵn sàng!");
+            initializeApp();
         }
     });
+    
+    let mapFlooding, marker;
+    let infoWindowFlooding;
+
+    function initializeApp() {
+        initMap();
+        const construction = @json($construction); 
+        showSingleConstructionMarker(construction);
+    }
+
+    function initMap() {
+        mapFlooding = new google.maps.Map(document.getElementById('mapFlooding'), {
+            center: {
+                lat: 8.946132,
+                lng: 105.033270
+            },
+            zoom: 11
+        });
+        infoWindowFlooding = new google.maps.InfoWindow();
+        
+        mapFlooding.addListener("click", function(event) {
+            let lat = event.latLng.lat().toFixed(6);
+            let lng = event.latLng.lng().toFixed(6);
+            
+            document.getElementById("coordinates").value = lat + ", " + lng;
+            
+            if (marker) {
+                marker.setPosition(event.latLng);
+            } else {
+                marker = new google.maps.Marker({
+                    position: event.latLng,
+                    map: mapFlooding,
+                    draggable: true
+                });
+            }
+        });
+    }
+
+    function updateMapFromInput() {
+        let inputVal = document.getElementById("coordinates").value.trim();
+        let coords = inputVal.split(",");
+
+        if (coords.length === 2) {
+            let lat = parseFloat(coords[0]);
+            let lng = parseFloat(coords[1]);
+
+            if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+                let newLocation = {
+                    lat: lat,
+                    lng: lng
+                };
+                mapFlooding.setCenter(newLocation);
+                mapFlooding.setZoom(13);
+                if (marker) {
+                    marker.setPosition(newLocation); 
+                }
+            } else {
+                showToast("⚠️ Tọa độ không hợp lệ! Vui lòng nhập lại.");
+            }
+        } else {
+            showToast("⚠️ Định dạng tọa độ không đúng! Vui lòng nhập theo dạng: lat, lng");
+        }
+    }
+
+    function showSingleConstructionMarker(construction) {
+        if (construction.coordinates) {
+            const [lat, lng] = construction.coordinates.split(',');
+            construction.latitude = parseFloat(lat.trim());
+            construction.longitude = parseFloat(lng.trim());
+
+            marker = new google.maps.Marker({ 
+                position: {
+                    lat: parseFloat(construction.latitude),
+                    lng: parseFloat(construction.longitude)
+                },
+                map: mapFlooding,
+                draggable: true,
+                icon: {
+                    url: "/uploads/map/ke_chong_sat_lo.png",
+                    scaledSize: new google.maps.Size(25, 25)
+                }
+            });
+            
+            marker.addListener("dragend", function(event) {
+                document.getElementById("coordinates").value =
+                    event.latLng.lat().toFixed(6) + ", " + event.latLng.lng().toFixed(6);
+            });
+            
+            marker.addListener("click", function() {
+                infoWindowFlooding.setContent(generateContent(construction));
+                infoWindowFlooding.open(mapFlooding, marker);
+            });
+            
+            google.maps.event.addListener(infoWindowFlooding, "domready", function() {
+                const closeBtn = document.querySelector(".gm-ui-hover-effect");
+                if (closeBtn) closeBtn.style.display = "none";
+                const customClose = document.getElementById("custom-close-btn");
+                if (customClose) {
+                    customClose.addEventListener("click", () => {
+                        infoWindowFlooding.close();
+                    });
+                }
+            });
+            
+            mapFlooding.setCenter(marker.getPosition());
+            mapFlooding.setZoom(10);
+        }
+    }
+
+    function generateContent(construction) {
+        const defaultImage = "{{ Vite::asset('resources/images/default-river-bank.png') }}";
+        return `
+        <div style="max-width: 340px; font-family: 'Segoe UI', sans-serif; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.15); background: #fff; transition: all 0.3s ease-in-out;">
+            
+            <div style="position: relative; overflow: hidden;">
+                <img src="${construction.image || defaultImage}" alt="Hình ảnh"
+                    style="width: 100%; height: 180px; object-fit: cover; transition: transform 0.3s ease;">
+                <button id="custom-close-btn"
+                        style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; padding: 6px 10px; font-size: 16px; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+                    ✕
+                </button>
+            </div>
+            
+            <div style="background: linear-gradient(to right, #3498db, #2980b9); color: white; padding: 14px 20px; text-align: center;">
+                <div style="font-size: 17px; font-weight: bold; letter-spacing: 0.5px;">
+                    ${construction.name}
+                </div>
+            </div>
+            
+           <div style="padding: 16px 20px; font-size: 14.5px; color: #333; line-height: 1.8;">
+                <div style="display: flex; align-items: start; margin-bottom: 6px;">
+                    <span style="width: 25px;">📍</span>
+                    <strong>Địa chỉ:</strong>&nbsp;${construction.address || "Không có"}
+                </div>
+                <div style="display: flex; align-items: start; margin-bottom: 6px;">
+                    <span style="width: 25px;">🏗️</span>
+                    <strong>Mã công trình:</strong>&nbsp;${construction.construction_code || "Không có"}
+                </div>
+                <div style="display: flex; align-items: start;">
+                    <span style="width: 25px;">🏘️</span>
+                    <strong>Xã:</strong>&nbsp;${construction.communes && construction.communes[0] ? construction.communes[0].name : "Không có"}
+                </div>
+            </div>
+        </div>
+        `;
+    }
 </script>
+@endpush

@@ -109,7 +109,8 @@ class RiverBankCalamityController extends Controller
                 'application/vnd.google-earth.kml+xml', 
                 'application/octet-stream', 
                 'application/zip', 
-                'text/xml'  
+                'text/xml',
+                'text/html'  
             ];
             $filePaths = []; 
             foreach ($mapFiles as $mapFile) {
@@ -209,33 +210,51 @@ class RiverBankCalamityController extends Controller
         unset($data[0]);
         foreach ($data as $row) {
             $row = array_combine($header, $row);
-           
-            $calamity = Calamities::create([
-                'name' => $row['Tên vị trí sạt lở'],
-                'slug' => Str::slug($row['Tên vị trí sạt lở']),
-                'sub_type_of_calamity_ids' => SubTypeOfCalamities::where('name', $row['Loại sạt lở'])->first()->id ?? null,
-                'risk_level_id' => RiskLevel::where('name', $row['Cấp độ rủi ro'])->first()->id ?? null,
+            $requiredKeys = [
+                'Tên vị trí sạt lở',
+                'Loại sạt lở',
+                'Cấp độ rủi ro',
                 
-                'time' => Carbon::createFromFormat('d-m-Y', $row['Thời gian'])->format('Y-m-d') ?? null,
-                'address' => $row['Địa điểm'] ?? null,
-                'length' => is_numeric($row['Chiều dài']) ? (int) $row['Chiều dài'] : null,
-                'width' => is_numeric($row['Chiều rộng']) ? (int) $row['Chiều rộng'] : null,
-                'acreage' => is_numeric($row['Diện tích']) ? (int) $row['Diện tích'] : null,
-                'coordinates' => $row['Tọa độ vị trí'] ?? null,
-                'reason' => $row['Nguyên nhân'] ?? null,
-                'geology' => $row['Địa chất'] ?? null,
-                'watermark_points' => $row['Đặc điểm thuỷ văn'] ?? null,
-                'human_damage' => $row['Thiệt hại về người'] ?? null,
-                'property_damage' => $row['Thiệt hại về tài sản'] ?? null,
-                'investment_level' => $row['Mức độ'] ?? null,
-                'mitigation_measures' => $row['Các biện pháp giảm thiểu'] ?? null,
-                'support_policy' => $row['Chính sách hỗ trợ'] ?? null,
+            ];
+            foreach ($requiredKeys as $key) {
+                if (!isset($row[$key]) || $row[$key] === null || $row[$key] === '') {
+                    return redirect()->back()->with('error', "Thiếu hoặc để trống cột '$key' trong file Excel!");
+                }
+            }
+            $communes = array_map('trim',explode(',', $rowData['Xã']));
+            $communeIds = Commune::whereIn('name', $communes)->pluck('id')->toArray();
+            $sub_type_of_calamities = array_map('trim',explode(',', $rowData['Loại sạt lở']));
+            $sub_type_of_calamity_ids = SubTypeOfCalamities::whereIn('name', $sub_type_of_calamities)->pluck('id')->toArray();
+             // Kiểm tra trùng lặp theo tên vị trí sạt lở
+            $exists = Calamities::where('name', $rowData["Tên vị trí sạt lở"])->exists();
+            if ($exists) {
+                \Log::info("Bỏ qua do trùng tên vị trí sạt lở: " . $rowData["Tên vị trí sạt lở"]);
+                continue;
+            }
+            $calamity = Calamities::create([
+                'name' => $rowData['Tên vị trí sạt lở'],
+                'slug' => Str::slug($rowData['Tên vị trí sạt lở']),
+                'sub_type_of_calamity_ids' => $sub_type_of_calamity_ids,
+                'risk_level_id' => RiskLevel::where('name', $rowData['Cấp độ rủi ro'])->first()->id ?? null,
+                
+                'time' => Carbon::createFromFormat('d-m-Y', $rowData['Thời gian'])->format('Y-m-d') ?? null,
+                'address' => $rowData['Địa điểm'] ?? null,
+                'length' => is_numeric($rowData['Chiều dài']) ? (int) $rowData['Chiều dài'] : null,
+                'width' => is_numeric($rowData['Chiều rộng']) ? (int) $rowData['Chiều rộng'] : null,
+                'acreage' => is_numeric($rowData['Diện tích']) ? (int) $rowData['Diện tích'] : null,
+                'coordinates' => $rowData['Tọa độ vị trí'] ?? null,
+                'reason' => $rowData['Nguyên nhân'] ?? null,
+                'geology' => $rowData['Địa chất'] ?? null,
+                'watermark_points' => $rowData['Đặc điểm thuỷ văn'] ?? null,
+                'human_damage' => $rowData['Thiệt hại về người'] ?? null,
+                'property_damage' => $rowData['Thiệt hại về tài sản'] ?? null,
+                'mitigation_measures' => $rowData['Biện pháp khắc phục'] ?? null,
+                'commune_ids' => $communeIds,
                 'created_by_user_id' => $user->id,
-            ]); 
-            $calamity->communes()->sync(Commune::where('name', $row['Phường/Xã'])->first()->id ?? null);
-            $calamity->sub_type_of_calamities()->sync($row['Loại sạt lở'] ?? null);
+            ]);
+            $calamity->sub_type_of_calamities()->sync($sub_type_of_calamity_ids);
+            $calamity->communes()->sync($communeIds);    
             $calamity->save();
-            
         }   
         return back()->with('success', 'Import thành công!');
     }   
@@ -298,7 +317,8 @@ class RiverBankCalamityController extends Controller
                 'application/vnd.google-earth.kml+xml', 
                 'application/octet-stream',
                 'application/zip',
-                'text/xml'
+                'text/xml',
+                'text/html'
             ];
             $filePaths = [];
             foreach ($mapFiles as $mapFile) {

@@ -12,57 +12,49 @@ class MapController extends Controller
 {
     public function viewRiverBank()
     {
-        $years_has_riverbank = Calamities::whereRelation('risk_level.type_of_calamities', 'slug', 'sat-lo-bo-song-bo-bien')->selectRaw('YEAR(time) as year')
+        $years_has_riverbank = Calamities::whereRelation('risk_level.type_of_calamities', 'slug', 'sat-lo-bo-song-bo-bien')
+            ->selectRaw('YEAR(time) as year')
             ->distinct()
             ->orderByDesc('year')
             ->pluck('year');
 
-        $locations_river_bank = [];
-
+        $riverBankByYear = [];
+        // Lấy tất cả
+        $riverBankByYear['all'] = Calamities::whereRelation('risk_level.type_of_calamities', 'slug', 'sat-lo-bo-song-bo-bien')
+            ->select('id', 'name', 'coordinates', 'length', 'width', 'acreage', 'address')
+            ->get()
+            ->map(fn($calamity) => [
+                'id' => $calamity->id,
+                'name' => $calamity->name,
+                'latitude' => explode(',', $calamity->coordinates)[0] ?? null,
+                'longitude' => explode(',', $calamity->coordinates)[1] ?? null,
+                'length' => $calamity->length,
+                'width' => $calamity->width,
+                'acreage' => ($calamity->acreage)
+                    ? $calamity->acreage
+                    : (($calamity->length && $calamity->width) ? $calamity->length * $calamity->width : ''),
+                'address' => $calamity->address,
+            ])->toArray();
+        // Lấy theo từng năm
         foreach ($years_has_riverbank as $year) {
-            $locations_river_bank[$year] = District::with([
-                'communes' => function ($query) use ($year) {
-                    $query->with(['calamities' => function ($query) use ($year) {
-                        $query->whereRelation('risk_level.type_of_calamities', 'slug', 'sat-lo-bo-song-bo-bien')
-                            ->whereYear('time', $year)
-                            ->select('id', 'address', 'coordinates', 'name', 'length', 'width', 'acreage');
-                    }]);
-                }
-            ])
+            $riverBankByYear[$year] = Calamities::whereRelation('risk_level.type_of_calamities', 'slug', 'sat-lo-bo-song-bo-bien')
+                ->whereYear('time', $year)
+                ->select('id', 'name', 'coordinates', 'length', 'width', 'acreage', 'address')
                 ->get()
-                ->mapWithKeys(function ($district) {
-                    $totalCalamities = $district->communes->sum(fn($commune) => $commune->calamities->count());
-
-                    return [
-                        $district->name => [
-                            'total' => $totalCalamities,
-                            'communes' => $district->communes->mapWithKeys(function ($commune) {
-                                return [
-                                    $commune->name => [
-                                        'count' => $commune->calamities->count(),
-                                        'calamities' => $commune->calamities->map(function ($calamity) {
-                                            return [
-                                                'name' => $calamity->name,
-                                                'latitude' => explode(',', $calamity->coordinates)[0] ?? ' ',
-                                                'longitude' => explode(',', $calamity->coordinates)[1] ?? ' ',
-                                                'length' => $calamity->length,
-                                                'width' => $calamity->width,
-                                                'acreage' => ($calamity->acreage)
-                                                    ? $calamity->acreage
-                                                    : (($calamity->length && $calamity->width) ? $calamity->length * $calamity->width : ' '),
-                                                'address' => $calamity->address,
-                                                'commune' => $calamity->communes->first()->name ?? '',
-                                                'district' => $calamity->communes->first()->district->name ?? '',
-
-                                            ];
-                                        })->toArray()
-                                    ]
-                                ];
-                            })->toArray()
-                        ]
-                    ];
-                });
+                ->map(fn($calamity) => [
+                    'id' => $calamity->id,
+                    'name' => $calamity->name,
+                    'latitude' => explode(',', $calamity->coordinates)[0] ?? null,
+                    'longitude' => explode(',', $calamity->coordinates)[1] ?? null,
+                    'length' => $calamity->length,
+                    'width' => $calamity->width,
+                    'acreage' => ($calamity->acreage)
+                        ? $calamity->acreage
+                        : (($calamity->length && $calamity->width) ? $calamity->length * $calamity->width : ''),
+                    'address' => $calamity->address,
+                ])->toArray();
         }
+
         $districts = District::all()->map(function ($district) {
             return [
                 'id'=>$district->id,
@@ -192,7 +184,6 @@ class MapController extends Controller
             ->orderByDesc('year')
             ->pluck('year');
         $stormsByYear = [];
-
         $stormsByYear['all'] = Calamities::whereHas('risk_level.type_of_calamities', function ($query) {
             $query->where('slug', 'bao-ap-thap-nhiet-doi');
         })
@@ -221,7 +212,7 @@ class MapController extends Controller
                 ])->toArray();
         }
 
-        return view('pages.map', compact('locations_river_bank', 'districts','constructionTypes','duongSoTanFiles' ,'constructions', 'administratives','floodByRange','stormsByYear'));
+        return view('pages.map', compact('riverBankByYear', 'districts','constructionTypes','duongSoTanFiles' ,'constructions', 'administratives','floodByRange','stormsByYear'));
     }
 
     public function getCategoryData()
